@@ -115,7 +115,7 @@ class TypeService(models.Model):
         if self.base_price:
             return f"${self.base_price:.2f} MXN"                                                                             #* Returns the base price formatted as a string with two decimal places
         return "Price not set"
-    
+
 #? <|--------------Company Configuration Model--------------|>
 class CompanyConfiguration(models.Model):
     
@@ -343,7 +343,7 @@ class OrderItem(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Length of the design in centimeters"
+        help_text="Length of the design in inches"
     )
 
     #* width dimensions field 
@@ -352,7 +352,7 @@ class OrderItem(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Width of the design in centimeters"
+        help_text="Width of the design in inches"
     )
     
     #* height dimensions field
@@ -361,7 +361,7 @@ class OrderItem(models.Model):
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Height of the design in centimeters"
+        help_text="Height of the design in inches"
     )
     
     #* Estimated unit price field 
@@ -397,6 +397,148 @@ class OrderItem(models.Model):
         help_text="Price for custom design service for this specific item"
     )
     
+    #? <|--------------Plasma Cutting Calculation Fields--------------|>
+    #* A: Diseño y Programacion (60min minimo)
+    plasma_design_programming_time = models.IntegerField(
+        default=60,
+        null=True,
+        blank=True,
+        help_text="Design and programming time in minutes (minimum 60)"
+    )
+    
+    #* B: Corte (30 min minimo)
+    plasma_cutting_time = models.IntegerField(
+        default=30,
+        null=True,
+        blank=True,
+        help_text="Cutting time in minutes (minimum 30)"
+    )
+    
+    #* C: Post-proceso (60min minimo)
+    plasma_post_process_time = models.IntegerField(
+        default=60,
+        null=True,
+        blank=True,
+        help_text="Post-process time in minutes (minimum 60)"
+    )
+    
+    #* E: Costo de Material (Placa 4'x8')
+    plasma_material_cost = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Material cost for 4'x8' plate"
+    )
+    
+    #* G: Consumibles (162.30 como default)
+    plasma_consumables = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=162.30,
+        null=True,
+        blank=True,
+        help_text="Consumables cost (default 162.30)"
+    )
+    
+    #? <|--------------Laser Cutting/Engraving Calculation Fields--------------|>
+    #* A: Diseño y Programacion (30min minimo)
+    laser_design_programming_time = models.IntegerField(
+        default=30,
+        null=True,
+        blank=True,
+        help_text="Design and programming time in minutes (minimum 30)"
+    )
+    
+    #* B: Corte (10 min minimo)
+    laser_cutting_time = models.IntegerField(
+        default=10,
+        null=True,
+        blank=True,
+        help_text="Cutting time in minutes (minimum 10)"
+    )
+    
+    #* C: Post-proceso (10min minimo)
+    laser_post_process_time = models.IntegerField(
+        default=10,
+        null=True,
+        blank=True,
+        help_text="Post-process time in minutes (minimum 10)"
+    )
+    
+    #* E: Costo de Material (Hoja 4'x8')
+    laser_material_cost = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Material cost for 4'x8' sheet"
+    )
+    
+    #* G: Consumibles (30 como default)
+    laser_consumables = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=30.00,
+        null=True,
+        blank=True,
+        help_text="Consumables cost (default 30.00)"
+    )
+    
+    #? <|--------------3D Printing Calculation Fields--------------|>
+    #* A: Diseño y Programacion (60min minimo)
+    printing_design_programming_time = models.IntegerField(
+        default=60,
+        null=True,
+        blank=True,
+        help_text="Design and programming time in minutes (minimum 60)"
+    )
+    
+    #* B: Impresion (30 min minimo)
+    printing_time = models.IntegerField(
+        default=30,
+        null=True,
+        blank=True,
+        help_text="Printing time in minutes (minimum 30)"
+    )
+    
+    #* C: Material utilizado (g)
+    printing_material_used = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Material used in grams"
+    )
+    
+    #* D: Post-proceso (60min minimo)
+    printing_post_process_time = models.IntegerField(
+        default=60,
+        null=True,
+        blank=True,
+        help_text="Post-process time in minutes (minimum 60)"
+    )
+    
+    #* F: Costo de Material (Rollo de 1Kg) (350 por default)
+    printing_material_cost = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=350.00,
+        null=True,
+        blank=True,
+        help_text="Material cost per 1Kg roll (default 350.00)"
+    )
+    
+    #* G: Consumibles (30 como default)
+    printing_consumables = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default=30.00,
+        null=True,
+        blank=True,
+        help_text="Consumables cost (default 30.00)"
+    )
+    
     #* Metadata class for the OrderItem model
     class Meta:
         verbose_name = "Order Item"
@@ -405,20 +547,118 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.service.name} - {self.quantity}x"                                                                  #* Returns a string representation of the order item with service name and quantity
     
+    #* Method to calculate area in square inches (for formulas)
+    def get_area_square_inches(self):
+        if self.length_dimensions and self.width_dimensions:
+            #* Already in inches, no conversion needed
+            return float(self.length_dimensions) * float(self.width_dimensions)
+        return 0
+    
+    #* Method to calculate estimated price based on service type
+    def calculate_service_price(self):
+        if not self.service:
+            return 0
+            
+        service_type = self.service.type
+        
+        if service_type == 'plasma':
+            return self.calculate_plasma_price()
+        elif service_type in ['laser_engraving', 'laser_cutting']:
+            return self.calculate_laser_price()
+        elif service_type in ['3D_printing', 'resin_printing']:
+            return self.calculate_printing_price()
+        else:
+            return float(self.service.base_price) if self.service.base_price else 0
+    
+    #* Plasma cutting price calculation
+    def calculate_plasma_price(self):
+        #* Use minimum values for estimation
+        A = self.plasma_design_programming_time or 60
+        B = self.plasma_cutting_time or 30
+        C = self.plasma_post_process_time or 60
+        D = 0.09524 * B  #* Luz (kW/min)
+        E = float(self.plasma_material_cost) if self.plasma_material_cost else 0
+        F = self.get_area_square_inches()
+        G = float(self.plasma_consumables) if self.plasma_consumables else 162.30
+        
+        #* SUBTOTAL = ((A*3.33)+(B*16.5)+(C*1.5)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3
+        subtotal = ((A * 3.33) + (B * 16.5) + (C * 1.5) + (D * 0.03211) + (((E * F) / 4608) * 2) + G) * 1.3
+        
+        #* TOTAL MXN = SUBTOTAL * 1.08
+        total = subtotal * 1.08
+        
+        return total
+    
+    #* Laser cutting/engraving price calculation
+    def calculate_laser_price(self):
+        #* Use minimum values for estimation
+        A = self.laser_design_programming_time or 30
+        B = self.laser_cutting_time or 10
+        C = self.laser_post_process_time or 10
+        D = 0.09524 * B  #* Luz (kW/min)
+        E = float(self.laser_material_cost) if self.laser_material_cost else 0
+        F = self.get_area_square_inches()
+        G = float(self.laser_consumables) if self.laser_consumables else 30.00
+        
+        #* SUBTOTAL = ((A*1.2)+(B*1.7)+(C*1)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3
+        subtotal = ((A * 1.2) + (B * 1.7) + (C * 1) + (D * 0.03211) + (((E * F) / 4608) * 2) + G) * 1.3
+        
+        #* TOTAL MXN = SUBTOTAL * 1.08
+        total = subtotal * 1.08
+        
+        return total
+    
+    #* 3D printing price calculation
+    def calculate_printing_price(self):
+        #* Use minimum values for estimation
+        A = self.printing_design_programming_time or 60
+        B = self.printing_time or 30
+        C = float(self.printing_material_used) if self.printing_material_used else 0
+        D = self.printing_post_process_time or 60
+        E = 0.0208333333333333 * B  #* Luz (kW/min)
+        F = float(self.printing_material_cost) if self.printing_material_cost else 350.00
+        G = float(self.printing_consumables) if self.printing_consumibles else 30.00
+        
+        #* SUBTOTAL = (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F))*2)+G)*1.6
+        subtotal = (((B * 2.7) + ((D + B) * 1.5) + E + (((C / 1000) / F) * 2) + G) * 1.6)
+        
+        #* TOTAL MXN = SUBTOTAL * 1.08
+        total = subtotal * 1.08
+        
+        return total
+    
     #* Method to calculate estimated total price of the item
     def get_estimated_total_price(self):
-        total = 0
-        if self.estimated_unit_price:
-            total += self.estimated_unit_price * self.quantity                                                           #* Add service price
+        #* Calculate service price automatically
+        service_price = self.calculate_service_price()
+        total = service_price * self.quantity
+        
+        #* Add custom design price if needed
         if self.needs_custom_design and self.custom_design_price:
-            total += self.custom_design_price                                                                            #* Add design price if needed
+            total += float(self.custom_design_price)
+        
+        #* Update estimated_unit_price with calculated value
+        self.estimated_unit_price = service_price
+        
         return total
     
     #* Method to calculate final total price of the item
     def get_final_total_price(self):
         total = 0
         if self.final_unit_price:
-            total += self.final_unit_price * self.quantity                                                               #* Add service price
+            total += float(self.final_unit_price) * self.quantity                                                               #* Add service price
         if self.needs_custom_design and self.custom_design_price:
-            total += self.custom_design_price                                                                            #* Add design price if needed
+            total += float(self.custom_design_price)                                                                            #* Add design price if needed
         return total
+    
+    #* Method to save and auto-calculate prices
+    def save(self, *args, **kwargs):
+        #* Auto-calculate estimated price if not manually set
+        if not self.estimated_unit_price and self.service:
+            self.estimated_unit_price = self.calculate_service_price()
+        
+        #* Auto-calculate final price if fields are modified and no manual final price
+        if not self.final_unit_price and self.service:
+            self.final_unit_price = self.calculate_service_price()
+        
+        super().save(*args, **kwargs)

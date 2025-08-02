@@ -70,31 +70,13 @@ class TypeServiceAdmin(admin.ModelAdmin):
             readonly.append('is_base_service')                             #* New services auto-set to non-base
         return readonly
     
-    #* Limit choices to prevent duplicating base services
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        if not obj:                                                        #* Only for new services
-            #* Get existing service types
-            existing_types = TypeService.objects.values_list('type', flat=True)
-            #* Filter choices to show only base types that don't exist yet
-            available_base_types = [choice for choice in TypeService.BASE_TYPES 
-                                  if choice[0] not in existing_types]
-            #* Set only available base types as choices
-            form.base_fields['type'].choices = available_base_types
-            
-            #* If no base types available, show message
-            if not available_base_types:
-                form.base_fields['type'].choices = [('', 'All base services already exist')]
-                form.base_fields['type'].widget.attrs['disabled'] = True
-        return form
-    
     #* Customize add form to show only essential fields
     def get_fieldsets(self, request, obj=None):
         if not obj:                                                        #* For new services (add form)
             return (
                 ('New Service',{
-                    'fields':('type', 'name'),
-                    'description': 'Select a service type and provide a name'
+                    'fields':('name',),
+                    'description': 'Only provide the service name - everything else is automatic'
                 }),
             )
         else:                                                              #* For existing services (edit form)
@@ -144,7 +126,7 @@ class TypeServiceAdmin(admin.ModelAdmin):
     
     #* Short description for the image thumbnail field
     image_thumbnail.short_description = 'Image'                           #* Set the short description for the image
-    
+
 #? <|--------------Company Configuration Admin Panel--------------|>
 @admin.register(CompanyConfiguration)
 class CompanyConfigurationAdmin(admin.ModelAdmin):
@@ -337,7 +319,7 @@ class OrderAdmin(admin.ModelAdmin):
     mark_as_completed.short_description = 'Mark orders as Completed'       #* Set the short description for the mark as completed action
 
 
-#? <|--------------Order Item Admin Panel--------------|>
+#? <|--------------Order Item Admin Panel con Secciones de Calculo--------------|>
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     
@@ -351,6 +333,7 @@ class OrderItemAdmin(admin.ModelAdmin):
         'custom_design_price',                                             #* Display custom design price
         'estimated_unit_price',                                            #* Display the estimated unit price of the service
         'final_unit_price',                                                #* Display the final unit price of the service
+        'calculated_price_display',                                        #* Display auto-calculated price
     ]
     
     #* Filter options
@@ -358,6 +341,7 @@ class OrderItemAdmin(admin.ModelAdmin):
         'service',                                                         #* Filter by service type
         'order__state',                                                    #* Filter by order status
         'needs_custom_design',                                             #* Filter by custom design need
+        'service__type',                                                   #* Filter by service type (plasma, laser, etc.)
     ]
     
     #* Search fields
@@ -366,24 +350,84 @@ class OrderItemAdmin(admin.ModelAdmin):
         'description',                                                     #* Search by description of the order item
         'service__name',                                                   #* Search by service name
     ]
+    
+    #* Make calculated prices readonly
+    readonly_fields = [
+        'estimated_unit_price',                                            #* Auto-calculated
+        'calculated_price_display',                                        #* Display calculated price
+        'area_display',                                                    #* Display calculated area
+    ]
 
-    #* Organize fields in the form
-    fieldsets = (
-        ('Order & Service', {
-            'fields': ('order', 'service', 'quantity')
-        }),
-        ('Description & Files', {
-            'fields': ('description', 'design_file'),
-            'classes': ('wide',)
-        }),
-        ('Dimensions', {
-            'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions'),
-            'description': 'All dimensions in centimeters'
-        }),
-        ('Design & Pricing', {
-            'fields': ('needs_custom_design', 'custom_design_price', 'estimated_unit_price', 'final_unit_price'),
-        }),
-    )
+    #* Dynamic fieldsets based on service type
+    def get_fieldsets(self, request, obj=None):
+        #* Base fieldsets that always appear
+        base_fieldsets = [
+            ('Order & Service Information', {
+                'fields': ('order', 'service', 'quantity', 'description')
+            }),
+            ('Design Files & Custom Work', {
+                'fields': ('design_file', 'needs_custom_design', 'custom_design_price'),
+                'classes': ('wide',)
+            }),
+            ('Dimensions (in inches)', {
+                'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions', 'area_display'),
+                'description': 'All dimensions must be in inches'
+            }),
+            ('Final Pricing', {
+                'fields': ('estimated_unit_price', 'final_unit_price', 'calculated_price_display'),
+                'classes': ('wide',)
+            }),
+        ]
+        
+        #* Add service-specific calculation fieldsets based on service type
+        if obj and obj.service:
+            service_type = obj.service.type
+            
+            if service_type == 'plasma':
+                calculation_fieldset = ('Plasma Cutting Calculations', {
+                    'fields': (
+                        'plasma_design_programming_time',
+                        'plasma_cutting_time', 
+                        'plasma_post_process_time',
+                        'plasma_material_cost',
+                        'plasma_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Formula: ((A*3.33)+(B*16.5)+(C*1.5)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3*1.08'
+                })
+                #* Insert calculation fieldset before Final Pricing
+                base_fieldsets.insert(-1, calculation_fieldset)
+                
+            elif service_type in ['laser_engraving', 'laser_cutting']:
+                calculation_fieldset = ('Laser Cutting/Engraving Calculations', {
+                    'fields': (
+                        'laser_design_programming_time',
+                        'laser_cutting_time',
+                        'laser_post_process_time', 
+                        'laser_material_cost',
+                        'laser_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Formula: ((A*1.2)+(B*1.7)+(C*1)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3*1.08'
+                })
+                base_fieldsets.insert(-1, calculation_fieldset)
+                
+            elif service_type in ['3D_printing', 'resin_printing']:
+                calculation_fieldset = ('3D Printing Calculations', {
+                    'fields': (
+                        'printing_design_programming_time',
+                        'printing_time',
+                        'printing_material_used',
+                        'printing_post_process_time',
+                        'printing_material_cost', 
+                        'printing_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Formula: (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F))*2)+G)*1.6*1.08'
+                })
+                base_fieldsets.insert(-1, calculation_fieldset)
+        
+        return base_fieldsets
 
     #* Method to display dimensions summary
     def dimensions_display(self, obj):
@@ -396,9 +440,68 @@ class OrderItemAdmin(admin.ModelAdmin):
             dims.append(f"H:{obj.height_dimensions}")
         
         if dims:
-            return " × ".join(dims) + " cm"
+            return " × ".join(dims) + " in"
         return "Not specified"
     dimensions_display.short_description = 'Dimensions'
+    
+    #* Method to display calculated area
+    def area_display(self, obj):
+        area = obj.get_area_square_inches()
+        if area > 0:
+            return f"{area:.2f} in²"
+        return "Not calculated"
+    area_display.short_description = 'Area (in²)'
+    
+    #* Method to display auto-calculated price with color coding
+    def calculated_price_display(self, obj):
+        if obj.service:
+            calculated_price = obj.calculate_service_price()
+            manual_price = obj.final_unit_price
+            
+            #* Ensure calculated_price is a float for formatting
+            try:
+                price_value = float(calculated_price)
+            except (ValueError, TypeError):
+                price_value = 0.0
+            
+            #* Format the price as string first
+            formatted_price = f"${price_value:.2f}"
+            
+            #* Color code based on whether manual price matches calculated
+            if manual_price and abs(float(manual_price) - price_value) > 0.01:
+                #* Manual price differs from calculated
+                color = '#ff6b35'  #* Orange for different
+                status = 'Manual Override'
+            else:
+                #* Using calculated price
+                color = '#28a745'  #* Green for auto-calculated
+                status = 'Auto-Calculated'
+            
+            return format_html(
+                '<span style="color: {}; font-weight: bold;">{}</span><br>'
+                '<small style="color: gray;">{}</small>',
+                color, formatted_price, status
+            )
+        return "No service selected"
+    calculated_price_display.short_description = 'Auto-Calculated Price'
+    
+    #* Save method override to recalculate when admin saves
+    def save_model(self, request, obj, form, change):
+        #* Force recalculation of prices when saving from admin
+        if obj.service:
+            #* Recalculate estimated price
+            obj.estimated_unit_price = obj.calculate_service_price()
+            
+            #* If no manual final price set, use calculated price
+            if not obj.final_unit_price:
+                obj.final_unit_price = obj.estimated_unit_price
+        
+        super().save_model(request, obj, form, change)
+        
+        #* Update order totals
+        if obj.order:
+            obj.order.estimaded_price = obj.order.calculate_estimated_price()
+            obj.order.save()
 
 
 #? <|--------------Custom Admin Actions--------------|>

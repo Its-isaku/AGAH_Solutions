@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',                        #* CORS Middleware
-    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -119,17 +119,119 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-#? CORS settings for allowing frontend to access the API
+#? <|--------------Django REST Framework Configuration--------------|>
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',        #* For admin/browsable API
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',                        #* Allow public access to APIs
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',                      #* JSON responses
+        'rest_framework.renderers.BrowsableAPIRenderer',              #* Browsable API for development
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,                                                  #* 20 items per page
+    'DEFAULT_FILTER_BACKENDS': [
+        'rest_framework.filters.SearchFilter',                        #* Search functionality
+        'rest_framework.filters.OrderingFilter',                      #* Ordering functionality
+    ],
+}
+
+#? <|--------------CORS Configuration for React Frontend--------------|>
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",                                                      
-    "http://127.0.0.1:3000",
+    "http://localhost:3000",                                          #* React development server
+    "http://127.0.0.1:3000",                                          #* Alternative React URL
+    "http://localhost:3001",                                          #* Alternative React port
 ]
 
-#? Static files (CSS, JavaScript, Images) from the frontend
+#* Headers that React can send
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+#* HTTP methods React can use
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+
+#? <|--------------Email Configuration--------------|>
+
+#* Gmail SMTP Configuration (for contact form and order confirmations)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'                             #* AGAH Solutions Gmail
+EMAIL_HOST_PASSWORD = 'your-app-password'                            #* AGAH Solutions Gmail App Password
+
+#* Email settings for the application
+DEFAULT_FROM_EMAIL = 'AGAH Solutions <your-email@gmail.com>'         #* Sender name and email
+CONTACT_EMAIL = 'your-business-email@gmail.com'                      #* Where contact forms are sent
+
+
+#? <|--------------Media Files Configuration--------------|>
+
+#* Media files (uploaded files like images and designs)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_URL = 'static/'
+#* Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+#? <|--------------File Upload Configuration--------------|>
+#* Maximum file size for uploads (in bytes)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024 * 1024                #* 10 GB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024 * 1024                #* 10 GB
+
+#* Allowed file extensions for design files
+ALLOWED_UPLOAD_EXTENSIONS = [
+    '.pdf', '.dwg', '.dxf', '.ai', '.eps', '.svg',                   #* Design files
+    '.jpg', '.jpeg', '.png', '.gif',                                 #* Image files
+    '.zip', '.rar',                                                  #* Compressed files
+]
+
+#! Investigar BIEN que hace esto  
+
+#? <|--------------Security Settings for Production--------------|>
+#* These should be configured when deploying to production
+
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+
+#? <|--------------Database Configuration (keep your existing)--------------|>
+#* Your existing database configuration stays the same
+#* DATABASES = { ... }
+
+#? <|--------------Debug and Development Settings--------------|>
+#* Keep your existing DEBUG setting
+#* DEBUG = True  # For development
+#* DEBUG = False  # For production
+
+#! Aqui Termina investigacion 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
