@@ -617,7 +617,7 @@ class OrderItem(models.Model):
         D = self.printing_post_process_time or 60
         E = 0.0208333333333333 * B  #* Luz (kW/min)
         F = float(self.printing_material_cost) if self.printing_material_cost else 350.00
-        G = float(self.printing_consumables) if self.printing_consumibles else 30.00
+        G = float(self.printing_consumables) if self.printing_consumables else 30.00
         
         #* SUBTOTAL = (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F))*2)+G)*1.6
         subtotal = (((B * 2.7) + ((D + B) * 1.5) + E + (((C / 1000) / F) * 2) + G) * 1.6)
@@ -651,14 +651,59 @@ class OrderItem(models.Model):
             total += float(self.custom_design_price)                                                                            #* Add design price if needed
         return total
     
+    #* Method to get estimated total including design price
+    def get_estimated_total_with_design(self):
+        """Calculate total estimated price including design price"""
+        total = 0
+        if self.estimated_unit_price:
+            total += float(self.estimated_unit_price) * self.quantity
+        
+        if self.needs_custom_design and self.custom_design_price:
+            total += float(self.custom_design_price)
+        
+        return total
+    
+    #* Method to get final total including design price
+    def get_final_total_with_design(self):
+        """Calculate total final price including design price"""
+        total = 0
+        if self.final_unit_price:
+            total += float(self.final_unit_price) * self.quantity
+        
+        if self.needs_custom_design and self.custom_design_price:
+            total += float(self.custom_design_price)
+        
+        return total
+    
+    #* Method to get savings/difference between estimated and final
+    def get_price_difference(self):
+        """Calculate difference between estimated and final total"""
+        estimated_total = self.get_estimated_total_with_design()
+        final_total = self.get_final_total_with_design()
+        
+        if estimated_total > 0 and final_total > 0:
+            return final_total - estimated_total
+        return 0
+    
+    #* Method to format total price for display
+    def get_formatted_total_price(self):
+        """Get formatted total price string"""
+        total = self.get_final_total_with_design()
+        if total > 0:
+            return f"${total:,.2f} MXN"
+        return "Not calculated"
+    
     #* Method to save and auto-calculate prices
     def save(self, *args, **kwargs):
-        #* Auto-calculate estimated price if not manually set
-        if not self.estimated_unit_price and self.service:
+        #* ONLY calculate estimated_unit_price if it's a NEW object (doesn't have pk)
+        if not self.pk and not self.estimated_unit_price and self.service:
+            #* It's a new object, calculate estimated price
             self.estimated_unit_price = self.calculate_service_price()
         
-        #* Auto-calculate final price if fields are modified and no manual final price
-        if not self.final_unit_price and self.service:
+        #* ALWAYS recalculate final_unit_price if there are changes in calculation fields
+        #* or if final_unit_price doesn't exist
+        if self.service and (not self.final_unit_price or self._state.adding == False):
+            #* Recalculate final price based on current fields
             self.final_unit_price = self.calculate_service_price()
         
         super().save(*args, **kwargs)

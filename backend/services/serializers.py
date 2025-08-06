@@ -8,7 +8,7 @@ from .models import TypeService, CompanyConfiguration, Order, OrderItem         
 class TypeServiceSerializer(serializers.ModelSerializer):
     
     #*  Add Calculated Field
-    formatted_price = serializers.SerializerMMethodField()                                                 #* Custom field to format price
+    formatted_price = serializers.SerializerMethodField()                                                 #* Custom field to format price
 
     #* Meta class to define model and fields
     class Meta:
@@ -91,14 +91,14 @@ class OrderItemSerializer(serializers.ModelSerializer):
             'area_square_inches',
         ]   
         
-        def get_calculated_estimated_price(self, obj):                                                  #* Method to calculate estimated price
-            return obj.get_estimated_price()                                                            #* Call method to calculate estimated price                                                                               
+    def get_calculated_estimated_price(self, obj):                                                  #* Method to calculate estimated price
+        return obj.get_estimated_price()                                                            #* Call method to calculate estimated price                                                                               
 
-        def get_calculated_final_price(self, obj):                                                      #* Method to calculate final price
-            return obj.get_final_total_price()                                                          #* Call method to calculate final price
+    def get_calculated_final_price(self, obj):                                                      #* Method to calculate final price
+        return obj.get_final_total_price()                                                          #* Call method to calculate final price
 
-        def get_area_square_inches(self, obj):                                                          #* Method to calculate area in square inches
-            return obj.get_area_square_inches()                                                         #* Call method to calculate area in square inches
+    def get_area_square_inches(self, obj):                                                          #* Method to calculate area in square inches
+        return obj.get_area_square_inches()                                                         #* Call method to calculate area in square inches
 
 
 #? <|----------------Order Item Create Serializer----------------|>
@@ -213,21 +213,21 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             'total_items'
         ]
         
-        #* Methods to calculate and format fields
-        def get_total_items(self, obj):
-            return sum(item.quantity for item in obj.items.all())
+    #* Methods to calculate and format fields
+    def get_total_items(self, obj):
+        return sum(item.quantity for item in obj.items.all())
+
+    #* Method to format estimated price
+    def get_formatted_estimated_price(self, obj):
+        if obj.estimaded_price:
+            return f"${obj.estimaded_price:,.2f} MXN"
+        return "Calculating..."
     
-        #* Method to format estimated price
-        def get_formatted_estimated_price(self, obj):
-            if obj.estimaded_price:
-                return f"${obj.estimaded_price:,.2f} MXN"
-            return "Calculating..."
-        
-        #* Method to format final price
-        def get_formatted_final_price(self, obj):
-            if obj.final_price:
-                return f"${obj.final_price:,.2f} MXN"
-            return "Pending admin review"
+    #* Method to format final price
+    def get_formatted_final_price(self, obj):
+        if obj.final_price:
+            return f"${obj.final_price:,.2f} MXN"
+        return "Pending admin review"
         
         
 #? Order Create Serializer
@@ -269,12 +269,12 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
             #* Create each order item
             for item_data in items_data:
-                order_item = OrderItem.objets.create(order=order, **item_data)                          #* Create order item with order and item data
+                order_item = OrderItem.objects.create(order=order, **item_data)                          #* Create order item with order and item data
     
                 #* Total Price Calculation
                 total_estimated += order_item.get_estimated_total_price()                               #* Add estimated price of the item to total estimated price
 
-            order.estimated_price = total_estimated                                                     #* Set the total estimated price on the order
+            order.estimaded_price = total_estimated                                                     #* Set the total estimated price on the order
             order.save()                                                                                #* Save the order
 
         return order

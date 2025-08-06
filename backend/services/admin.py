@@ -333,6 +333,7 @@ class OrderItemAdmin(admin.ModelAdmin):
         'custom_design_price',                                             #* Display custom design price
         'estimated_unit_price',                                            #* Display the estimated unit price of the service
         'final_unit_price',                                                #* Display the final unit price of the service
+        'total_price_display',                                             #* Display total price (NEW)
         'calculated_price_display',                                        #* Display auto-calculated price
     ]
     
@@ -353,9 +354,11 @@ class OrderItemAdmin(admin.ModelAdmin):
     
     #* Make calculated prices readonly
     readonly_fields = [
-        'estimated_unit_price',                                            #* Auto-calculated
+        'estimated_unit_price',                                            #* Precio estimado original (no editable)
         'calculated_price_display',                                        #* Display calculated price
         'area_display',                                                    #* Display calculated area
+        'total_price_display',                                             #* Display total price (NEW)
+        'estimated_total_display',                                         #* Display estimated total (NEW)
     ]
 
     #* Dynamic fieldsets based on service type
@@ -374,8 +377,14 @@ class OrderItemAdmin(admin.ModelAdmin):
                 'description': 'All dimensions must be in inches'
             }),
             ('Final Pricing', {
-                'fields': ('estimated_unit_price', 'final_unit_price', 'calculated_price_display'),
-                'classes': ('wide',)
+                'fields': (
+                    'estimated_unit_price',      # Row 1: Estimated unit price
+                    'final_unit_price',           # Row 2: Final unit price
+                    'total_price_display',        # Row 3: Total price with breakdown
+                    'calculated_price_display'    # Row 4: Auto-calculated price
+                ),
+                'classes': ('wide',),
+                'description': 'Unit prices and total calculations. Estimated price is from initial quote. Final price updates when you modify calculation fields above.'
             }),
         ]
         
@@ -485,22 +494,145 @@ class OrderItemAdmin(admin.ModelAdmin):
         return "No service selected"
     calculated_price_display.short_description = 'Auto-Calculated Price'
     
+    #* Method to display total price based on final unit price
+    def total_price_display(self, obj):
+        if obj.final_unit_price and obj.quantity:
+            total_service = float(obj.final_unit_price) * obj.quantity
+            
+            #* Add custom design price if applicable
+            total_final = total_service
+            if obj.needs_custom_design and obj.custom_design_price:
+                total_final += float(obj.custom_design_price)
+            
+            #* Build breakdown parts as plain strings
+            breakdown_parts = []
+            breakdown_parts.append(f"${obj.final_unit_price:.2f} × {obj.quantity} = ${total_service:.2f}")
+            
+            if obj.needs_custom_design and obj.custom_design_price:
+                breakdown_parts.append(f"+ Custom Design: ${obj.custom_design_price:.2f}")
+            
+            # Build the complete HTML manually without format_html to avoid SafeString issues
+            breakdown_text = "<br>".join(breakdown_parts)
+            
+            html = f'''
+            <div style="text-align: center;">
+                <div style="font-size: 16px; font-weight: bold; color: #059669; margin-bottom: 4px;">
+                    ${total_final:.2f} MXN
+                </div>
+                <div style="font-size: 11px; color: #6b7280; line-height: 1.3;">
+                    {breakdown_text}
+                </div>
+            </div>
+            '''
+            
+            return mark_safe(html)
+        return format_html('<span style="color: #ef4444;">Not calculated</span>')
+    total_price_display.short_description = 'Total Price'
+    
+    #* Method to display estimated total price for comparison
+    def estimated_total_display(self, obj):
+        if obj.quantity:
+            # Try estimated_unit_price first, fall back to final_unit_price if estimated is not set
+            unit_price = obj.estimated_unit_price if obj.estimated_unit_price else obj.final_unit_price
+            
+            if unit_price:
+                total_service = float(unit_price) * obj.quantity
+                
+                #* Add custom design price if applicable
+                total_estimated = total_service
+                if obj.needs_custom_design and obj.custom_design_price:
+                    total_estimated += float(obj.custom_design_price)
+                
+                # Show different styling based on whether we're using estimated or final price
+                if obj.estimated_unit_price:
+                    label = "Initial Estimate"
+                    color = "#6b7280"
+                else:
+                    label = "Based on Final Price"
+                    color = "#9ca3af"
+                
+                return format_html(
+                    '<div style="text-align: center; color: {};">'
+                    '<div style="font-size: 14px;">${:.2f} MXN</div>'
+                    '<div style="font-size: 10px;">{}</div>'
+                    '</div>',
+                    color, total_estimated, label
+                )
+        return format_html('<span style="color: #6b7280;">Not calculated</span>')
+    estimated_total_display.short_description = 'Estimated Total'
+    
+    #* Method to show price comparison
+    def price_comparison_display(self, obj):
+        estimated_total = obj.get_estimated_total_with_design()
+        final_total = obj.get_final_total_with_design()
+        
+        if estimated_total > 0 and final_total > 0:
+            difference = final_total - estimated_total
+            percentage = (difference / estimated_total) * 100
+            
+            if abs(difference) < 0.01:  # Practically the same
+                color = '#10b981'  # Green
+                status = 'Same as estimate'
+                arrow = '='
+            elif difference > 0:  # Final price higher
+                color = '#ef4444'  # Red
+                status = f'${difference:.2f} higher ({percentage:+.1f}%)'
+                arrow = '↑'
+            else:  # Final price lower
+                color = '#10b981'  # Green
+                status = f'${abs(difference):.2f} lower ({percentage:.1f}%)'
+                arrow = '↓'
+            
+            return format_html(
+                '<div style="text-align: center;">'
+                '<div style="font-size: 20px; color: {}; font-weight: bold;">{}</div>'
+                '<div style="font-size: 11px; color: #6b7280;">{}</div>'
+                '</div>',
+                color, arrow, status
+            )
+        return format_html('<span style="color: #6b7280;">-</span>')
+    price_comparison_display.short_description = 'vs Estimate'
+    
     #* Save method override to recalculate when admin saves
     def save_model(self, request, obj, form, change):
-        #* Force recalculation of prices when saving from admin
-        if obj.service:
-            #* Recalculate estimated price
-            obj.estimated_unit_price = obj.calculate_service_price()
-            
-            #* If no manual final price set, use calculated price
-            if not obj.final_unit_price:
-                obj.final_unit_price = obj.estimated_unit_price
+        #* Si es un objeto existente (change=True), mantener el estimated_unit_price original
+        if change and obj.estimated_unit_price:
+            #* Guardar el precio estimado original
+            original_estimated_price = obj.estimated_unit_price
+        else:
+            #* Si es nuevo, calcular el precio estimado
+            original_estimated_price = obj.calculate_service_price() if obj.service else 0
         
+        #* SIEMPRE calcular el precio final basado en los campos actuales
+        if obj.service:
+            calculated_final_price = obj.calculate_service_price()
+            
+            #* Actualizar SOLO el final_unit_price con el nuevo cálculo
+            obj.final_unit_price = calculated_final_price
+            
+            #* Mantener o establecer el estimated_unit_price original
+            obj.estimated_unit_price = original_estimated_price
+        
+        #* Guardar el objeto
         super().save_model(request, obj, form, change)
         
         #* Update order totals
         if obj.order:
-            obj.order.estimaded_price = obj.order.calculate_estimated_price()
+            #* Recalcular total de la orden basado en final_unit_price si existe, sino estimated_unit_price
+            total_estimated = 0
+            total_final = 0
+            
+            for item in obj.order.items.all():
+                if item.estimated_unit_price:
+                    total_estimated += float(item.estimated_unit_price) * item.quantity
+                if item.final_unit_price:
+                    total_final += float(item.final_unit_price) * item.quantity
+            
+            #* Actualizar precios de la orden
+            obj.order.estimaded_price = total_estimated
+            if total_final > 0:
+                obj.order.final_price = total_final
+            
             obj.order.save()
 
 
