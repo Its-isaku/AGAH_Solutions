@@ -1,0 +1,98 @@
+/*? <|---------- GENERAL STYLES ---------|> */
+a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 500;
+}
+
+/*? <|---------- NAVBAR CONTAINER ---------|> */
+.Navbar_Content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .4rem 1rem;
+    height: 30px;
+}
+
+/*? <|---------- NAVBAR LOGO ---------|> */
+.Navbar_Logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.Navbar_Logo a {
+    font-weight: bold;
+    font-size: 2rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.Navbar_Logo a:hover {
+    color: #78B7D0;
+    transform: scale(1.02);
+}
+
+/*? <|---------- NAVBAR LINKS ---------|> */
+.Navbar_Links ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1.2rem;
+}
+
+.Navbar_Links li {
+    display: inline-block;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.Navbar_Links a {
+    display: block;
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.Navbar_Links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #78B7D0;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.Navbar_Links a:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+.Navbar_Links a:hover::before {
+    width: 80%;
+}
+
+/*? <|---------- NAVBAR ACCOUNT ---------|> */
+.Navbar_Account {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.Navbar_Account > * {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.Navbar_Account > *:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
