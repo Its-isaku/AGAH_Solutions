@@ -18,7 +18,7 @@ urlpatterns = [
     #* Homepage data endpoint
     path('api/homepage/', HomepageDataView.as_view(), name='homepage-data'),
     
-    #* Service Types endpoints (Services page)
+    #* Service Types endpoints (Services page)a
     path('api/services/', ServiceTypeListView.as_view(), name='service-list'),
     path('api/services/<str:type>/', ServiceTypeDetailView.as_view(), name='service-detail'),
     

@@ -1,0 +1,178 @@
+/*? <|---------- GENERAL STYLES ---------|> */
+a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: 500;
+}
+
+/*? <|---------- FOOTER CONTAINER ---------|> */
+.Footer_Content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 2rem;
+    margin: 0;
+}
+
+.Footer_Title {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+    border-bottom: 2px solid rgba(120, 183, 208, 0.338);
+}
+
+/*? <|---------- FOOTER CONTACT ---------|> */
+.Footer_contact {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+.Footer_contact h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.Footer_contact span {
+    font-weight: bold;
+    color: #F4E7E1 !important;
+}
+
+.Footer_contact p {
+    transition: all 0.3s ease;
+    padding-bottom: .5rem;
+    margin-bottom: .5rem;
+}
+
+.Footer_contact p {
+    position: relative;
+}
+
+.Footer_contact p::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #78B7D0;
+    transition: all 0.5s ease;
+}
+
+.Footer_contact p:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+.Footer_contact p:hover::before {
+    width: 55%;
+}
+
+/*? <|---------- FOOTER LINKS ---------|> */
+.Footer_links {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+.Footer_links h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.Footer_links ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.Footer_links li {
+    margin-bottom: 0.5rem;
+}
+
+.Footer_links a {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    padding-bottom: .5rem;
+}
+
+.Footer_links a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #78B7D0;
+    transition: all 0.5s ease;
+}
+
+.Footer_links a:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+.Footer_links a:hover::before {
+    width: 15%;
+}
+
+/*? <|---------- FOOTER SOCIAL ---------|> */
+.Footer_social {
+    flex: 1;
+    padding: 0 1rem;
+}
+
+.Footer_social h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.Footer_social ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.Footer_social li {
+    margin-bottom: 0.5rem;
+}
+
+.Footer_social a{
+    display: flex;
+    align-items: center;
+    color: inherit;
+    transition: color 0.3s ease;
+    line-height: 1;
+    position: relative;
+    padding-bottom: .5rem;
+}
+
+.Footer_social a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #78B7D0;
+    transition: all 0.5s ease;
+}
+
+.Footer_social a:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+.Footer_social a:hover::before {
+    width: 25%;
+}
+
+.Footer_social span {
+    margin-right: 0.5rem;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+}
+
+
+/*? <|---------- MEDIA SECTION ---------|> */
