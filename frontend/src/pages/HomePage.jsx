@@ -2,6 +2,7 @@
 import '../style/HomePage.css'
 import SplitText from "../components/common/SplitText";
 import CardSwap, { Card } from '../components/common/CardSwap'
+import Carousel from '../components/common/Carousel'
 import plasmaCuttingImg from '../img/plasma_cutting.jpg'
 import lasserEngravingImg from '../img/laser_engravingpng.png'
 import PrintingImg from '../img/3D_printing.jpg'
@@ -13,6 +14,23 @@ function HomePage() {
     //? Variables 
     const welcomeText = "Welcome to";
     const companyName = "AGAH Solutions";
+    const carouselItems = [
+        {
+            id: 1,
+            title: "Plasma Cutting",
+            image: plasmaCuttingImg
+        },
+        {
+            id: 2,
+            title: "Laser Engraving",
+            image: lasserEngravingImg
+        },
+        {
+            id: 3,
+            title: "3D Printing",
+            image: PrintingImg
+        }
+    ];
 
 
     //? Functions
@@ -63,7 +81,7 @@ function HomePage() {
                 <p>Cutting-Edge Solutions, Crafted to Perfection</p>
             </div>
             
-            {/*//* Card Display */}
+            {/*//* Card Display - Desktop only */}
             <div className="card_display_container">
                 <CardSwap
                     width={800}
@@ -105,8 +123,21 @@ function HomePage() {
                         </div>
                     </Card>
                 </CardSwap>
-                </div>
             </div>
+
+            {/*//* Card Display - Mobile & Tablet only */}
+            <div className='carrusel_display_container' style={{ height: '800px', position: 'relative' }}>
+                <Carousel
+                    items={carouselItems}
+                    baseWidth={400}
+                    autoplay={true}
+                    autoplayDelay={3000}
+                    pauseOnHover={true}
+                    loop={true}
+                    round={false}
+                />
+            </div>
+        </div>
 
         {/*//?  Info Section */}
         <div className='info_section'>

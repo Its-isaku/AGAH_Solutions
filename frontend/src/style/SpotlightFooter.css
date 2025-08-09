@@ -10,6 +10,14 @@
     width: 100%;
 }
 
+/*? <|---------- RESPONSIVE FOOTER HEIGHT ---------|> */
+@media (max-width: 768px) {
+    .card-spotlight-Footer {
+        height: auto;
+        min-height: 400px;
+    }
+}
+
 .card-spotlight-Footer::before {
     content: "";
     position: absolute;
