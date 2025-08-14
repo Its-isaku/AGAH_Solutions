@@ -1,656 +1,480 @@
 #? Admin configuration for the services app
-from django.contrib import admin
-from django.utils.html import format_html
-from django.urls import reverse
-from django.utils.safestring import mark_safe
-from .models import TypeService, CompanyConfiguration, Order, OrderItem
+from django.contrib import admin                                                   #* Django admin import
+from django.utils.html import format_html                                          #* HTML formatting for admin display
+from django.forms import ModelForm                                                 #* Model forms for custom form handling
+from django.core.exceptions import ValidationError                                 #* Validation error handling
+from .models import TypeService, Order, OrderItem, CompanyConfiguration           #* Import all models from services app
 
 
-#? <|--------------Service Type Admin Panel--------------|>
-@admin.register(TypeService)
+#? <|--------------Custom Form for Type Service Admin--------------|>
+class TypeServiceForm(ModelForm):
+    """
+    Custom form for TypeService admin
+    Purpose: Simplify the add form to only show name field for new services
+    """
+    """
+    Custom form for TypeService admin
+    Purpose: Simplify the add form to only show name field for new services
+    """
+    class Meta:
+        model = TypeService                                                         #* Which model this form is for
+        fields = '__all__'                                                          #* Include all fields
+    
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the form with custom behavior
+        - For new services: Only focus on name field
+        - Auto-generate type from name
+        """
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:                                                    #* Only for new objects (no primary key yet)
+            #* For new services, only show name and type fields
+            self.fields['type'].widget.attrs['placeholder'] = 'Auto-generated from name'  #* Placeholder text
+            self.fields['type'].required = False                                    #* Make type field optional
+            #* Focus on the name field when form loads
+            self.fields['name'].widget.attrs['autofocus'] = True                    #* Auto-focus on name field
+
+
+#? <|--------------Type Service Admin Configuration--------------|>
+@admin.register(TypeService)                                                       #* Register TypeService model with admin
 class TypeServiceAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for TypeService model
+    Features:
+    - Simplified form for adding new services (only name required)
+    - Visual status indicators with colors
+    - Mass actions for activate/deactivate
+    - Auto-generation of type and order_display
+    """
+    form = TypeServiceForm                                                          #* Use custom form defined above
     
-    #* Display fields in the admin panel for TypeService 
-    list_display = (
-        'name',
-        'type',
-        'formated_price',
-        'active_status',
-        'active',
-        'is_base_service_display',
-        'order_display',
-        'image_thumbnail',
-        )
+    #* Fields to display in the list view (like columns in a table)
+    list_display = ['name', 'type', 'active_display', 'order_display', 'get_price_display', 'is_base_service', 'active']
     
-    #* Filter options for the admin panel
-    list_filter = [
-        'type',                                                            #* Filter by service type
-        'active',                                                          #* Filter by active status
-        'is_base_service',                                                 #* Filter by base service
-    ]
+    #* Filters that appear on the right side of the list view
+    list_filter = ['active', 'is_base_service', 'type']                            #* Filter by active status, base service, and type
     
-    #* Search fields for the admin panel
-    search_fields = [
-        'name',                                                            #* Search by service name
-        'description',                                                     #* Search by service description
-        'short_description',                                               #* Search by short description
-    ]
+    #* Fields that can be searched from the search box
+    search_fields = ['name', 'type', 'description']                                #* Search by name, type, or description
     
-    #* Fields that can be edited directly in the list view 
-    list_editable = [
-        'active',                                                          #* Allow editing of active status
-    ]
+    #* Fields that can be edited directly in the list view (without opening detail)
+    list_editable = ['active']                                                      #* Can toggle active status from list
     
-    #* Organize the fields in the admin panel
+    #* Fields that cannot be edited (read-only)
+    readonly_fields = ['type', 'order_display']                                    #* Auto-generated fields
+    
+    #* Organization of fields in the detail form
     fieldsets = (
-        ('Basic Information',{                                             #* Group basic information fields
-            'fields':('name', 'type', 'short_description', 'is_base_service')
+        ('Basic Information', {                                                     #* First section: Basic info
+            'fields': ('name', 'type')
         }),
-        ('Detailed Information',{                                          #* Group detailed information fields
-            'fields':('description',),
-            'classes': ('wide',)
-        }),                                                            
-        ('Price and Configuration',{                                       #* Group price and configuration fields
-            'fields':('base_price', 'active', 'order_display')
+        ('Content', {                                                               #* Second section: Content
+            'fields': ('description', 'short_description', 'principal_image')
         }),
-        ('Image',{                                                         #* Group image fields
-            'fields':('principal_image',)
+        ('Pricing & Display', {                                                     #* Third section: Pricing and display
+            'fields': ('base_price', 'active', 'order_display', 'is_base_service')
         }),
     )
     
-    #* Default ordering for the admin panel
-    ordering = ['is_base_service', 'order_display', 'name']                #* Order by base service first, then order display field
+    #* Special fieldset for adding new services (simpler form)
+    add_fieldsets = (
+        ('Add New Service', {
+            'classes': ('wide',),                                                   #* Make form wider
+            'fields': ('name',),                                                    #* Only show name field
+            'description': 'Just enter the service name. Everything else will be auto-generated or can be edited later.'
+        }),
+    )
     
-    #* Prevent creating duplicates of base services and control readonly fields
-    def get_readonly_fields(self, request, obj=None):
-        readonly = ['order_display']                                       #* order_display is always readonly (auto-assigned)
-        if obj and obj.is_base_service:
-            readonly.extend(['type', 'is_base_service'])                   #* Base services can't change type
-        else:
-            readonly.append('is_base_service')                             #* New services auto-set to non-base
-        return readonly
-    
-    #* Customize add form to show only essential fields
     def get_fieldsets(self, request, obj=None):
-        if not obj:                                                        #* For new services (add form)
-            return (
-                ('New Service',{
-                    'fields':('name',),
-                    'description': 'Only provide the service name - everything else is automatic'
-                }),
-            )
-        else:                                                              #* For existing services (edit form)
-            return super().get_fieldsets(request, obj)
+        """
+        Choose which fieldsets to use based on whether we're adding or editing
+        - Adding new: Use simplified add_fieldsets
+        - Editing existing: Use full fieldsets
+        """
+        if not obj:                                                                 #* Adding new object
+            return self.add_fieldsets
+        return super().get_fieldsets(request, obj)                                  #* Editing existing object
     
-    #* function to format the price for display 
-    def formated_price(self, obj):
-        if obj.base_price:
-            return f"${obj.base_price:.2f}"                                #* Format the price for display
-        return "Not set"                                                   #* Show "Not set" if no price
+    def active_display(self, obj):
+        """
+        Custom display method for active status with colors and icons
+        Returns: HTML with colored text and checkmark/X icon
+        """
+        if obj.active:
+            return format_html('<span style="color: green; font-weight: bold;">✓ Active</span>')
+        else:
+            return format_html('<span style="color: red; font-weight: bold;">✗ Inactive</span>')
+    active_display.short_description = 'Status'                                    #* Column header name
+    active_display.admin_order_field = 'active'                                    #* Allow sorting by this field
+    
+    #* Custom mass actions that appear in the dropdown above the list
+    actions = ['activate_services', 'deactivate_services']
+    
+    def activate_services(self, request, queryset):
+        """
+        Mass action to activate selected services
+        Updates all selected services to active=True
+        """
+        updated = queryset.update(active=True)                                      #* Update all selected objects
+        self.message_user(request, f'{updated} services activated.')               #* Show success message
+    activate_services.short_description = 'Activate selected services'            #* Text shown in dropdown
+    
+    def deactivate_services(self, request, queryset):
+        """
+        Mass action to deactivate selected services
+        Updates all selected services to active=False
+        """
+        updated = queryset.update(active=False)                                     #* Update all selected objects
+        self.message_user(request, f'{updated} services deactivated.')             #* Show success message
+    deactivate_services.short_description = 'Deactivate selected services'        #* Text shown in dropdown
 
-    #* Short description and admin order field for the formatted price 
-    formated_price.short_description = 'Price'                            #* Set the short description for the formatted price field
-    formated_price.admin_order_field = 'base_price'                       #* Allow ordering by the base price field
-    
-    #* function to display the active status of the service type 
-    def active_status(self, obj):
-        if obj.active:                                                     #* Check if the service type is active
-            color = 'green'                                                #* Set the color to green if active
-            text = 'Active'                                                #* Set the text to "Active"
-        else:                                                              #* If not active
-            color = 'red'                                                  #* Set the color to red
-            text = 'Inactive'                                              #* Set the text to "Inactive"
-        return format_html(                                                #* Format the text with the appropriate color
-            '<span style="color: {};">{}</span>',
-            color, text
-        )
-    
-    #* Short description for the active status field    
-    active_status.short_description = 'Status'                            #* Set the short description for the active status field
-    
-    #* Function to display if it's a base service
-    def is_base_service_display(self, obj):
-        if obj.is_base_service:
-            return format_html('<span style="color: blue;">Base</span>')
-        return format_html('<span style="color: gray;">Additional</span>')
-    is_base_service_display.short_description = 'Type'
-    
-    #* function to display a thumbnail of the service image
-    def image_thumbnail(self, obj):
-        if obj.principal_image:                                            #* Check if the service has a principal image
-            return format_html(                                            #* Format the image as HTML
-                '<img src="{}" style="width: 50px; height: 50px; border-radius: 5px;" />',
-                obj.principal_image.url                                    #* Use the URL of the principal image
-            )
-        return "No Image"                                                  #* Return "No Image" if no image is set
-    
-    #* Short description for the image thumbnail field
-    image_thumbnail.short_description = 'Image'                           #* Set the short description for the image
 
-#? <|--------------Company Configuration Admin Panel--------------|>
-@admin.register(CompanyConfiguration)
-class CompanyConfigurationAdmin(admin.ModelAdmin):
-    
-    #* Display fields in the admin panel for CompanyConfiguration
-    list_display = (
-        'company_name',                                                    #* Display the company name
-        'contact_email',                                                   #* Display the company email
-        'company_phone',                                                   #* Display the company phone number
-    )
-    
-    #* Organize the fields in the admin panel
-    fieldsets = (
-        ('Contact Information',{
-            'fields':('company_name','contact_email','company_phone', 'company_address')
-        }),
-        ('Institutional Texts',{
-            'fields':('about_us','company_mission','company_vision'),
-            'classes': ('wide',)
-        }),
-        ('Business Configuration',{
-            'fields':('company_time_response_hours',)
-        }),
-    )
-
-    #* Only allow one configuration to exist
-    def has_add_permission(self, request):
-        return not CompanyConfiguration.objects.exists()                  #* Prevent multiple configurations
-
-#? <|--------------Order Items Admin Panel--------------|>
-#* Admin configuration for the Order Items model
+#? <|--------------Order Item Inline Admin--------------|>
 class OrderItemInline(admin.TabularInline):
+    """
+    Inline admin for OrderItem within Order admin
+    Purpose: Allow editing order items directly from the order detail page
+    Layout: Tabular (table-like) instead of stacked (form-like)
+    """
+    model = OrderItem                                                               #* Model to inline
+    extra = 0                                                                       #* Number of empty forms to show
     
-    model = OrderItem                                                      #* Specify the model for the admin panel
-    extra = 1                                                              #* Allow one extra empty form for adding new items
-
-    #* Display simplified fields for inline editing
+    #* Fields to show in the inline table
     fields = [
-        'service',                                                         #* Field for selecting the service type
-        'quantity',                                                        #* Field for entering the quantity of the service
-        'description',                                                     #* Field for entering a description of the order item
-        'length_dimensions',                                               #* Length dimension field
-        'width_dimensions',                                                #* Width dimension field
-        'height_dimensions',                                               #* Height dimension field
-        'needs_custom_design',                                             #* Custom design checkbox
-        'custom_design_price',                                             #* Custom design price field
-        'design_file',                                                     #* Design file upload
-        'estimated_unit_price',                                            #* Field for entering the estimated unit price of the service
-        'final_unit_price',                                                #* Field for entering the final unit price of the service
+        'service', 'description', 'quantity',                                      #* Basic info
+        'length_dimensions', 'width_dimensions', 'height_dimensions',              #* Dimensions
+        'design_file', 'needs_custom_design', 'custom_design_price',               #* Design and pricing
+        'estimated_unit_price', 'final_unit_price'                                 #* Calculated prices
     ]
+    
+    #* Fields that are read-only in the inline
+    readonly_fields = ['estimated_unit_price']                                     #* Auto-calculated field
 
-    readonly_fields = ['estimated_unit_price']                            #* Make the estimated price read-only (auto-calculated)
 
-#? <|--------------Order Admin Panel--------------|>
-@admin.register(Order)
+#? <|--------------Order Admin Configuration--------------|>
+@admin.register(Order)                                                             #* Register Order model with admin
 class OrderAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for Order model
+    Features:
+    - Inline editing of order items
+    - Color-coded status display
+    - User type indicators
+    - Calculated totals display
+    - Mass status change actions
+    """
+    inlines = [OrderItemInline]                                                     #* Include OrderItem inline
     
-    #* Display fields in the admin panel for Order
-    list_display = (
-        'order_number',
-        'customer_name',
-        'customer_email',
-        'colored_state',
-        'state',
-        'estimated_formated_price',
-        'final_formated_price',
-        'created_at',
-        'assigned_user',
-        'see_items',
-    )
+    #* Fields to display in the list view
+    list_display = [
+        'order_number', 'customer_name', 'customer_email',                         #* Basic order info
+        'user_display', 'state_display', 'created_at',                             #* User and status info
+        'get_total_items', 'get_estimated_total', 'state'                           #* Calculated fields and state
+    ]
     
-    #* filter the fields in the admin panel for Order
+    #* Filters for the right sidebar
     list_filter = [
-        'state',                                                           #* Filter by order state
-        'created_at',                                                      #* Filter by creation date
-        'assigned_user',                                                   #* Filter by assigned user
+        'state', 'created_at'                                                      #* Filter by status and date
     ]
-
-    #* Search fields for the admin panel
+    
+    #* Searchable fields
     search_fields = [
-        'order_number',                                                    #* Search by order number
-        'customer_name',                                                   #* Search by customer name
-        'customer_email',                                                  #* Search by customer email
-        'customer_phone',                                                  #* Search by customer phone
+        'order_number', 'customer_name', 'customer_email',                         #* Order and customer info
+        'user__email', 'user__first_name', 'user__last_name'                       #* User info
     ]
-
-    #* Fields that can be edited directly in the list view
-    list_editable = [
-        'state',                                                           #* Allow editing state directly
-        'assigned_user',                                                   #* Allow editing of the assigned user directly in the list view
+    
+    #* Fields that can be edited directly from the list view
+    list_editable = ['state']                                                       #* Can change status from list
+    
+    #* Read-only fields in the detail form
+    readonly_fields = [
+        'order_number', 'created_at', 'user',                                      #* System-generated fields
+        'get_total_items', 'get_estimated_total', 'get_final_total'                #* Calculated fields
     ]
-
-    #* Organize fields in the admin form
+    
+    #* Organization of fields in the detail form
     fieldsets = (
-        ('Order Information', {                                            #* Group order information fields
-            'fields': ('order_number', 'state', 'assigned_user')
+        ('Order Information', {                                                     #* Order basics
+            'fields': ('order_number', 'state', 'created_at')
         }),
-        ('Customer Details', {                                             #* Group customer details fields
-            'fields': ('customer_name', 'customer_email', 'customer_phone'),
-            'classes': ('wide',)                                           #* Make the customer details fields wide
+        ('Customer Information', {                                                  #* Customer details
+            'fields': ('user', 'customer_name', 'customer_email', 'customer_phone')
         }),
-        ('Prices & Times', {                                               #* Group prices and times fields
+        ('Order Details', {                                                         #* Order specifics
+            'fields': ('additional_notes', 'assigned_user')
+        }),
+        ('Pricing Information', {                                                   #* Pricing details
             'fields': ('estimaded_price', 'final_price', 'estimated_completion_date_days')
         }),
-        ('Process Dates', {                                                #* Group process dates fields
-            'fields': ('created_at',),
-            'classes': ('collapse',)                                       #* Collapse by default
+        ('Calculated Totals', {                                                     #* Auto-calculated totals
+            'fields': ('get_total_items', 'get_estimated_total', 'get_final_total'),
+            'classes': ('collapse',)                                                #* Collapsible section
         }),
-        ('Admin Notes', {                                                  #* Group admin notes fields
-            'fields': ('additional_notes',),
-            'classes': ('wide',)                                           #* Make the admin notes fields wide
-        })
     )
     
-    #* Read-only fields (auto-generated or calculated)
-    readonly_fields = [
-        'order_number',                                                    #* Make the order number field read-only
-        'created_at',                                                      #* Make the creation date field read-only
-        'estimaded_price',                                                 #* Make the estimated price field read-only
-    ]
-
-    inlines = [OrderItemInline]                                            #* Include the OrderItemInline for managing order items
-
-    ordering = ['-created_at']                                             #* Order the orders by creation date in descending order
-
-    actions = ['mark_as_estimated', 'mark_as_completed']                   #* Define actions for marking orders as completed or canceled
-    
-    #* Function to display colored state
-    def colored_state(self, obj):
-        
-        colors = {                                                         #* Define color classes for different states of the order
-            'pending': '#ffc107',
-            'estimated': '#17a2b8',
-            'confirmed': '#28a745',
-            'in_progress': '#6f42c1',
-            'completed': '#28a745',
-            'canceled': '#dc3545',
-        }
-    
-        color = colors.get(obj.state, '#6c757d')                          #* Get the color class for the current state of the order
-        return format_html(                                                #* Format the state with the appropriate color
-            '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px; font-size: 11px;">{}</span>',
-            color, obj.get_state_display()                                 #* Capitalize the state for display
-        )
-    colored_state.short_description = 'State'                             #* Set the short description for the colored state field
-    
-    #* Function to display formatted estimated price
-    def estimated_formated_price(self, obj):
-        if obj.estimaded_price :
-            return f"${obj.estimaded_price:.2f}"                           #* Format the estimated price for display
-        return "-"
-    estimated_formated_price.short_description = 'Estimated Price'        #* Set the short description for the estimated price field
-    
-    #* Function to display formatted final price
-    def final_formated_price(self, obj):
-        if obj.final_price:
-            return f"${obj.final_price:.2f}"                               #* Format the final price for display
-        return "Pending"                                                   #* Return "Pending" if the final price is not set
-    final_formated_price.short_description = 'Final Price'                #* Set the short description for the final price field
-    
-    #* Function to display link to view order items
-    def see_items(self, obj):
-        count = obj.items.count()                                          #* Count the number of items in the order
-        if count > 0:                                                      #* If there are items in the order
-            url = reverse('admin:services_orderitem_changelist') + f'?order__id={obj.id}'
-            return format_html(                                            #* Format the link to view the items in the order
-                '<a href="{}">View Items ({})</a>',
-                url, count                                                 #* Include the count of items in the link text
-            )
-            
-        return "No Items"                                                  #* Return "No Items" if there are no items in the order
-    see_items.short_description = 'Items'                                 #* Set the short description for the order items field
-
-    #* Custom action to mark orders as estimated
-    def mark_as_estimated(self, request, queryset):
-        from django.utils import timezone
-        for order in queryset:
-            order.state = 'estimated'
-            order.save()
-        self.message_user(request, f"{queryset.count()} orders marked as estimated.")
-    mark_as_estimated.short_description = 'Mark orders as Estimated'
-    
-    #* Custom action to mark orders as completed
-    def mark_as_completed(self, request, queryset):
-        from django.utils import timezone
-        for order in queryset:                                             #* Iterate through the selected orders
-            order.state = 'completed'                                      #* Set the state of the order to 'completed'
-            order.save()                                                   #* Save the changes to the order
-        self.message_user(request, f"{queryset.count()} orders marked as completed.")
-    mark_as_completed.short_description = 'Mark orders as Completed'       #* Set the short description for the mark as completed action
-
-
-#? <|--------------Order Item Admin Panel con Secciones de Calculo--------------|>
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
-    
-    #* Display fields in the list view
-    list_display = [
-        'order',                                                           #* Display the order associated with the order item
-        'service',                                                         #* Display the service type of the order item
-        'quantity',                                                        #* Display the quantity of the service in the order item
-        'dimensions_display',                                              #* Display dimensions summary
-        'needs_custom_design',                                             #* Display if needs custom design
-        'custom_design_price',                                             #* Display custom design price
-        'estimated_unit_price',                                            #* Display the estimated unit price of the service
-        'final_unit_price',                                                #* Display the final unit price of the service
-        'total_price_display',                                             #* Display total price (NEW)
-        'calculated_price_display',                                        #* Display auto-calculated price
-    ]
-    
-    #* Filter options
-    list_filter = [
-        'service',                                                         #* Filter by service type
-        'order__state',                                                    #* Filter by order status
-        'needs_custom_design',                                             #* Filter by custom design need
-        'service__type',                                                   #* Filter by service type (plasma, laser, etc.)
-    ]
-    
-    #* Search fields
-    search_fields = [
-        'order__order_number',                                             #* Search by order number
-        'description',                                                     #* Search by description of the order item
-        'service__name',                                                   #* Search by service name
-    ]
-    
-    #* Make calculated prices readonly
-    readonly_fields = [
-        'estimated_unit_price',                                            #* Precio estimado original (no editable)
-        'calculated_price_display',                                        #* Display calculated price
-        'area_display',                                                    #* Display calculated area
-        'total_price_display',                                             #* Display total price (NEW)
-        'estimated_total_display',                                         #* Display estimated total (NEW)
-    ]
-
-    #* Dynamic fieldsets based on service type
-    def get_fieldsets(self, request, obj=None):
-        #* Base fieldsets that always appear
-        base_fieldsets = [
-            ('Order & Service Information', {
-                'fields': ('order', 'service', 'quantity', 'description')
-            }),
-            ('Design Files & Custom Work', {
-                'fields': ('design_file', 'needs_custom_design', 'custom_design_price'),
-                'classes': ('wide',)
-            }),
-            ('Dimensions (in inches)', {
-                'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions', 'area_display'),
-                'description': 'All dimensions must be in inches'
-            }),
-            ('Final Pricing', {
-                'fields': (
-                    'estimated_unit_price',      # Row 1: Estimated unit price
-                    'final_unit_price',           # Row 2: Final unit price
-                    'total_price_display',        # Row 3: Total price with breakdown
-                    'calculated_price_display'    # Row 4: Auto-calculated price
-                ),
-                'classes': ('wide',),
-                'description': 'Unit prices and total calculations. Estimated price is from initial quote. Final price updates when you modify calculation fields above.'
-            }),
-        ]
-        
-        #* Add service-specific calculation fieldsets based on service type
-        if obj and obj.service:
-            service_type = obj.service.type
-            
-            if service_type == 'plasma':
-                calculation_fieldset = ('Plasma Cutting Calculations', {
-                    'fields': (
-                        'plasma_design_programming_time',
-                        'plasma_cutting_time', 
-                        'plasma_post_process_time',
-                        'plasma_material_cost',
-                        'plasma_consumables'
-                    ),
-                    'classes': ('collapse',),
-                    'description': 'Formula: ((A*3.33)+(B*16.5)+(C*1.5)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3*1.08'
-                })
-                #* Insert calculation fieldset before Final Pricing
-                base_fieldsets.insert(-1, calculation_fieldset)
-                
-            elif service_type in ['laser_engraving', 'laser_cutting']:
-                calculation_fieldset = ('Laser Cutting/Engraving Calculations', {
-                    'fields': (
-                        'laser_design_programming_time',
-                        'laser_cutting_time',
-                        'laser_post_process_time', 
-                        'laser_material_cost',
-                        'laser_consumables'
-                    ),
-                    'classes': ('collapse',),
-                    'description': 'Formula: ((A*1.2)+(B*1.7)+(C*1)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3*1.08'
-                })
-                base_fieldsets.insert(-1, calculation_fieldset)
-                
-            elif service_type in ['3D_printing', 'resin_printing']:
-                calculation_fieldset = ('3D Printing Calculations', {
-                    'fields': (
-                        'printing_design_programming_time',
-                        'printing_time',
-                        'printing_material_used',
-                        'printing_post_process_time',
-                        'printing_material_cost', 
-                        'printing_consumables'
-                    ),
-                    'classes': ('collapse',),
-                    'description': 'Formula: (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F))*2)+G)*1.6*1.08'
-                })
-                base_fieldsets.insert(-1, calculation_fieldset)
-        
-        return base_fieldsets
-
-    #* Method to display dimensions summary
-    def dimensions_display(self, obj):
-        dims = []
-        if obj.length_dimensions:
-            dims.append(f"L:{obj.length_dimensions}")
-        if obj.width_dimensions:
-            dims.append(f"W:{obj.width_dimensions}")
-        if obj.height_dimensions:
-            dims.append(f"H:{obj.height_dimensions}")
-        
-        if dims:
-            return " × ".join(dims) + " in"
-        return "Not specified"
-    dimensions_display.short_description = 'Dimensions'
-    
-    #* Method to display calculated area
-    def area_display(self, obj):
-        area = obj.get_area_square_inches()
-        if area > 0:
-            return f"{area:.2f} in²"
-        return "Not calculated"
-    area_display.short_description = 'Area (in²)'
-    
-    #* Method to display auto-calculated price with color coding
-    def calculated_price_display(self, obj):
-        if obj.service:
-            calculated_price = obj.calculate_service_price()
-            manual_price = obj.final_unit_price
-            
-            #* Ensure calculated_price is a float for formatting
-            try:
-                price_value = float(calculated_price)
-            except (ValueError, TypeError):
-                price_value = 0.0
-            
-            #* Format the price as string first
-            formatted_price = f"${price_value:.2f}"
-            
-            #* Color code based on whether manual price matches calculated
-            if manual_price and abs(float(manual_price) - price_value) > 0.01:
-                #* Manual price differs from calculated
-                color = '#ff6b35'  #* Orange for different
-                status = 'Manual Override'
-            else:
-                #* Using calculated price
-                color = '#28a745'  #* Green for auto-calculated
-                status = 'Auto-Calculated'
-            
+    def user_display(self, obj):
+        """
+        Custom display for user field with icons and colors
+        Shows: 👤 for registered users, 👥 for guest orders
+        """
+        if obj.user:
             return format_html(
-                '<span style="color: {}; font-weight: bold;">{}</span><br>'
-                '<small style="color: gray;">{}</small>',
-                color, formatted_price, status
+                '<span style="color: blue;">👤 {}</span>',                         #* Blue icon for registered users
+                obj.user.get_full_name()
             )
-        return "No service selected"
-    calculated_price_display.short_description = 'Auto-Calculated Price'
-    
-    #* Method to display total price based on final unit price
-    def total_price_display(self, obj):
-        if obj.final_unit_price and obj.quantity:
-            total_service = float(obj.final_unit_price) * obj.quantity
-            
-            #* Add custom design price if applicable
-            total_final = total_service
-            if obj.needs_custom_design and obj.custom_design_price:
-                total_final += float(obj.custom_design_price)
-            
-            #* Build breakdown parts as plain strings
-            breakdown_parts = []
-            breakdown_parts.append(f"${obj.final_unit_price:.2f} × {obj.quantity} = ${total_service:.2f}")
-            
-            if obj.needs_custom_design and obj.custom_design_price:
-                breakdown_parts.append(f"+ Custom Design: ${obj.custom_design_price:.2f}")
-            
-            # Build the complete HTML manually without format_html to avoid SafeString issues
-            breakdown_text = "<br>".join(breakdown_parts)
-            
-            html = f'''
-            <div style="text-align: center;">
-                <div style="font-size: 16px; font-weight: bold; color: #059669; margin-bottom: 4px;">
-                    ${total_final:.2f} MXN
-                </div>
-                <div style="font-size: 11px; color: #6b7280; line-height: 1.3;">
-                    {breakdown_text}
-                </div>
-            </div>
-            '''
-            
-            return mark_safe(html)
-        return format_html('<span style="color: #ef4444;">Not calculated</span>')
-    total_price_display.short_description = 'Total Price'
-    
-    #* Method to display estimated total price for comparison
-    def estimated_total_display(self, obj):
-        if obj.quantity:
-            # Try estimated_unit_price first, fall back to final_unit_price if estimated is not set
-            unit_price = obj.estimated_unit_price if obj.estimated_unit_price else obj.final_unit_price
-            
-            if unit_price:
-                total_service = float(unit_price) * obj.quantity
-                
-                #* Add custom design price if applicable
-                total_estimated = total_service
-                if obj.needs_custom_design and obj.custom_design_price:
-                    total_estimated += float(obj.custom_design_price)
-                
-                # Show different styling based on whether we're using estimated or final price
-                if obj.estimated_unit_price:
-                    label = "Initial Estimate"
-                    color = "#6b7280"
-                else:
-                    label = "Based on Final Price"
-                    color = "#9ca3af"
-                
-                return format_html(
-                    '<div style="text-align: center; color: {};">'
-                    '<div style="font-size: 14px;">${:.2f} MXN</div>'
-                    '<div style="font-size: 10px;">{}</div>'
-                    '</div>',
-                    color, total_estimated, label
-                )
-        return format_html('<span style="color: #6b7280;">Not calculated</span>')
-    estimated_total_display.short_description = 'Estimated Total'
-    
-    #* Method to show price comparison
-    def price_comparison_display(self, obj):
-        estimated_total = obj.get_estimated_total_with_design()
-        final_total = obj.get_final_total_with_design()
-        
-        if estimated_total > 0 and final_total > 0:
-            difference = final_total - estimated_total
-            percentage = (difference / estimated_total) * 100
-            
-            if abs(difference) < 0.01:  # Practically the same
-                color = '#10b981'  # Green
-                status = 'Same as estimate'
-                arrow = '='
-            elif difference > 0:  # Final price higher
-                color = '#ef4444'  # Red
-                status = f'${difference:.2f} higher ({percentage:+.1f}%)'
-                arrow = '↑'
-            else:  # Final price lower
-                color = '#10b981'  # Green
-                status = f'${abs(difference):.2f} lower ({percentage:.1f}%)'
-                arrow = '↓'
-            
-            return format_html(
-                '<div style="text-align: center;">'
-                '<div style="font-size: 20px; color: {}; font-weight: bold;">{}</div>'
-                '<div style="font-size: 11px; color: #6b7280;">{}</div>'
-                '</div>',
-                color, arrow, status
-            )
-        return format_html('<span style="color: #6b7280;">-</span>')
-    price_comparison_display.short_description = 'vs Estimate'
-    
-    #* Save method override to recalculate when admin saves
-    def save_model(self, request, obj, form, change):
-        #* Si es un objeto existente (change=True), mantener el estimated_unit_price original
-        if change and obj.estimated_unit_price:
-            #* Guardar el precio estimado original
-            original_estimated_price = obj.estimated_unit_price
         else:
-            #* Si es nuevo, calcular el precio estimado
-            original_estimated_price = obj.calculate_service_price() if obj.service else 0
+            return format_html('<span style="color: gray;">👥 Guest</span>')        #* Gray icon for guest orders
+    user_display.short_description = 'User'                                        #* Column header
+    user_display.admin_order_field = 'user'                                        #* Allow sorting
+    
+    def state_display(self, obj):
+        """
+        Custom display for order state with color-coded badges
+        Each state has its own color for quick visual identification
+        """
+        colors = {
+            'pending': 'orange',                                                    #* Orange for pending
+            'estimated': 'blue',                                                    #* Blue for estimated
+            'confirmed': 'green',                                                   #* Green for confirmed
+            'in_progress': 'purple',                                                #* Purple for in progress
+            'completed': 'darkgreen',                                               #* Dark green for completed
+            'canceled': 'red',                                                      #* Red for canceled
+        }
         
-        #* SIEMPRE calcular el precio final basado en los campos actuales
-        if obj.service:
-            calculated_final_price = obj.calculate_service_price()
-            
-            #* Actualizar SOLO el final_unit_price con el nuevo cálculo
-            obj.final_unit_price = calculated_final_price
-            
-            #* Mantener o establecer el estimated_unit_price original
-            obj.estimated_unit_price = original_estimated_price
-        
-        #* Guardar el objeto
-        super().save_model(request, obj, form, change)
-        
-        #* Update order totals
-        if obj.order:
-            #* Recalcular total de la orden basado en final_unit_price si existe, sino estimated_unit_price
-            total_estimated = 0
-            total_final = 0
-            
-            for item in obj.order.items.all():
-                if item.estimated_unit_price:
-                    total_estimated += float(item.estimated_unit_price) * item.quantity
-                if item.final_unit_price:
-                    total_final += float(item.final_unit_price) * item.quantity
-            
-            #* Actualizar precios de la orden
-            obj.order.estimaded_price = total_estimated
-            if total_final > 0:
-                obj.order.final_price = total_final
-            
-            obj.order.save()
+        color = colors.get(obj.state, 'gray')                                       #* Default to gray if state not found
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px; font-size: 11px;">{}</span>',
+            color, obj.get_state_display()
+        )
+    state_display.short_description = 'Status'                                     #* Column header
+    state_display.admin_order_field = 'state'                                      #* Allow sorting
+    
+    def get_total_items(self, obj):
+        """
+        Calculate and display total number of items in the order
+        """
+        return obj.items.count()                                                    #* Count related OrderItems
+    get_total_items.short_description = 'Items'                                    #* Column header
+    
+    def get_estimated_total(self, obj):
+        """
+        Calculate and display total estimated price for all items
+        Includes custom design prices if applicable
+        """
+        total = sum(item.get_estimated_total_with_design() for item in obj.items.all())
+        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
+    get_estimated_total.short_description = 'Estimated Total'                      #* Column header
+    
+    def get_final_total(self, obj):
+        """
+        Calculate and display total final price for all items
+        Includes custom design prices if applicable
+        """
+        total = sum(item.get_final_total_with_design() for item in obj.items.all())
+        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
+    get_final_total.short_description = 'Final Total'                              #* Column header
+    
+    #* Custom mass actions for changing order status
+    actions = ['mark_as_estimated', 'mark_as_confirmed', 'mark_as_in_progress', 'mark_as_completed']
+    
+    def mark_as_estimated(self, request, queryset):
+        """Mass action to mark orders as estimated"""
+        updated = queryset.update(state='estimated')
+        self.message_user(request, f'{updated} orders marked as estimated.')
+    mark_as_estimated.short_description = 'Mark as Estimated'
+    
+    def mark_as_confirmed(self, request, queryset):
+        """Mass action to mark orders as confirmed"""
+        updated = queryset.update(state='confirmed')
+        self.message_user(request, f'{updated} orders marked as confirmed.')
+    mark_as_confirmed.short_description = 'Mark as Confirmed'
+    
+    def mark_as_in_progress(self, request, queryset):
+        """Mass action to mark orders as in progress"""
+        updated = queryset.update(state='in_progress')
+        self.message_user(request, f'{updated} orders marked as in progress.')
+    mark_as_in_progress.short_description = 'Mark as In Progress'
+    
+    def mark_as_completed(self, request, queryset):
+        """Mass action to mark orders as completed"""
+        updated = queryset.update(state='completed')
+        self.message_user(request, f'{updated} orders marked as completed.')
+    mark_as_completed.short_description = 'Mark as Completed'
 
 
-#? <|--------------Custom Admin Actions--------------|>
+#? <|--------------Order Item Admin Configuration--------------|>
+@admin.register(OrderItem)                                                         #* Register OrderItem model with admin
+class OrderItemAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for OrderItem model
+    Features:
+    - Link to parent order
+    - Dimensions display formatting
+    - Collapsible calculation sections for each service type
+    - Price calculations display
+    """
+    
+    #* Fields to display in the list view
+    list_display = [
+        'order_link', 'service', 'quantity', 'dimensions_display',                 #* Basic item info
+        'needs_custom_design', 'custom_design_price',                              #* Design info
+        'estimated_unit_price', 'final_unit_price', 'get_total_display'            #* Pricing info
+    ]
+    
+    #* Filters for the right sidebar
+    list_filter = [
+        'service__type', 'needs_custom_design', 'service'                          #* Filter by service type, design need, service
+    ]
+    
+    #* Searchable fields
+    search_fields = [
+        'order__order_number', 'order__customer_name',                             #* Order info
+        'service__name', 'description'                                             #* Item info
+    ]
+    
+    #* Read-only fields
+    readonly_fields = ['estimated_unit_price']                                     #* Auto-calculated field
+    
+    #* Organization of fields in the detail form
+    fieldsets = (
+        ('Order & Service', {                                                       #* Basic order and service info
+            'fields': ('order', 'service', 'description', 'quantity')
+        }),
+        ('Dimensions', {                                                            #* Item dimensions
+            'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions')
+        }),
+        ('Files & Design', {                                                        #* Design files and custom design
+            'fields': ('design_file', 'needs_custom_design', 'custom_design_price')
+        }),
+        ('Pricing', {                                                               #* Price information
+            'fields': ('estimated_unit_price', 'final_unit_price')
+        }),
+        ('Plasma Cutting Calculations', {                                           #* Plasma-specific calculation fields
+            'fields': (
+                'plasma_design_programming_time', 'plasma_cutting_time',
+                'plasma_post_process_time', 'plasma_material_cost', 'plasma_consumables'
+            ),
+            'classes': ('collapse',)                                                #* Collapsible section
+        }),
+        ('Laser Cutting/Engraving Calculations', {                                 #* Laser-specific calculation fields
+            'fields': (
+                'laser_design_programming_time', 'laser_cutting_time',
+                'laser_post_process_time', 'laser_material_cost', 'laser_consumables'
+            ),
+            'classes': ('collapse',)                                                #* Collapsible section
+        }),
+        ('3D Printing Calculations', {                                              #* 3D printing-specific calculation fields
+            'fields': (
+                'printing_design_programming_time', 'printing_time', 'printing_material_used',
+                'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
+            ),
+            'classes': ('collapse',)                                                #* Collapsible section
+        }),
+    )
+    
+    def order_link(self, obj):
+        """
+        Create a clickable link to the parent order
+        Allows easy navigation from item to order
+        """
+        return format_html(
+            '<a href="/admin/services/order/{}/change/">{}</a>',                    #* Create HTML link
+            obj.order.id, obj.order.order_number
+        )
+    order_link.short_description = 'Order'                                         #* Column header
+    order_link.admin_order_field = 'order'                                         #* Allow sorting
+    
+    def dimensions_display(self, obj):
+        """
+        Format dimensions for better readability
+        Shows: Length × Width × Height in inches
+        """
+        if obj.length_dimensions and obj.width_dimensions:
+            dims = f"{obj.length_dimensions} × {obj.width_dimensions}"              #* Length × Width
+            if obj.height_dimensions:
+                dims += f" × {obj.height_dimensions}"                               #* Add height if present
+            return f"{dims} in"                                                     #* Add units
+        return "Not specified"                                                      #* No dimensions provided
+    dimensions_display.short_description = 'Dimensions'                            #* Column header
+    
+    def get_total_display(self, obj):
+        """
+        Display total price for this item (including design if applicable)
+        Shows final price with proper formatting
+        """
+        total = obj.get_final_total_with_design()                                   #* Get total including design
+        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
+    get_total_display.short_description = 'Total Price'                            #* Column header
 
-#* Function to create the 5 base services automatically
+
+#? <|--------------Company Configuration Admin--------------|>
+@admin.register(CompanyConfiguration)                                              #* Register CompanyConfiguration model
+class CompanyConfigurationAdmin(admin.ModelAdmin):
+    """
+    Admin configuration for CompanyConfiguration model
+    Features:
+    - Only one instance allowed (singleton pattern)
+    - Cannot be deleted (protection)
+    - Organized fieldsets for easy editing
+    """
+    
+    #* Fields to display in the list view
+    list_display = ['company_name', 'contact_email', 'company_phone', 'company_time_response_hours']
+    
+    #* Organization of fields in the detail form
+    fieldsets = (
+        ('Basic Information', {                                                     #* Company contact info
+            'fields': ('company_name', 'contact_email', 'company_phone', 'company_address')
+        }),
+        ('About Company', {                                                         #* Company description
+            'fields': ('about_us', 'company_mission', 'company_vision')
+        }),
+        ('Business Configuration', {                                                #* Business settings
+            'fields': ('company_time_response_hours',)
+        }),
+    )
+    
+    def has_add_permission(self, request):
+        """
+        Only allow one company configuration to exist
+        Prevents creating multiple company configurations
+        """
+        return not CompanyConfiguration.objects.exists()                           #* Only allow if none exists
+    
+    def has_delete_permission(self, request, obj=None):
+        """
+        Don't allow deletion of company configuration
+        Protects essential company data
+        """
+        return False                                                                #* Never allow deletion
+
+
+#? <|--------------Custom Admin Actions & Utilities--------------|>
+
 def create_base_services():
+    """
+    Function to create the 5 base services automatically
+    Purpose: Initialize the system with the main services AGAH offers
+    Usage: Run this in Django shell after setting up the database
+    
+    Services created:
+    1. Plasma Cutting
+    2. Laser Engraving  
+    3. Laser Cutting
+    4. 3D Printing
+    5. Resin Printing
+    """
     
     base_services_data = [
         {
-            'type': 'plasma',
-            'name': 'Plasma Cutting',
-            'short_description': 'Precision metal cutting with plasma technology',
-            'is_base_service': True,
-            'order_display': 1
+            'type': 'plasma',                                                       #* Service type identifier
+            'name': 'Plasma Cutting',                                               #* Display name
+            'short_description': 'Precision metal cutting with plasma technology', #* Brief description
+            'is_base_service': True,                                                #* Mark as base service
+            'order_display': 1                                                      #* Display order
         },
         {
-            'type': 'laser_engraving', 
+            'type': 'laser_engraving',
             'name': 'Laser Engraving',
             'short_description': 'Detailed engraving on wood and other materials',
             'is_base_service': True,
@@ -658,7 +482,7 @@ def create_base_services():
         },
         {
             'type': 'laser_cutting',
-            'name': 'Laser Cutting', 
+            'name': 'Laser Cutting',
             'short_description': 'Precise cutting of wood and thin materials',
             'is_base_service': True,
             'order_display': 3
@@ -667,7 +491,7 @@ def create_base_services():
             'type': '3D_printing',
             'name': '3D Printing',
             'short_description': 'Additive manufacturing with filament technology',
-            'is_base_service': True, 
+            'is_base_service': True,
             'order_display': 4
         },
         {
@@ -679,15 +503,17 @@ def create_base_services():
         }
     ]
     
+    #* Create each service if it doesn't already exist
     for service_data in base_services_data:
-        TypeService.objects.get_or_create(
-            type=service_data['type'],
-            defaults=service_data
+        TypeService.objects.get_or_create(                                          #* Create only if doesn't exist
+            type=service_data['type'],                                              #* Find by type
+            defaults=service_data                                                   #* Use this data if creating new
         )
 
 
-#? <|--------------Change Admin Panel Titles--------------|>
+#? <|--------------Admin Panel Customization--------------|>
 
-admin.site.site_header = "AGAH Solutions Admin"                           #* Set the site header for the admin panel
-admin.site.site_title = "AGAH Solutions Admin Portal"                     #* Set the site title for the admin panel
-admin.site.index_title = "Welcome to the AGAH Solutions Admin Portal"     #* Set the index title for the admin panel
+#* Customize the admin panel header and titles
+admin.site.site_header = "AGAH Solutions Admin"                                    #* Main header text
+admin.site.site_title = "AGAH Solutions Admin Portal"                             #* Browser tab title
+admin.site.index_title = "Welcome to the AGAH Solutions Admin Portal"             #* Welcome message on admin home

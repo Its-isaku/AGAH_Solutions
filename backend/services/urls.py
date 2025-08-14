@@ -2,38 +2,54 @@
 #? Nesesary imports
 from django.urls import path
 from .views import (
-    HomepageDataView,
-    ServiceTypeListView,
-    ServiceTypeDetailView, 
+    #* Public Views
+    TypeServiceListView,
+    TypeServiceDetailView,
     CompanyConfigurationView,
-    OrderListByCustomerView,
-    OrderCreateView,
+    ContactFormView,
     OrderTrackingView,
-    AddItemToCartView,
-    CalculateCartTotalView,
-    ContactFormView
+    
+    #* Protected Views (User Authentication Required)
+    OrderCreateView,
+    UserOrdersListView,
+    UserOrderDetailView,
+    
+    #* Admin Views (Staff/Admin Only)
+    AdminOrderListView,
+    AdminOrderDetailView,
 )
 
 urlpatterns = [
-    #* Homepage data endpoint
-    path('api/homepage/', HomepageDataView.as_view(), name='homepage-data'),
     
-    #* Service Types endpoints (Services page)a
-    path('api/services/', ServiceTypeListView.as_view(), name='service-list'),
-    path('api/services/<str:type>/', ServiceTypeDetailView.as_view(), name='service-detail'),
+    #? <|--------------Public API Endpoints (No Authentication Required)--------------|>
     
-    #* Company Configuration endpoint (About Us page)
-    path('api/company/', CompanyConfigurationView.as_view(), name='company-config'),
+    #* Services endpoints
+    path('api/services/', TypeServiceListView.as_view(), name='service-list'),
+    path('api/services/<int:pk>/', TypeServiceDetailView.as_view(), name='service-detail'),
     
-    #* Orders endpoints (Orders page - list by customer)
-    path('api/orders/customer/', OrderListByCustomerView.as_view(), name='orders-by-customer'),
-    path('api/orders/create/', OrderCreateView.as_view(), name='order-create'),
-    path('api/orders/track/<str:order_number>/', OrderTrackingView.as_view(), name='order-tracking'),
+    #* Company information endpoint
+    path('api/company/', CompanyConfigurationView.as_view(), name='company-info'),
     
-    #* Cart functionality endpoints
-    path('api/cart/add-item/', AddItemToCartView.as_view(), name='cart-add-item'),
-    path('api/cart/calculate-total/', CalculateCartTotalView.as_view(), name='cart-calculate-total'),
-    
-    #* Contact endpoint (Contact Us page)
+    #* Contact form endpoint
     path('api/contact/', ContactFormView.as_view(), name='contact-form'),
+    
+    #* Order tracking endpoint (public - requires order number + email)
+    path('api/orders/track/', OrderTrackingView.as_view(), name='order-tracking'),
+    
+    
+    #? <|--------------Protected API Endpoints (Authentication Required)--------------|>
+    
+    #* Order creation (requires authentication)
+    path('api/orders/create/', OrderCreateView.as_view(), name='order-create'),
+    
+    #* User's personal orders
+    path('api/orders/my-orders/', UserOrdersListView.as_view(), name='user-orders-list'),
+    path('api/orders/my-orders/<int:pk>/', UserOrderDetailView.as_view(), name='user-order-detail'),
+    
+    
+    #? <|--------------Admin API Endpoints (Staff/Admin Only)--------------|>
+    
+    #* Admin order management
+    path('api/admin/orders/', AdminOrderListView.as_view(), name='admin-orders-list'),
+    path('api/admin/orders/<int:pk>/', AdminOrderDetailView.as_view(), name='admin-order-detail'),
 ]

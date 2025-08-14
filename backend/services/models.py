@@ -1,6 +1,7 @@
+
 #? Models for the services app
 from django.db import models                                                                                                #* models import for database tables 
-from django.contrib.auth.models import User                                                                                 #* User model import for user-related fields
+from django.conf import settings                                                                                            #* User model from settings
 from django.utils import timezone                                                                                           #* timezone import for date and time handling
 
 #? <|--------------Type of service Model--------------|>
@@ -116,6 +117,7 @@ class TypeService(models.Model):
             return f"${self.base_price:.2f} MXN"                                                                             #* Returns the base price formatted as a string with two decimal places
         return "Price not set"
 
+
 #? <|--------------Company Configuration Model--------------|>
 class CompanyConfiguration(models.Model):
     
@@ -194,6 +196,16 @@ class Order(models.Model):
         help_text="Unique order number for the order"
     )
 
+    #* User who placed the order (can be null for guest orders)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='orders',
+        help_text="User who placed the order (optional for guest orders)"
+    )
+
     #* Customer name field 
     customer_name = models.CharField(
         max_length=100,
@@ -252,10 +264,11 @@ class Order(models.Model):
     
     #* Assigned user field
     assigned_user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,                                                                                         #* If the user is deleted, set this field to null
         null=True,
         blank=True,
+        related_name='assigned_orders',
         help_text="User assigned to the order"
     )
     
@@ -299,8 +312,8 @@ class Order(models.Model):
         }
         return colors.get(self.state, 'text-gray-500')                                                                     #* Returns the color class for the current state of the order
 
-#? <|--------------Order Item Model--------------|>
 
+#? <|--------------Order Item Model--------------|>
 class OrderItem(models.Model):
 
     #* order foreign key field

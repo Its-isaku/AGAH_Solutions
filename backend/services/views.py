@@ -1,160 +1,165 @@
-
-#? Nesesary imports
-from rest_framework import generics, status
+#? Views for the services app
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.conf import settings
-from django.db.models import Q
-from .models import TypeService, CompanyConfiguration, Order, OrderItem
+from .models import TypeService, Order, OrderItem, CompanyConfiguration
 from .serializers import (
-    TypeServiceSerializer, 
-    CompanyConfigurationSerializer,
-    OrderListSerializer, 
-    OrderDetailSerializer, 
-    OrderCreateSerializer,
+    TypeServiceSerializer,
+    OrderSerializer,
     OrderItemSerializer,
-    ContactFormSerializer,
-    CartItemSerializer
+    CompanyConfigurationSerializer,
+    ContactFormSerializer
 )
 
 
-#? <|------------------Homepage Data View------------------|>
-class HomepageDataView(APIView):
+#? <|--------------Public Views (No Authentication Required)--------------|>
 
-    #* get method to retrieve homepage data 
-    def get(self, request):
-        
-        #* Get featured services (first 3 active services)
-        featured_services = TypeService.objects.filter(active=True)[:3]
-        services_data = TypeServiceSerializer(featured_services, many=True).data
-        
-        #* Get basic company information
-        company = CompanyConfiguration.objects.first()
-        company_data = CompanyConfigurationSerializer(company).data if company else {}
-        
-        #* Get statistics for homepage
-        recent_orders_count = Order.objects.filter(state='completed').count()
-        
-        #* Prepare response data
-        response_data = {
-            'featured_services': services_data,
-            'company_info': {
-                'name': company_data.get('company_name', 'AGAH Solutions'),
-                'email': company_data.get('contact_email', ''),
-                'phone': company_data.get('company_phone', ''),
-            },
-            'stats': {
-                'completed_orders': recent_orders_count,
-                'active_services': TypeService.objects.filter(active=True).count(),
-            }
-        }
-        
-        return Response(response_data, status=status.HTTP_200_OK)
-
-
-
-#? <|------------------Service Type Views------------------|>
-
-#? class for listing all active service types 
-class ServiceTypeListView(generics.ListAPIView):    
-    
-    #* queryset to filter active service types 
+class TypeServiceListView(generics.ListAPIView):
+    """
+    Public endpoint to list all active services
+    Used by: Homepage, Services page
+    """
     queryset = TypeService.objects.filter(active=True)
     serializer_class = TypeServiceSerializer
+    permission_classes = [permissions.AllowAny]  #* Public access
 
-#? class for retrieving details of a specific service type
-class ServiceTypeDetailView(generics.RetrieveAPIView):
 
-    #* queryset to filter active service types
+class TypeServiceDetailView(generics.RetrieveAPIView):
+    """
+    Public endpoint to get details of a specific service
+    Used by: Service detail modals, order forms
+    """
     queryset = TypeService.objects.filter(active=True)
     serializer_class = TypeServiceSerializer
-    lookup_field = 'type'
+    permission_classes = [permissions.AllowAny]  #* Public access
 
 
-
-#? <|--------------Company Configuration View--------------|>
-class CompanyConfigurationView(generics.RetrieveAPIView):
-
-    #* serializer class for company configuration 
+class CompanyConfigurationView(generics.ListAPIView):
+    """
+    Public endpoint to get company information
+    Used by: About page, Contact page, Footer
+    """
+    queryset = CompanyConfiguration.objects.all()
     serializer_class = CompanyConfigurationSerializer
+    permission_classes = [permissions.AllowAny]  #* Public access
+
+
+class ContactFormView(APIView):
+    """
+    Public endpoint for contact form submissions
+    Used by: Contact page
+    """
+    permission_classes = [permissions.AllowAny]  #* Public access
     
-    #* function to get the first company configuration object
-    def get_object(self):
-        return CompanyConfiguration.objects.first()
-
-
-
-#? <|----------------------Order Views---------------------|>
-
-#? class for listing all orders by customer email
-class OrderListByCustomerView(generics.ListAPIView):
-
-    #* serializer class for listing orders by customer email
-    serializer_class = OrderListSerializer
-
-    #* function to get the queryset for listing orders by customer email
-    def get_queryset(self):
-        customer_email = self.request.query_params.get('email', None)
+    def post(self, request):
+        serializer = ContactFormSerializer(data=request.data)
         
-        if customer_email:
-            return Order.objects.filter(
-                customer_email=customer_email
-            ).order_by('-created_at')
+        if serializer.is_valid():
+            #* Send email to company
+            try:
+                subject = f"Contact Form: {serializer.validated_data['subject']}"
+                message = f"""
+                Nueva consulta desde el formulario de contacto:
+                
+                Nombre: {serializer.validated_data['name']}
+                Email: {serializer.validated_data['email']}
+                Teléfono: {serializer.validated_data.get('phone', 'No proporcionado')}
+                Asunto: {serializer.validated_data['subject']}
+                
+                Mensaje:
+                {serializer.validated_data['message']}
+                
+                Enviado desde el formulario de contacto del sitio web de AGAH Solutions.
+                """
+                
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[settings.CONTACT_EMAIL],
+                    fail_silently=False,
+                )
+                
+                return Response({
+                    'message': 'Su mensaje ha sido enviado exitosamente. Nos pondremos en contacto con usted pronto.'
+                }, status=status.HTTP_200_OK)
+                
+            except Exception as e:
+                return Response({
+                    'error': 'Error al enviar el mensaje. Por favor, inténtelo de nuevo más tarde.'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Order.objects.none()
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#? class for creating new orders 
+#? <|--------------Protected Views (Authentication Required)--------------|>
+
 class OrderCreateView(generics.CreateAPIView):
-
-    #* queryset for all orders
-    queryset = Order.objects.all()
+    """
+    Protected endpoint to create new orders
+    Requires: User authentication
+    Used by: Checkout process
+    """
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
     
-    #* serializer class for creating orders
-    serializer_class = OrderCreateSerializer
+    def perform_create(self, serializer):
+        #* Automatically assign the authenticated user and their data
+        serializer.save(
+            user=self.request.user,
+            customer_name=self.request.user.get_full_name(),
+            customer_email=self.request.user.email
+        )
     
-    #* function to create a new order and send confirmation email
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        #* Custom create to send confirmation email
+        response = super().create(request, *args, **kwargs)
         
-        #* Create the order
-        order = serializer.save()
+        if response.status_code == status.HTTP_201_CREATED:
+            order = Order.objects.get(id=response.data['id'])
+            
+            #* Send order confirmation email
+            try:
+                self.send_order_confirmation_email(order)
+            except Exception as e:
+                print(f"Failed to send order confirmation email: {e}")
         
-        #* Try to send confirmation email
-        try:
-            self.send_order_confirmation_email(order)
-        except Exception as e:
-            print(f"Failed to send confirmation email: {e}")
-        
-        #* Return detailed order information
-        response_serializer = OrderDetailSerializer(order)
-        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        return response
     
     def send_order_confirmation_email(self, order):
-        config = CompanyConfiguration.objects.first()
-        response_time = config.company_time_response_hours if config else 24
+        """Send order confirmation email to customer"""
+        subject = f"Order Confirmation - {order.order_number}"
         
-        subject = f"Confirmacion de Orden - {order.order_number}"
+        #* Build order items list
+        items_list = ""
+        for item in order.items.all():
+            items_list += f"- {item.service.name} x{item.quantity}\n"
+        
         message = f"""
-        Estimado {order.customer_name},
-
-        Gracias por su pedido! Hemos recibido su solicitud.
-
-        Aquí están los detalles de su orden:
-        ----------------------------------------
-        Detalles:
-        Número: {order.order_number}
-        Precio Estimado: ${order.estimaded_price:.2f}
-        Artículos: {order.items.count()}
-
-        Revisaremos su pedido y le enviaremos una cotización detallada dentro de {response_time} horas.
-
-        Puede rastrear el estado de su pedido utilizando el número de pedido anterior.
-
-        Saludos cordiales, y que Dios le bendiga.
-        AGAH Solutions Team
+        Hola {order.customer_name},
+        
+        ¡Gracias por su pedido! Hemos recibido su solicitud y la procesaremos en breve.
+        
+        Detalles del Pedido:
+        Número de Pedido: {order.order_number}
+        Fecha del Pedido: {order.created_at.strftime('%d de %B de %Y a las %I:%M %p')}
+        
+        Servicios Solicitados:
+        {items_list}
+        
+        Próximos Pasos:
+        1. Nuestro equipo revisará su pedido y archivos de diseño
+        2. Le enviaremos una cotización detallada para su aprobación
+        3. Una vez que apruebe la cotización, comenzaremos la producción
+        
+        Puede rastrear el estado de su pedido en cualquier momento usando su número de pedido.
+        
+        Si tiene alguna pregunta, no dude en contactarnos.
+        
+        Saludos cordiales,
+        Equipo de AGAH Solutions
         """
         
         send_mail(
@@ -165,174 +170,155 @@ class OrderCreateView(generics.CreateAPIView):
             fail_silently=False,
         )
 
-class OrderTrackingView(generics.RetrieveAPIView):
+
+class UserOrdersListView(generics.ListAPIView):
+    """
+    Protected endpoint to list current user's orders
+    Requires: User authentication
+    Used by: My Orders page, Order history
+    """
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
     
-    #* queryset for all orders 
-    queryset = Order.objects.all()
-    serializer_class = OrderDetailSerializer
-    lookup_field = 'order_number'
+    def get_queryset(self):
+        #* Only return orders for the authenticated user
+        return Order.objects.filter(user=self.request.user)
 
 
-#? <|-----------------Cart Management Views----------------|>
-class AddItemToCartView(APIView):
+class UserOrderDetailView(generics.RetrieveAPIView):
+    """
+    Protected endpoint to get details of user's specific order
+    Requires: User authentication + ownership
+    Used by: Order detail page, Order tracking
+    """
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    
+    def get_queryset(self):
+        #* Only return orders for the authenticated user
+        return Order.objects.filter(user=self.request.user)
 
-    #* Post method to add an item to the cart 
+
+class OrderTrackingView(APIView):
+    """
+    Public endpoint for order tracking by order number
+    Allows tracking without login (for customer convenience)
+    Used by: Order tracking page
+    """
+    permission_classes = [permissions.AllowAny]  #* Public access
+    
     def post(self, request):
-        serializer = CartItemSerializer(data=request.data)
+        order_number = request.data.get('order_number', '').strip()
+        customer_email = request.data.get('customer_email', '').strip().lower()
         
-        if serializer.is_valid():
-            service_id = serializer.validated_data['service_id']
-            
-            try:
-                service = TypeService.objects.get(id=service_id, active=True)
-            except TypeService.DoesNotExist:
-                return Response(
-                    {'error': 'Service not found'}, 
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            
-            #* Calculate estimated price temporarily
-            quantity = serializer.validated_data['quantity']
-            
-            #* Create temporary OrderItem for calculations (don't save to DB)
-            temp_item = OrderItem(
-                service=service,
-                quantity=quantity,
-                length_dimensions=serializer.validated_data.get('length_dimensions'),
-                width_dimensions=serializer.validated_data.get('width_dimensions'),
-                height_dimensions=serializer.validated_data.get('height_dimensions'),
-                needs_custom_design=serializer.validated_data.get('needs_custom_design', False),
-                custom_design_price=serializer.validated_data.get('custom_design_price'),
+        if not order_number or not customer_email:
+            return Response({
+                'error': 'El número de pedido y el email del cliente son requeridos.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            #* Find order by number and email for security
+            order = Order.objects.get(
+                order_number=order_number,
+                customer_email=customer_email
             )
             
-            #* Calculate price using model methods
-            estimated_price = temp_item.calculate_service_price() * quantity
+            serializer = OrderSerializer(order)
+            return Response(serializer.data, status=status.HTTP_200_OK)
             
-            #* Add design price if needed
-            if temp_item.needs_custom_design and temp_item.custom_design_price:
-                estimated_price += float(temp_item.custom_design_price)
-            
-            #* Prepare data for frontend
-            cart_item_data = {
-                'service_id': service.id,
-                'service_name': service.name,
-                'service_type': service.type,
-                'description': serializer.validated_data['description'],
-                'quantity': quantity,
-                'length_dimensions': serializer.validated_data.get('length_dimensions'),
-                'width_dimensions': serializer.validated_data.get('width_dimensions'),
-                'height_dimensions': serializer.validated_data.get('height_dimensions'),
-                'needs_custom_design': temp_item.needs_custom_design,
-                'custom_design_price': temp_item.custom_design_price,
-                'estimated_unit_price': temp_item.calculate_service_price(),
-                'estimated_total_price': estimated_price
-            }
-            
+        except Order.DoesNotExist:
             return Response({
-                'success': True,
-                'cart_item': cart_item_data,
-                'message': 'Item added to cart successfully'
-            }, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                'error': 'Pedido no encontrado. Por favor, verifique su número de pedido y dirección de email.'
+            }, status=status.HTTP_404_NOT_FOUND)
 
-class CalculateCartTotalView(APIView):
 
-    #* Post method to calculate cart total
-    def post(self, request):
-        cart_items = request.data.get('cart_items', [])
-        
-        total_estimated = 0
-        total_items = 0
-        
-        #* Iterate through each cart item
-        for item in cart_items:
-            try:
-                service = TypeService.objects.get(id=item['service_id'], active=True)
-                quantity = item.get('quantity', 1)
-                
-                #* Create temporary item for calculations
-                temp_item = OrderItem(
-                    service=service,
-                    quantity=quantity,
-                    length_dimensions=item.get('length_dimensions'),
-                    width_dimensions=item.get('width_dimensions'), 
-                    height_dimensions=item.get('height_dimensions'),
-                    needs_custom_design=item.get('needs_custom_design', False),
-                    custom_design_price=item.get('custom_design_price'),
-                )
-                
-                #* Calculate item price
-                item_total = temp_item.calculate_service_price() * quantity
-                
-                #* Add custom design price if applicable
-                if temp_item.needs_custom_design and temp_item.custom_design_price:
-                    item_total += float(temp_item.custom_design_price)
-                
-                total_estimated += item_total
-                total_items += quantity
-                
-            except (TypeService.DoesNotExist, KeyError, ValueError):
-                continue
-        
-        return Response({
-            'total_estimated_price': total_estimated,
-            'total_items': total_items,
-            'formatted_price': f"${total_estimated:,.2f} MXN",
-            'breakdown': {
-                'subtotal': total_estimated / 1.08,
-                'tax': total_estimated - (total_estimated / 1.08),
-                'total': total_estimated
-            }
-        }, status=status.HTTP_200_OK)
+#? <|--------------Admin Views (Staff/Admin Only)--------------|>
 
-#? <|-------------------Contact Form View------------------|>
-class ContactFormView(APIView):
+class AdminOrderListView(generics.ListAPIView):
+    """
+    Admin endpoint to list all orders
+    Requires: Staff or admin permissions
+    Used by: Admin dashboard, Order management
+    """
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
     
-    #* Post method to handle contact form submissions 
-    def post(self, request):
-        serializer = ContactFormSerializer(data=request.data)
+    def get_queryset(self):
+        #* Only allow staff and admin users
+        if not (self.request.user.is_staff or 
+                self.request.user.user_type in ['admin', 'staff']):
+            return Order.objects.none()  #* Return empty queryset
         
-        if serializer.is_valid():
-            data = serializer.validated_data
-            
-            #* Prepare email content
-            subject = f"Contact Form: {data['subject']}"
-            message = f"""
-                        Envío de formulario de contacto del sitio web:
-                        
-                        Nombre: {data['name']}
-                        Correo: {data['email']}
-                        Teléfono: {data.get('phone', 'No proporcionado')}
-                        
-                        Asunto: {data['subject']}
-                        
-                        Mensaje:
-                        {data['message']}
-                        
-                        ---
-                        Enviado desde el formulario de contacto del sitio web de AGAH Solutions
-                        """
-            
-            try:
-                send_mail(
-                    subject=subject,
-                    message=message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.CONTACT_EMAIL],
-                    fail_silently=False,
-                )
-                
-                return Response(
-                    {'message': 'Mensaje enviado exitosamente, te contactaremos pronto!.'}, 
-                    status=status.HTTP_200_OK
-                )
-                
-            except Exception as e:
-                return Response(
-                    {'error': 'Error al Mandar Correo, intentalo mas tarde.'}, 
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Order.objects.all()
 
+
+class AdminOrderDetailView(generics.RetrieveUpdateAPIView):
+    """
+    Admin endpoint to view and update specific orders
+    Requires: Staff or admin permissions
+    Used by: Admin order management, Status updates
+    """
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    
+    def get_queryset(self):
+        #* Only allow staff and admin users
+        if not (self.request.user.is_staff or 
+                self.request.user.user_type in ['admin', 'staff']):
+            return Order.objects.none()  #* Return empty queryset
+        
+        return Order.objects.all()
+    
+    def perform_update(self, serializer):
+        #* Track who updated the order
+        serializer.save(assigned_user=self.request.user)
+        
+        #* Send status update email if state changed
+        if 'state' in serializer.validated_data:
+            order = serializer.instance
+            try:
+                self.send_status_update_email(order)
+            except Exception as e:
+                print(f"Failed to send status update email: {e}")
+    
+    def send_status_update_email(self, order):
+        """Send order status update email to customer"""
+        status_messages = {
+            'pending': 'Su pedido está siendo revisado por nuestro equipo.',
+            'estimated': 'Hemos preparado una cotización para su pedido. Por favor, revise y confirme.',
+            'confirmed': 'Su pedido ha sido confirmado y comenzará la producción pronto.',
+            'in_progress': 'Su pedido está actualmente en producción.',
+            'completed': 'Su pedido ha sido completado y está listo para retiro/entrega.',
+            'canceled': 'Su pedido ha sido cancelado. Por favor, contáctenos para más información.'
+        }
+        
+        subject = f"Order Update - {order.order_number}"
+        status_message = status_messages.get(order.state, 'El estado de su pedido ha sido actualizado.')
+        
+        message = f"""
+        Hola {order.customer_name},
+        
+        El estado de su pedido ha sido actualizado:
+        
+        Número de Pedido: {order.order_number}
+        Estado Actual: {order.get_state_display()}
+        
+        {status_message}
+        
+        Puede rastrear su pedido en cualquier momento usando su número de pedido en nuestro sitio web.
+        
+        Si tiene alguna pregunta, no dude en contactarnos.
+        
+        Saludos cordiales,
+        Equipo de AGAH Solutions
+        """
+        
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[order.customer_email],
+            fail_silently=False,
+        )

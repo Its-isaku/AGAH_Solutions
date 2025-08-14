@@ -31,27 +31,35 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+#? <|--------------Applications--------------|>
+
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',                                               #* Django REST Framework
-    'corsheaders',                                                  #* CORS Headers
-    'services',                                                     #* Custom app for services
+    'django.contrib.admin',                                                        #* Django admin interface
+    'django.contrib.auth',                                                         #* Django authentication framework
+    'django.contrib.contenttypes',                                                 #* Django content types framework
+    'django.contrib.sessions',                                                     #* Django session framework
+    'django.contrib.messages',                                                     #* Django messaging framework
+    'django.contrib.staticfiles',                                                  #* Django static files handling
+    
+    #* Third-party packages
+    'rest_framework',                                                              #* Django REST Framework for API development
+    'rest_framework.authtoken',                                                    #* Token authentication for DRF
+    'corsheaders',                                                                 #* CORS headers for React frontend integration
+    
+    #* Custom applications
+    'services',                                                                    #* AGAH Solutions services app (orders, services, company config)
+    'auth',                                                                        #* Custom authentication app (users, tokens, verification)
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware', 
-    'corsheaders.middleware.CorsMiddleware',                        #* CORS Middleware
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',                               #* Security-related middleware
+    'corsheaders.middleware.CorsMiddleware',                                       #* CORS middleware (must be high in the list)
+    'django.contrib.sessions.middleware.SessionMiddleware',                        #* Session middleware
+    'django.middleware.common.CommonMiddleware',                                   #* Common middleware for URL rewriting, etc.
+    'django.middleware.csrf.CsrfViewMiddleware',                                   #* CSRF protection middleware
+    'django.contrib.auth.middleware.AuthenticationMiddleware',                     #* Authentication middleware
+    'django.contrib.messages.middleware.MessageMiddleware',                        #* Messages middleware
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',                      #* Clickjacking protection
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -119,31 +127,59 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+#? <|--------------Custom User Model--------------|
+AUTH_USER_MODEL = 'custom_auth.User'                                #* Use custom user model from auth app with custom_auth label
+
+
 #? <|--------------Django REST Framework Configuration--------------|>
+
 REST_FRAMEWORK = {
+    #* Authentication Classes (in order of priority)
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',        #* For admin/browsable API
+        'rest_framework.authentication.TokenAuthentication',                       #* Token-based authentication for API
+        'rest_framework.authentication.SessionAuthentication',                     #* Session-based auth for admin/browsable API
     ],
+    
+    #* Default Permission Classes
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',                        #* Allow public access to APIs
+        'rest_framework.permissions.AllowAny',                                     #* Allow public access by default (views override as needed)
     ],
+    
+    #* Response Rendering Classes
     'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',                      #* JSON responses
-        'rest_framework.renderers.BrowsableAPIRenderer',              #* Browsable API for development
+        'rest_framework.renderers.JSONRenderer',                                   #* JSON responses for production
+        'rest_framework.renderers.BrowsableAPIRenderer',                           #* HTML interface for development
     ],
+    
+    #* Pagination Configuration
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,                                                  #* 20 items per page
+    'PAGE_SIZE': 20,                                                               #* 20 items per page for list endpoints
+    
+    #* Filtering and Search
     'DEFAULT_FILTER_BACKENDS': [
-        'rest_framework.filters.SearchFilter',                        #* Search functionality
-        'rest_framework.filters.OrderingFilter',                      #* Ordering functionality
+        'rest_framework.filters.SearchFilter',                                     #* Enable search functionality
+        'rest_framework.filters.OrderingFilter',                                   #* Enable ordering functionality
     ],
+    
+    #* API Throttling (Rate Limiting)
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',                              #* Rate limiting for anonymous users
+        'rest_framework.throttling.UserRateThrottle'                               #* Rate limiting for authenticated users
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',                                                        #* Anonymous users: 100 requests per hour
+        'user': '1000/hour',                                                       #* Authenticated users: 1000 requests per hour
+    }
 }
 
+
 #? <|--------------CORS Configuration for React Frontend--------------|>
+#* Allowed Origins for CORS requests
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",                                          #* React development server
-    "http://127.0.0.1:3000",                                          #* Alternative React URL
-    "http://localhost:3001",                                          #* Alternative React port
+    "http://localhost:3000",                                                       #* React development server (default port)
+    "http://127.0.0.1:3000",                                                       #* Alternative React development URL
+    "http://localhost:3001",                                                       #* Alternative React development port
+    "http://localhost:5173",                                                       #* Vite development server (if using Vite)
 ]
 
 #* Headers that React can send
@@ -184,6 +220,21 @@ EMAIL_HOST_PASSWORD = 'your-app-password'                            #* AGAH Sol
 DEFAULT_FROM_EMAIL = 'AGAH Solutions <your-email@gmail.com>'         #* Sender name and email
 CONTACT_EMAIL = 'your-business-email@gmail.com'                      #* Where contact forms are sent
 
+#* Frontend URL for email links
+FRONTEND_URL = 'http://localhost:3000'                              #* React frontend URL for verification/reset links
+
+#* Email Templates Configuration
+EMAIL_TIMEOUT = 30  
+
+
+#? <|--------------Frontend Integration Configuration--------------|>
+
+#* Frontend URL for email links and redirects
+FRONTEND_URL = 'http://localhost:3000'                                            #* React frontend URL (used in email templates)
+
+#* API Base URL (for frontend configuration)
+API_BASE_URL = 'http://localhost:8000'                                            #* Django backend URL
+
 
 #? <|--------------Media Files Configuration--------------|>
 
@@ -207,6 +258,62 @@ ALLOWED_UPLOAD_EXTENSIONS = [
     '.jpg', '.jpeg', '.png', '.gif',                                 #* Image files
     '.zip', '.rar',                                                  #* Compressed files
 ]
+
+
+#? <|--------------Logging Configuration--------------|>
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'auth': {                                                                  #* Logging for auth app
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'services': {                                                              #* Logging for services app
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+#* Ensure logs directory exists
+os.makedirs(BASE_DIR / 'logs', exist_ok=True)
+
 
 #! Investigar BIEN que hace esto  
 
