@@ -87,3 +87,10 @@ INFO 2025-08-14 16:53:53,745 basehttp 23916 27828 "GET /static/admin/js/inlines.
 INFO 2025-08-14 16:53:53,779 basehttp 23916 27828 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
 INFO 2025-08-14 16:53:53,798 basehttp 23916 27828 "GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
 INFO 2025-08-14 16:54:15,334 basehttp 23916 27828 "GET /static/admin/img/inline-delete.svg HTTP/1.1" 200 537
+INFO 2025-08-14 16:58:14,279 autoreload 25284 20260 Watching for file changes with StatReloader
+INFO 2025-08-14 16:58:44,426 autoreload 23180 18096 Watching for file changes with StatReloader
+WARNING 2025-08-14 16:58:46,316 log 23180 17844 Not Found: /
+WARNING 2025-08-14 16:58:46,317 basehttp 23180 17844 "GET / HTTP/1.1" 404 5096
+INFO 2025-08-14 16:58:49,687 basehttp 23180 17844 "GET /admin/ HTTP/1.1" 200 12456
+INFO 2025-08-14 16:58:52,918 basehttp 23180 17844 "GET /admin/services/typeservice/ HTTP/1.1" 200 13908
+INFO 2025-08-14 16:58:53,009 basehttp 23180 17844 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
