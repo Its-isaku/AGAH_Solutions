@@ -37,10 +37,8 @@ function HomePage() {
 
             if(result.success) {
                 setHomepageData(result.data)
-                console.log('Homepage data loaded successfully:', result.data);
             } else {
                 setError(result.error || '');
-                console.log('Error loading homepage data:', result.error);
             }
         } catch (err) {
             setError('Server Connection Error');

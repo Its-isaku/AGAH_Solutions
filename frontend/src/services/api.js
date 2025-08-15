@@ -53,14 +53,8 @@ class HomepageAPI {
     //* Get homepage data (featured services, stats, company info)
     async getHomepageData() {
         try {
-            console.log('Making request to:', `${this.baseURL}/homepage/`);
             const response = await this.api.get('/homepage/');
-            
-            console.log('Raw response:', response);
-            console.log('Response data:', response.data);
-            console.log('Response status:', response.status);
-            
-            // Check if response is successful
+
             if (response.status === 200 && response.data) {
                 return {
                     success: true,

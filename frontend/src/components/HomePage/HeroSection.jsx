@@ -150,9 +150,6 @@ function HeroSection({heroData}) {
                                     onError={(e) => {
                                         console.warn(`Failed to load image for ${service.title}:`, e.target.src);
                                     }}
-                                    onLoad={() => {
-                                        console.log(`Image loaded successfully for ${service.title}`);
-                                    }}
                                 />
                             </div>
                         </Card>

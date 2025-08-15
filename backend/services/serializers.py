@@ -23,7 +23,8 @@ class TypeServiceSerializer(serializers.ModelSerializer):
             'principal_image',
             'active',
             'order_display',
-            'is_base_service'
+            'is_base_service',
+            'is_featured'
         ]
         read_only_fields = [
             'id',
