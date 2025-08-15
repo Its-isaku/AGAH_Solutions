@@ -38,15 +38,54 @@ class BaseAPI {
 
 
 //? <|------------------Home Page APIs------------------|>
-class HomepageAPI extends BaseAPI {
+class HomepageAPI {
+    constructor() {
+        this.baseURL = 'http://localhost:8000/api';
+        this.api = axios.create({ 
+            baseURL: this.baseURL,
+            timeout: 10000,  // 10 second timeout
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+    }
 
-    //* Function to get homepage data
+    //* Get homepage data (featured services, stats, company info)
     async getHomepageData() {
         try {
-            const response = await this.api.get('/api/homepage/');
-            return response.data;
+            console.log('Making request to:', `${this.baseURL}/homepage/`);
+            const response = await this.api.get('/homepage/');
+            
+            console.log('Raw response:', response);
+            console.log('Response data:', response.data);
+            console.log('Response status:', response.status);
+            
+            // Check if response is successful
+            if (response.status === 200 && response.data) {
+                return {
+                    success: true,
+                    data: response.data
+                };
+            } else {
+                console.warn('Unexpected response format:', response);
+                return {
+                    success: false,
+                    error: 'Formato de respuesta inesperado'
+                };
+            }
         } catch (error) {
-            this.handleError(error, 'Failed to load homepage data');
+            console.error('Homepage API Error:', error);
+            console.error('Error details:', {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+                config: error.config
+            });
+            
+            return {
+                success: false,
+                error: error.response?.data?.message || error.message || 'Error al cargar datos del homepage'
+            };
         }
     }
 }
@@ -97,7 +136,7 @@ class ServicesAPI extends BaseAPI {
 }
 
 //? <|-------------------About Us APIs------------------|>
-export class AboutUsAPI {
+class AboutUsAPI extends BaseAPI{
 
     //* Class to get About Us information
     async getAboutInfo() {
@@ -111,6 +150,16 @@ export class AboutUsAPI {
             };
         } catch (error) {
             this.handleError(error, 'Failed to load about information');
+        }
+    }
+
+    //* Function to get company information
+    async getCompanyInfo() {
+        try {
+            const response = await this.api.get('/api/company/');
+            return response.data;
+        } catch (error) {
+            this.handleError(error, 'Failed to load company information');
         }
     }
 }
@@ -128,15 +177,6 @@ class ContactAPI extends BaseAPI {
         }
     }
 
-    //* Function to get company information
-    async getCompanyInfo() {
-        try {
-            const response = await this.api.get('/api/company/');
-            return response.data;
-        } catch (error) {
-            this.handleError(error, 'Failed to load company information');
-        }
-    }
 
     //* Function to get contact information
     async getContactInfo() {

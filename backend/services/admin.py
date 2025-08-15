@@ -8,24 +8,12 @@ from .models import TypeService, Order, OrderItem, CompanyConfiguration         
 
 #? <|--------------Custom Form for Type Service Admin--------------|>
 class TypeServiceForm(ModelForm):
-    """
-    Custom form for TypeService admin
-    Purpose: Simplify the add form to only show name field for new services
-    """
-    """
-    Custom form for TypeService admin
-    Purpose: Simplify the add form to only show name field for new services
-    """
+
     class Meta:
         model = TypeService                                                         #* Which model this form is for
         fields = '__all__'                                                          #* Include all fields
     
     def __init__(self, *args, **kwargs):
-        """
-        Initialize the form with custom behavior
-        - For new services: Only focus on name field
-        - Auto-generate type from name
-        """
         super().__init__(*args, **kwargs)
         if not self.instance.pk:                                                    #* Only for new objects (no primary key yet)
             #* For new services, only show name and type fields
@@ -38,27 +26,20 @@ class TypeServiceForm(ModelForm):
 #? <|--------------Type Service Admin Configuration--------------|>
 @admin.register(TypeService)                                                       #* Register TypeService model with admin
 class TypeServiceAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for TypeService model
-    Features:
-    - Simplified form for adding new services (only name required)
-    - Visual status indicators with colors
-    - Mass actions for activate/deactivate
-    - Auto-generation of type and order_display
-    """
+    
     form = TypeServiceForm                                                          #* Use custom form defined above
     
     #* Fields to display in the list view (like columns in a table)
-    list_display = ['name', 'type', 'active_display', 'order_display', 'get_price_display', 'is_base_service', 'active']
+    list_display = ['name', 'type', 'active_display', 'order_display', 'is_base_service', 'active', 'is_featured']
     
     #* Filters that appear on the right side of the list view
-    list_filter = ['active', 'is_base_service', 'type']                            #* Filter by active status, base service, and type
+    list_filter = ['active', 'is_base_service', 'type', 'is_featured']                            #* Filter by active status, base service, and type
     
     #* Fields that can be searched from the search box
     search_fields = ['name', 'type', 'description']                                #* Search by name, type, or description
     
     #* Fields that can be edited directly in the list view (without opening detail)
-    list_editable = ['active']                                                      #* Can toggle active status from list
+    list_editable = ['active', 'is_featured']                                                      #* Can toggle active status from list
     
     #* Fields that cannot be edited (read-only)
     readonly_fields = ['type', 'order_display']                                    #* Auto-generated fields
@@ -72,7 +53,7 @@ class TypeServiceAdmin(admin.ModelAdmin):
             'fields': ('description', 'short_description', 'principal_image')
         }),
         ('Pricing & Display', {                                                     #* Third section: Pricing and display
-            'fields': ('base_price', 'active', 'order_display', 'is_base_service')
+            'fields': ('base_price', 'active', 'is_featured', 'order_display', 'is_base_service')
         }),
     )
     
@@ -86,20 +67,11 @@ class TypeServiceAdmin(admin.ModelAdmin):
     )
     
     def get_fieldsets(self, request, obj=None):
-        """
-        Choose which fieldsets to use based on whether we're adding or editing
-        - Adding new: Use simplified add_fieldsets
-        - Editing existing: Use full fieldsets
-        """
         if not obj:                                                                 #* Adding new object
             return self.add_fieldsets
         return super().get_fieldsets(request, obj)                                  #* Editing existing object
     
     def active_display(self, obj):
-        """
-        Custom display method for active status with colors and icons
-        Returns: HTML with colored text and checkmark/X icon
-        """
         if obj.active:
             return format_html('<span style="color: green; font-weight: bold;">✓ Active</span>')
         else:
@@ -108,34 +80,31 @@ class TypeServiceAdmin(admin.ModelAdmin):
     active_display.admin_order_field = 'active'                                    #* Allow sorting by this field
     
     #* Custom mass actions that appear in the dropdown above the list
-    actions = ['activate_services', 'deactivate_services']
+    actions = ['activate_services', 'deactivate_services', 'mark_as_featured', 'mark_as_not_featured']
     
     def activate_services(self, request, queryset):
-        """
-        Mass action to activate selected services
-        Updates all selected services to active=True
-        """
         updated = queryset.update(active=True)                                      #* Update all selected objects
         self.message_user(request, f'{updated} services activated.')               #* Show success message
     activate_services.short_description = 'Activate selected services'            #* Text shown in dropdown
     
     def deactivate_services(self, request, queryset):
-        """
-        Mass action to deactivate selected services
-        Updates all selected services to active=False
-        """
         updated = queryset.update(active=False)                                     #* Update all selected objects
         self.message_user(request, f'{updated} services deactivated.')             #* Show success message
     deactivate_services.short_description = 'Deactivate selected services'        #* Text shown in dropdown
+    
+    def mark_as_featured(self, request, queryset):
+        updated = queryset.update(is_featured=True)                                 #* Mark as featured
+        self.message_user(request, f'{updated} services marked as featured.')      #* Show success message
+    mark_as_featured.short_description = 'Mark as featured services'              #* Text shown in dropdown
+    
+    def mark_as_not_featured(self, request, queryset):
+        updated = queryset.update(is_featured=False)                                #* Remove from featured
+        self.message_user(request, f'{updated} services removed from featured.')   #* Show success message
+    mark_as_not_featured.short_description = 'Remove from featured'               #* Text shown in dropdown
 
 
 #? <|--------------Order Item Inline Admin--------------|>
 class OrderItemInline(admin.TabularInline):
-    """
-    Inline admin for OrderItem within Order admin
-    Purpose: Allow editing order items directly from the order detail page
-    Layout: Tabular (table-like) instead of stacked (form-like)
-    """
     model = OrderItem                                                               #* Model to inline
     extra = 0                                                                       #* Number of empty forms to show
     
@@ -154,15 +123,6 @@ class OrderItemInline(admin.TabularInline):
 #? <|--------------Order Admin Configuration--------------|>
 @admin.register(Order)                                                             #* Register Order model with admin
 class OrderAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for Order model
-    Features:
-    - Inline editing of order items
-    - Color-coded status display
-    - User type indicators
-    - Calculated totals display
-    - Mass status change actions
-    """
     inlines = [OrderItemInline]                                                     #* Include OrderItem inline
     
     #* Fields to display in the list view
@@ -213,10 +173,6 @@ class OrderAdmin(admin.ModelAdmin):
     )
     
     def user_display(self, obj):
-        """
-        Custom display for user field with icons and colors
-        Shows: 👤 for registered users, 👥 for guest orders
-        """
         if obj.user:
             return format_html(
                 '<span style="color: blue;">👤 {}</span>',                         #* Blue icon for registered users
@@ -228,10 +184,6 @@ class OrderAdmin(admin.ModelAdmin):
     user_display.admin_order_field = 'user'                                        #* Allow sorting
     
     def state_display(self, obj):
-        """
-        Custom display for order state with color-coded badges
-        Each state has its own color for quick visual identification
-        """
         colors = {
             'pending': 'orange',                                                    #* Orange for pending
             'estimated': 'blue',                                                    #* Blue for estimated
@@ -250,26 +202,15 @@ class OrderAdmin(admin.ModelAdmin):
     state_display.admin_order_field = 'state'                                      #* Allow sorting
     
     def get_total_items(self, obj):
-        """
-        Calculate and display total number of items in the order
-        """
         return obj.items.count()                                                    #* Count related OrderItems
     get_total_items.short_description = 'Items'                                    #* Column header
     
     def get_estimated_total(self, obj):
-        """
-        Calculate and display total estimated price for all items
-        Includes custom design prices if applicable
-        """
         total = sum(item.get_estimated_total_with_design() for item in obj.items.all())
         return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
     get_estimated_total.short_description = 'Estimated Total'                      #* Column header
     
     def get_final_total(self, obj):
-        """
-        Calculate and display total final price for all items
-        Includes custom design prices if applicable
-        """
         total = sum(item.get_final_total_with_design() for item in obj.items.all())
         return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
     get_final_total.short_description = 'Final Total'                              #* Column header
@@ -278,25 +219,21 @@ class OrderAdmin(admin.ModelAdmin):
     actions = ['mark_as_estimated', 'mark_as_confirmed', 'mark_as_in_progress', 'mark_as_completed']
     
     def mark_as_estimated(self, request, queryset):
-        """Mass action to mark orders as estimated"""
         updated = queryset.update(state='estimated')
         self.message_user(request, f'{updated} orders marked as estimated.')
     mark_as_estimated.short_description = 'Mark as Estimated'
     
     def mark_as_confirmed(self, request, queryset):
-        """Mass action to mark orders as confirmed"""
         updated = queryset.update(state='confirmed')
         self.message_user(request, f'{updated} orders marked as confirmed.')
     mark_as_confirmed.short_description = 'Mark as Confirmed'
     
     def mark_as_in_progress(self, request, queryset):
-        """Mass action to mark orders as in progress"""
         updated = queryset.update(state='in_progress')
         self.message_user(request, f'{updated} orders marked as in progress.')
     mark_as_in_progress.short_description = 'Mark as In Progress'
     
     def mark_as_completed(self, request, queryset):
-        """Mass action to mark orders as completed"""
         updated = queryset.update(state='completed')
         self.message_user(request, f'{updated} orders marked as completed.')
     mark_as_completed.short_description = 'Mark as Completed'
@@ -305,14 +242,6 @@ class OrderAdmin(admin.ModelAdmin):
 #? <|--------------Order Item Admin Configuration--------------|>
 @admin.register(OrderItem)                                                         #* Register OrderItem model with admin
 class OrderItemAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for OrderItem model
-    Features:
-    - Link to parent order
-    - Dimensions display formatting
-    - Collapsible calculation sections for each service type
-    - Price calculations display
-    """
     
     #* Fields to display in the list view
     list_display = [
@@ -373,10 +302,6 @@ class OrderItemAdmin(admin.ModelAdmin):
     )
     
     def order_link(self, obj):
-        """
-        Create a clickable link to the parent order
-        Allows easy navigation from item to order
-        """
         return format_html(
             '<a href="/admin/services/order/{}/change/">{}</a>',                    #* Create HTML link
             obj.order.id, obj.order.order_number
@@ -385,10 +310,6 @@ class OrderItemAdmin(admin.ModelAdmin):
     order_link.admin_order_field = 'order'                                         #* Allow sorting
     
     def dimensions_display(self, obj):
-        """
-        Format dimensions for better readability
-        Shows: Length × Width × Height in inches
-        """
         if obj.length_dimensions and obj.width_dimensions:
             dims = f"{obj.length_dimensions} × {obj.width_dimensions}"              #* Length × Width
             if obj.height_dimensions:
@@ -398,72 +319,65 @@ class OrderItemAdmin(admin.ModelAdmin):
     dimensions_display.short_description = 'Dimensions'                            #* Column header
     
     def get_total_display(self, obj):
-        """
-        Display total price for this item (including design if applicable)
-        Shows final price with proper formatting
-        """
         total = obj.get_final_total_with_design()                                   #* Get total including design
         return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
     get_total_display.short_description = 'Total Price'                            #* Column header
 
 
 #? <|--------------Company Configuration Admin--------------|>
-@admin.register(CompanyConfiguration)                                              #* Register CompanyConfiguration model
+
+@admin.register(CompanyConfiguration)
 class CompanyConfigurationAdmin(admin.ModelAdmin):
-    """
-    Admin configuration for CompanyConfiguration model
-    Features:
-    - Only one instance allowed (singleton pattern)
-    - Cannot be deleted (protection)
-    - Organized fieldsets for easy editing
-    """
     
     #* Fields to display in the list view
-    list_display = ['company_name', 'contact_email', 'company_phone', 'company_time_response_hours']
+    list_display = [
+        'company_name', 
+        'company_tagline',                                                          #* Show tagline in list
+        'company_phone', 
+        'contact_email',
+        'updated_at'
+    ]
     
-    #* Organization of fields in the detail form
+    #* Fields organization in the form
     fieldsets = (
-        ('Basic Information', {                                                     #* Company contact info
-            'fields': ('company_name', 'contact_email', 'company_phone', 'company_address')
+        ('Información Básica de la Empresa', {
+            'fields': ('company_name', 'company_tagline')                          #* Company name and tagline
         }),
-        ('About Company', {                                                         #* Company description
-            'fields': ('about_us', 'company_mission', 'company_vision')
+        ('Información de Contacto', {
+            'fields': ('contact_email', 'company_phone', 'company_address')        #* Contact information
         }),
-        ('Business Configuration', {                                                #* Business settings
-            'fields': ('company_time_response_hours',)
+        ('Acerca de la Empresa', {
+            'fields': ('about_us', 'company_mission', 'company_vision')            #* About company
+        }),
+        ('Configuración de Servicio', {
+            'fields': ('company_time_response_hours',)                             #* Service settings
+        }),
+        ('Metadatos', {
+            'fields': ('created_at', 'updated_at'),                                #* Timestamps
+            'classes': ('collapse',)                                               #* Collapsible section
         }),
     )
     
+    #* Read-only fields
+    readonly_fields = ['created_at', 'updated_at']                                 #* Timestamps are read-only
+    
+    #* Search functionality
+    search_fields = ['company_name', 'company_tagline', 'contact_email']           #* Search by these fields
+    
     def has_add_permission(self, request):
-        """
-        Only allow one company configuration to exist
-        Prevents creating multiple company configurations
-        """
-        return not CompanyConfiguration.objects.exists()                           #* Only allow if none exists
+        #* Only allow one company configuration
+        if CompanyConfiguration.objects.exists():
+            return False
+        return True                                                                 #* Allow adding if none exists
     
     def has_delete_permission(self, request, obj=None):
-        """
-        Don't allow deletion of company configuration
-        Protects essential company data
-        """
-        return False                                                                #* Never allow deletion
+        #* Prevent deletion of company configuration
+        return False   
 
 
 #? <|--------------Custom Admin Actions & Utilities--------------|>
 
 def create_base_services():
-    """
-    Function to create the 5 base services automatically
-    Purpose: Initialize the system with the main services AGAH offers
-    Usage: Run this in Django shell after setting up the database
-    
-    Services created:
-    1. Plasma Cutting
-    2. Laser Engraving  
-    3. Laser Cutting
-    4. 3D Printing
-    5. Resin Printing
-    """
     
     base_services_data = [
         {

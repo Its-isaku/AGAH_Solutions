@@ -1,190 +1,330 @@
-/*? <|----------------- Intro Section -----------------|> */
-.intro_section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: space-between;
-    align-items: center;
-    height: 64vh;
-    position: relative;
-    overflow: hidden;
-}
-
-.welcome_text{
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.welcome_text h1 {
-    font-size: 4rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.welcome_text h2 {
-    font-size: 3rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.company_name {
-    color: #4A90E2;
-}
-
-.carrusel_display_container {
-    display: none;
-}
-
-.card_display_container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    position: relative;
-    z-index: 1;
-    padding-top: 200px;
-    padding-left: 200px;    
-}
-
-.card_title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 0.3rem;
-    border-bottom: 2px solid #F4E7E1;
-    padding: .3rem 0;
-    position: relative;
-    z-index: 0;
-}
-
-.card_photo {
-    width: 100%;
-    height: calc(100% - 60px);
-    overflow: hidden;
-    border-radius: 8px;
-    margin-top: 5px;
-    position: relative;
-    z-index: 0;
-}
-
-.card_photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.placeholder_image {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #4A90E2, #2c5aa0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 500;
-}
-
-/** <|----------Media Intro Section ----------|> */
-@media (max-width: 1024px) {
-    .intro_section{
-        display: flex;
-        flex-direction: column;
-    }
-
-    .welcome_text h1 {
-        font-size: 5.5rem;
-    }
-
-    .welcome_text h2 {
-        font-size: 4rem;
-    }
-
-    .welcome_text {
-        font-size: 1.5rem;
-    }
-
-    .card_display_container{
-        display: none;
-    }
-
-    .carrusel_display_container {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        margin-top: 3rem;
-        padding: 0 1rem;
-        box-sizing: border-box;
-    }
-
-}
-
-@media (max-width: 768px) {
-    .welcome_text h1 {
-        font-size: 4rem;
-    }
-
-    .welcome_text h2 {
-        font-size: 3rem;
-    }
-
-    .welcome_text  {
-        font-size: 1rem;
-    }
-
-    .carrusel_display_container {
-        padding: 0 0.5rem;
-        margin-top: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    
-    
-    .intro_section {
-        height: 90vh;
-    }
-
-    .welcome_text h1 {
-        font-size: 2.5rem;
-    }
-
-    .welcome_text h2 {
-        font-size: 1.8rem;
-    }
-
-    .carrusel_display_container {
-        padding: 0 0.5rem;
-        margin-top: 0.2rem;
-    }
-}
+/* frontend/src/style/HomePage.css */
 
 /*? <|----------------- Info Section -----------------|> */
-/* .info_section {
+.info_section {
     position: relative;
     z-index: 10;
     height: 80vh;
-} */
+}
 
-/* .info_divider {
+.info_divider {
     height: 20px;
     background: linear-gradient(135deg, #4A90E2, #2c5aa0);
     margin: 0;
     position: relative;
     z-index: 10;
-} */
+}
 
-/*? <|----------------- Core Services Section -----------------|> */
-/* Styles to be added */
+/*? <|----------------- AGAH Carnet Section -----------------|> */
+.agah_carnet_section {
+    /* Estilos para la sección de Lanyard */
+    position: relative;
+    z-index: 10;
+    min-height: 60vh;
+    padding: 2rem 0;
+}
 
-/*? <|----------------- Contact Section -----------------|> */
-/* Styles to be added */
+/*? <|----------------- Featured Services Section -----------------|> */
+.featured_services_section {
+    /* Estilos para la sección About Us Preview */
+    position: relative;
+    z-index: 10;
+    min-height: 60vh;
+    padding: 2rem 0;
+}
+
+/*? <|----------------- Short Contact Section -----------------|> */
+.short_contact_section {
+    /* Estilos para la sección de contacto */
+    position: relative;
+    z-index: 10;
+    min-height: 40vh;
+    padding: 2rem 0;
+}
+
+/*? <|----------------- Services Preview (dentro de info_section) -----------------|> */
+.services-preview {
+    padding: 2rem;
+    text-align: center;
+}
+
+.services-preview h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.service-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.service-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.service-card p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.service-price {
+    font-weight: bold;
+    color: #4A90E2;
+    font-size: 1.1rem;
+}
+
+/*? <|----------------- About Preview (dentro de featured_services_section) -----------------|> */
+.about-preview {
+    padding: 2rem;
+    text-align: center;
+    background: #f8f9fa;
+}
+
+.about-preview h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.about-preview p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/*? <|----------------- Contact Preview (dentro de short_contact_section) -----------------|> */
+.contact-preview {
+    padding: 2rem;
+    text-align: center;
+    background: #4A90E2;
+    color: white;
+    border-radius: 12px;
+    margin: 0 2rem;
+}
+
+.contact-preview h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.contact-info {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.contact-info p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/*? <|----------------- Loading States (para la API) -----------------|> */
+.homepage-loading {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/*? <|----------------- Error Notification (para la API) -----------------|> */
+.error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #ff4444;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.error-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.error-content button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.error-content button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/*? <|----------------- Debug Info (para desarrollo) -----------------|> */
+.debug-info {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 1000;
+    font-family: monospace;
+}
+
+.debug-info div {
+    margin-bottom: 3px;
+}
+
+/*? <|----------------- Responsive Design -----------------|> */
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+    .info_section {
+        height: auto;
+        min-height: 60vh;
+        padding: 2rem 1rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .contact-preview {
+        margin: 0 1rem;
+    }
+}
+
+/* Mobile Large (768px and below) */
+@media (max-width: 768px) {
+    .info_section,
+    .agah_carnet_section,
+    .featured_services_section,
+    .short_contact_section {
+        height: auto;
+        min-height: auto;
+        padding: 1.5rem 0.5rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .services-preview,
+    .about-preview,
+    .contact-preview {
+        padding: 1.5rem;
+    }
+    
+    .services-preview h2,
+    .about-preview h2,
+    .contact-preview h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .contact-preview {
+        margin: 0 0.5rem;
+        border-radius: 8px;
+    }
+    
+    .contact-info p {
+        font-size: 1rem;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+}
+
+/* Mobile Small (480px and below) */
+@media (max-width: 480px) {
+    .info_section,
+    .agah_carnet_section,
+    .featured_services_section,
+    .short_contact_section {
+        padding: 1rem 0.25rem;
+    }
+    
+    .services-preview,
+    .about-preview,
+    .contact-preview {
+        padding: 1rem;
+    }
+    
+    .services-preview h2,
+    .about-preview h2,
+    .contact-preview h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .service-card {
+        padding: 1rem;
+    }
+    
+    .service-card h3 {
+        font-size: 1.1rem;
+    }
+    
+    .service-card p {
+        font-size: 0.9rem;
+    }
+    
+    .about-preview p {
+        font-size: 1rem;
+    }
+    
+    .contact-info p {
+        font-size: 0.9rem;
+    }
+}

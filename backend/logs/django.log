@@ -94,3 +94,231 @@ WARNING 2025-08-14 16:58:46,317 basehttp 23180 17844 "GET / HTTP/1.1" 404 5096
 INFO 2025-08-14 16:58:49,687 basehttp 23180 17844 "GET /admin/ HTTP/1.1" 200 12456
 INFO 2025-08-14 16:58:52,918 basehttp 23180 17844 "GET /admin/services/typeservice/ HTTP/1.1" 200 13908
 INFO 2025-08-14 16:58:53,009 basehttp 23180 17844 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:53:27,131 autoreload 30976 1908 Watching for file changes with StatReloader
+WARNING 2025-08-14 17:53:29,317 log 30976 31136 Not Found: /
+WARNING 2025-08-14 17:53:29,319 basehttp 30976 31136 "GET / HTTP/1.1" 404 5096
+INFO 2025-08-14 17:53:33,296 basehttp 30976 31136 "GET /admin/ HTTP/1.1" 200 12456
+INFO 2025-08-14 17:53:35,648 basehttp 30976 31136 "GET /admin/services/typeservice/ HTTP/1.1" 200 21112
+INFO 2025-08-14 17:53:35,738 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:53:39,483 basehttp 30976 31136 "GET /admin/services/typeservice/1/change/ HTTP/1.1" 200 20425
+INFO 2025-08-14 17:53:39,562 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:54:08,527 basehttp 30976 31136 "POST /admin/services/typeservice/1/change/ HTTP/1.1" 302 0
+INFO 2025-08-14 17:54:08,568 basehttp 30976 31136 "GET /admin/services/typeservice/ HTTP/1.1" 200 21336
+INFO 2025-08-14 17:54:08,650 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:54:15,674 basehttp 30976 31136 "GET /admin/services/typeservice/2/change/ HTTP/1.1" 200 20438
+INFO 2025-08-14 17:54:15,738 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:54:24,657 basehttp 30976 31136 "POST /admin/services/typeservice/2/change/ HTTP/1.1" 302 0
+INFO 2025-08-14 17:54:24,694 basehttp 30976 31136 "GET /admin/services/typeservice/ HTTP/1.1" 200 21337
+INFO 2025-08-14 17:54:24,783 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:54:30,281 basehttp 30976 31136 "GET /admin/services/typeservice/4/change/ HTTP/1.1" 200 20419
+INFO 2025-08-14 17:54:30,355 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 17:54:38,093 basehttp 30976 31136 "POST /admin/services/typeservice/4/change/ HTTP/1.1" 302 0
+INFO 2025-08-14 17:54:38,131 basehttp 30976 31136 "GET /admin/services/typeservice/ HTTP/1.1" 200 21333
+INFO 2025-08-14 17:54:38,210 basehttp 30976 31136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:00:41,172 basehttp 30976 8136 "GET /admin/services/typeservice/3/change/ HTTP/1.1" 200 20424
+INFO 2025-08-14 18:00:41,300 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:00:50,991 basehttp 30976 8136 "POST /admin/services/typeservice/3/change/ HTTP/1.1" 302 0
+INFO 2025-08-14 18:00:51,025 basehttp 30976 8136 "GET /admin/services/typeservice/ HTTP/1.1" 200 21335
+INFO 2025-08-14 18:00:51,156 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:00:52,812 basehttp 30976 8136 "GET /admin/services/typeservice/5/change/ HTTP/1.1" 200 20432
+INFO 2025-08-14 18:00:52,891 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:01:16,764 basehttp 30976 8136 "POST /admin/services/typeservice/5/change/ HTTP/1.1" 302 0
+INFO 2025-08-14 18:01:16,801 basehttp 30976 8136 "GET /admin/services/typeservice/ HTTP/1.1" 200 21336
+INFO 2025-08-14 18:01:16,883 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:01:26,082 basehttp 30976 8136 "GET /admin/services/companyconfiguration/ HTTP/1.1" 200 11995
+INFO 2025-08-14 18:01:27,307 basehttp 30976 8136 "GET /admin/services/companyconfiguration/add/ HTTP/1.1" 200 20114
+INFO 2025-08-14 18:01:27,379 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:03:38,286 basehttp 30976 8136 "POST /admin/services/companyconfiguration/add/ HTTP/1.1" 302 0
+INFO 2025-08-14 18:03:38,314 basehttp 30976 8136 "GET /admin/services/companyconfiguration/ HTTP/1.1" 200 13006
+INFO 2025-08-14 18:03:59,681 basehttp 30976 8136 "GET /admin/services/typeservice/ HTTP/1.1" 200 20988
+INFO 2025-08-14 18:03:59,777 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 18:04:06,486 basehttp 30976 8136 "GET /admin/authtoken/tokenproxy/ HTTP/1.1" 200 12216
+INFO 2025-08-14 18:06:44,381 basehttp 30976 8136 "GET /admin/authtoken/tokenproxy/ HTTP/1.1" 200 12216
+INFO 2025-08-14 18:06:49,663 basehttp 30976 8136 "GET /admin/services/companyconfiguration/ HTTP/1.1" 200 12769
+INFO 2025-08-14 18:06:52,896 basehttp 30976 8136 "GET /admin/services/companyconfiguration/1/change/ HTTP/1.1" 200 22292
+INFO 2025-08-14 18:06:52,982 basehttp 30976 8136 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-08-14 19:26:04,615 log 30976 29956 Not Found: /api/homepage/
+WARNING 2025-08-14 19:26:04,619 log 30976 31488 Not Found: /api/homepage/
+WARNING 2025-08-14 19:26:04,620 basehttp 30976 29956 "GET /api/homepage/ HTTP/1.1" 404 5153
+WARNING 2025-08-14 19:26:04,620 basehttp 30976 31488 "GET /api/homepage/ HTTP/1.1" 404 5153
+WARNING 2025-08-14 19:27:21,316 log 30976 31488 Not Found: /api/homepage/
+WARNING 2025-08-14 19:27:21,317 basehttp 30976 31488 "GET /api/homepage/ HTTP/1.1" 404 5153
+WARNING 2025-08-14 19:27:21,325 log 30976 29956 Not Found: /api/homepage/
+WARNING 2025-08-14 19:27:21,326 basehttp 30976 29956 "GET /api/homepage/ HTTP/1.1" 404 5153
+WARNING 2025-08-14 19:28:50,064 log 30976 29956 Not Found: /api/homepage/
+WARNING 2025-08-14 19:28:50,064 basehttp 30976 29956 "GET /api/homepage/ HTTP/1.1" 404 5153
+WARNING 2025-08-14 19:28:50,073 log 30976 31488 Not Found: /api/homepage/
+WARNING 2025-08-14 19:28:50,074 basehttp 30976 31488 "GET /api/homepage/ HTTP/1.1" 404 5153
+INFO 2025-08-14 19:30:47,888 autoreload 33784 22328 Watching for file changes with StatReloader
+INFO 2025-08-14 19:35:12,312 autoreload 33784 22328 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-14 19:35:13,385 autoreload 32904 32460 Watching for file changes with StatReloader
+INFO 2025-08-14 19:35:16,227 autoreload 32904 32460 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-14 19:35:17,314 autoreload 384 33448 Watching for file changes with StatReloader
+INFO 2025-08-14 19:35:21,010 autoreload 384 33448 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-14 19:35:21,988 autoreload 33788 29820 Watching for file changes with StatReloader
+INFO 2025-08-14 19:35:24,673 autoreload 33788 29820 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-14 19:35:25,764 autoreload 23912 32776 Watching for file changes with StatReloader
+INFO 2025-08-14 19:35:43,309 autoreload 23912 32776 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\urls.py changed, reloading.
+INFO 2025-08-14 19:35:44,568 autoreload 31152 32372 Watching for file changes with StatReloader
+INFO 2025-08-14 19:35:47,167 autoreload 31152 32372 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\urls.py changed, reloading.
+INFO 2025-08-14 19:35:48,226 autoreload 7152 30808 Watching for file changes with StatReloader
+INFO 2025-08-14 19:36:18,927 autoreload 6048 32876 Watching for file changes with StatReloader
+INFO 2025-08-14 19:36:25,058 basehttp 6048 30428 "GET /api/homepage/ HTTP/1.1" 200 5922
+INFO 2025-08-14 19:36:25,351 basehttp 6048 30428 "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2025-08-14 19:36:25,358 basehttp 6048 23572 "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3426
+INFO 2025-08-14 19:36:25,370 basehttp 6048 33736 "GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+INFO 2025-08-14 19:36:25,373 basehttp 6048 9752 "GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+INFO 2025-08-14 19:36:25,400 basehttp 6048 30428 "GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1793
+INFO 2025-08-14 19:36:25,413 basehttp 6048 9752 "GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+INFO 2025-08-14 19:36:25,414 basehttp 6048 28800 "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3796
+INFO 2025-08-14 19:36:25,424 basehttp 6048 30428 "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 200 59
+INFO 2025-08-14 19:36:25,426 basehttp 6048 28800 "GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+INFO 2025-08-14 19:36:25,436 basehttp 6048 33736 "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+INFO 2025-08-14 19:36:25,443 basehttp 6048 23572 "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2025-08-14 19:36:25,486 basehttp 6048 28932 "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+WARNING 2025-08-14 19:36:25,734 log 6048 28932 Not Found: /favicon.ico
+WARNING 2025-08-14 19:36:25,734 basehttp 6048 28932 "GET /favicon.ico HTTP/1.1" 404 5415
+INFO 2025-08-14 19:36:29,804 basehttp 6048 26208 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 19:36:29,814 basehttp 6048 33036 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 19:39:06,667 basehttp 6048 32316 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 19:39:06,672 basehttp 6048 4008 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 19:39:30,998 basehttp 6048 4008 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 19:39:31,004 basehttp 6048 4008 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 19:40:12,227 basehttp 6048 28932 "GET /admin/services/typeservice/ HTTP/1.1" 200 20988
+INFO 2025-08-14 19:40:12,351 basehttp 6048 28932 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-08-14 19:40:12,686 log 6048 28932 Not Found: /favicon.ico
+WARNING 2025-08-14 19:40:12,687 basehttp 6048 28932 "GET /favicon.ico HTTP/1.1" 404 5415
+INFO 2025-08-14 19:40:15,714 basehttp 6048 28932 "GET /admin/services/typeservice/1/change/ HTTP/1.1" 200 20618
+INFO 2025-08-14 19:40:15,804 basehttp 6048 28932 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 19:43:03,469 autoreload 6048 32876 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-08-14 19:43:04,470 autoreload 22340 32424 Watching for file changes with StatReloader
+INFO 2025-08-14 19:44:30,137 autoreload 22340 32424 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-14 19:44:31,405 autoreload 32188 24668 Watching for file changes with StatReloader
+INFO 2025-08-14 19:45:53,735 autoreload 32188 24668 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:45:54,795 autoreload 33484 31716 Watching for file changes with StatReloader
+INFO 2025-08-14 19:45:56,389 autoreload 33484 31716 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:45:57,503 autoreload 31896 1036 Watching for file changes with StatReloader
+INFO 2025-08-14 19:46:41,709 autoreload 31896 1036 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:46:42,773 autoreload 18400 20344 Watching for file changes with StatReloader
+INFO 2025-08-14 19:46:53,867 autoreload 18400 20344 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:46:54,806 autoreload 7228 31312 Watching for file changes with StatReloader
+INFO 2025-08-14 19:46:57,215 autoreload 7228 31312 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:46:58,152 autoreload 2268 31900 Watching for file changes with StatReloader
+INFO 2025-08-14 19:47:01,598 autoreload 2268 31900 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:47:02,621 autoreload 20580 20564 Watching for file changes with StatReloader
+INFO 2025-08-14 19:47:16,908 autoreload 20580 20564 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:47:17,900 autoreload 22484 20904 Watching for file changes with StatReloader
+INFO 2025-08-14 19:47:47,977 autoreload 22484 20904 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:47:48,979 autoreload 24736 32468 Watching for file changes with StatReloader
+INFO 2025-08-14 19:47:51,366 autoreload 24736 32468 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:47:52,374 autoreload 30140 23808 Watching for file changes with StatReloader
+INFO 2025-08-14 19:49:12,327 autoreload 30140 23808 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:49:13,369 autoreload 28376 19468 Watching for file changes with StatReloader
+INFO 2025-08-14 19:49:15,952 autoreload 28376 19468 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:49:16,979 autoreload 13336 27040 Watching for file changes with StatReloader
+INFO 2025-08-14 19:49:30,358 autoreload 13336 27040 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:49:31,408 autoreload 30328 14036 Watching for file changes with StatReloader
+INFO 2025-08-14 19:50:43,931 autoreload 30328 14036 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:50:45,000 autoreload 28636 6448 Watching for file changes with StatReloader
+INFO 2025-08-14 19:50:49,742 autoreload 28636 6448 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:50:50,988 autoreload 18560 5336 Watching for file changes with StatReloader
+INFO 2025-08-14 19:50:57,999 autoreload 18560 5336 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:50:58,977 autoreload 22316 30040 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:03,702 autoreload 22316 30040 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:04,638 autoreload 25196 33784 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:09,411 autoreload 25196 33784 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:10,369 autoreload 17508 31720 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:16,271 autoreload 17508 31720 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:17,502 autoreload 27408 10672 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:22,424 autoreload 27408 10672 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:23,501 autoreload 26948 8144 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:29,436 autoreload 26948 8144 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:30,678 autoreload 32176 16408 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:37,567 autoreload 32176 16408 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:38,745 autoreload 27828 25864 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:46,850 autoreload 27828 25864 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:48,107 autoreload 30476 24384 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:52,861 autoreload 30476 24384 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:51:54,217 autoreload 33584 13944 Watching for file changes with StatReloader
+INFO 2025-08-14 19:51:59,045 autoreload 33584 13944 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:00,306 autoreload 19468 23916 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:05,182 autoreload 19468 23916 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:06,711 autoreload 28884 21832 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:08,487 autoreload 28884 21832 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-08-14 19:52:10,276 autoreload 32396 29480 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:12,003 autoreload 32396 29480 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-08-14 19:52:13,024 autoreload 31472 27040 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:14,642 autoreload 31472 27040 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-08-14 19:52:16,021 autoreload 28720 23640 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:17,781 autoreload 28720 23640 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:18,836 autoreload 26752 31256 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:23,572 autoreload 26752 31256 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:24,606 autoreload 23916 32504 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:29,290 autoreload 23916 32504 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:30,399 autoreload 33732 32260 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:34,025 autoreload 33732 32260 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:34,992 autoreload 22656 32084 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:47,140 autoreload 22656 32084 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:48,141 autoreload 30864 17472 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:53,075 autoreload 30864 17472 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:54,039 autoreload 24212 28072 Watching for file changes with StatReloader
+INFO 2025-08-14 19:52:58,853 autoreload 24212 28072 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:52:59,855 autoreload 25476 27040 Watching for file changes with StatReloader
+INFO 2025-08-14 19:53:09,875 autoreload 25476 27040 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:53:10,846 autoreload 5116 24648 Watching for file changes with StatReloader
+INFO 2025-08-14 19:53:13,443 autoreload 5116 24648 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:53:14,535 autoreload 24692 31204 Watching for file changes with StatReloader
+INFO 2025-08-14 19:53:52,224 autoreload 24692 31204 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:53:53,200 autoreload 23808 29828 Watching for file changes with StatReloader
+INFO 2025-08-14 19:54:00,028 autoreload 23808 29828 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:54:00,916 autoreload 21384 20780 Watching for file changes with StatReloader
+INFO 2025-08-14 19:54:12,972 autoreload 21384 20780 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:54:14,096 autoreload 31264 32680 Watching for file changes with StatReloader
+INFO 2025-08-14 19:54:19,819 autoreload 31264 32680 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:54:20,900 autoreload 14236 1716 Watching for file changes with StatReloader
+INFO 2025-08-14 19:54:26,617 autoreload 14236 1716 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:54:27,836 autoreload 33384 23284 Watching for file changes with StatReloader
+INFO 2025-08-14 19:55:22,600 autoreload 33384 23284 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 19:55:23,696 autoreload 28724 33224 Watching for file changes with StatReloader
+INFO 2025-08-14 19:56:54,375 autoreload 28724 33224 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-14 19:56:55,300 autoreload 21980 29664 Watching for file changes with StatReloader
+INFO 2025-08-14 19:57:06,641 autoreload 29448 23284 Watching for file changes with StatReloader
+INFO 2025-08-14 21:56:11,195 autoreload 37240 34700 Watching for file changes with StatReloader
+INFO 2025-08-14 21:56:50,211 autoreload 7984 29924 Watching for file changes with StatReloader
+INFO 2025-08-14 22:02:21,595 autoreload 2540 22616 Watching for file changes with StatReloader
+INFO 2025-08-14 22:02:25,165 basehttp 2540 30004 "GET /admin/services/typeservice/1/change/ HTTP/1.1" 200 21414
+INFO 2025-08-14 22:02:25,291 basehttp 2540 30004 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:02:29,306 basehttp 2540 30004 "GET /admin/services/typeservice/ HTTP/1.1" 200 21973
+INFO 2025-08-14 22:02:29,388 basehttp 2540 30004 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:02:40,929 basehttp 2540 28448 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 22:02:40,934 basehttp 2540 28448 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 22:03:12,693 autoreload 2540 22616 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-08-14 22:03:13,679 autoreload 23692 7356 Watching for file changes with StatReloader
+INFO 2025-08-14 22:03:16,869 basehttp 23692 29808 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 22:03:16,870 basehttp 23692 37208 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 22:04:18,463 basehttp 23692 34528 "GET /admin/services/typeservice/1/change/ HTTP/1.1" 200 21414
+INFO 2025-08-14 22:04:18,574 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-08-14 22:04:18,788 log 23692 34528 Not Found: /favicon.ico
+WARNING 2025-08-14 22:04:18,789 basehttp 23692 34528 "GET /favicon.ico HTTP/1.1" 404 5415
+INFO 2025-08-14 22:04:23,811 basehttp 23692 34528 "POST /admin/services/typeservice/1/change/ HTTP/1.1" 302 0
+INFO 2025-08-14 22:04:23,862 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 22205
+INFO 2025-08-14 22:04:23,975 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:04:31,673 basehttp 23692 34528 "POST /admin/services/typeservice/ HTTP/1.1" 302 0
+INFO 2025-08-14 22:04:31,705 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 22149
+INFO 2025-08-14 22:04:31,774 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:04:33,296 basehttp 23692 34528 "POST /admin/services/typeservice/ HTTP/1.1" 302 0
+INFO 2025-08-14 22:04:33,327 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 21997
+INFO 2025-08-14 22:04:33,390 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:04:34,943 basehttp 23692 34528 "POST /admin/services/typeservice/ HTTP/1.1" 302 0
+INFO 2025-08-14 22:04:34,976 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 21997
+INFO 2025-08-14 22:04:35,037 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:04:38,720 basehttp 23692 37208 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 22:04:38,723 basehttp 23692 29808 "GET /api/homepage/ HTTP/1.1" 200 324
+INFO 2025-08-14 22:04:44,759 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 21997
+INFO 2025-08-14 22:04:44,820 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-08-14 22:04:44,945 log 23692 34528 Not Found: /favicon.ico
+WARNING 2025-08-14 22:04:44,946 basehttp 23692 34528 "GET /favicon.ico HTTP/1.1" 404 5415
+INFO 2025-08-14 22:04:47,231 basehttp 23692 34528 "GET /admin/services/typeservice/4/change/ HTTP/1.1" 200 21410
+INFO 2025-08-14 22:04:47,302 basehttp 23692 34528 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-14 22:04:54,441 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 21997
+INFO 2025-08-14 22:04:54,818 basehttp 23692 34528 "GET /admin/services/typeservice/ HTTP/1.1" 200 21997

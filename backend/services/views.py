@@ -14,6 +14,72 @@ from .serializers import (
 )
 
 
+#? <|------------------Homepage View------------------|>
+# En tu backend/services/views.py, actualizar la HomepageView:
+
+class HomepageView(APIView):
+    """
+    Returns homepage data combining services, company info and stats
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        try:
+            #* Get company configuration
+            company_config = CompanyConfiguration.objects.first()
+            
+            #* Get featured services
+            featured_services = TypeService.objects.filter(
+                is_active=True, 
+                is_featured=True
+            )
+            
+            #* Calculate basic stats
+            total_orders = Order.objects.count()
+            completed_orders = Order.objects.filter(status='completed').count()
+            
+            #* Prepare homepage data
+            homepage_data = {
+                'company_name': company_config.company_name if company_config else 'AGAH Solutions',
+                'hero_title': 'Welcome to',
+                'hero_description': company_config.tagline if company_config else 'Cutting-Edge Solutions, Crafted to Perfection',  # ← USAR TAGLINE
+                'featured_services': TypeServiceSerializer(featured_services, many=True).data,
+                'company_stats': {
+                    'total_projects': max(completed_orders, 50),
+                    'happy_clients': max(completed_orders - 2, 45),
+                    'years_experience': 5
+                },
+                'contact_info': {
+                    'phone': company_config.contact_phone if company_config else '664-123-4567',
+                    'email': company_config.contact_email if company_config else 'info@agahsolutions.com', 
+                    'address': company_config.address if company_config else 'Tijuana, Baja California'
+                }
+            }
+            
+            return Response(homepage_data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            #* Fallback data if anything fails
+            fallback_data = {
+                'company_name': 'AGAH Solutions',
+                'hero_title': 'Welcome to',
+                'hero_description': 'Cutting-Edge Solutions, Crafted to Perfection',
+                'featured_services': [],
+                'company_stats': {
+                    'total_projects': 50,
+                    'happy_clients': 45,
+                    'years_experience': 5
+                },
+                'contact_info': {
+                    'phone': '664-123-4567',
+                    'email': 'info@agahsolutions.com',
+                    'address': 'Tijuana, BC'
+                }
+            }
+            
+            return Response(fallback_data, status=status.HTTP_200_OK)
+
+
 #? <|--------------Public Views (No Authentication Required)--------------|>
 
 class TypeServiceListView(generics.ListAPIView):

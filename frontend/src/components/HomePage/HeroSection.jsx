@@ -1,50 +1,97 @@
-//?  Imports
+//?frontend/src/components/homepage/HeroSection.jsx
+
+//?  <|----------------------Imports----------------------|>
+
+//* css 
 import '../../style/HeroSection.css'
+
+//* Components 
 import SplitText from "../../components/common/SplitText";
 import CardSwap, { Card } from '../../components/common/CardSwap'
 import Carousel from '../../components/common/Carousel'
+
+//* Images
 import plasmaCuttingImg from '../../img/plasma_cutting.jpg'
 import lasserEngravingImg from '../../img/laser_engravingpng.png'
-import PrintingImg from '../../img/3D_printing.jpg'
+import FillPrinting from '../../img/3D_printing.jpg'
 
+//!  <|------------------Component------------------|> 
+function HeroSection({heroData}) {
 
-//?  Component 
-function HeroSection() {
+    //? <|------------------Variables------------------|> 
+    const welcomeText = heroData?.welcomeText || "Welcome to";
+    const companyName = heroData?.companyName || "AGAH Solutions";
+    const tagline = heroData?.description || "Cutting-Edge Solutions, Crafted to Perfection";
 
-    //? Variables 
-    const welcomeText = "Welcome to";
-    const companyName = "AGAH Solutions";
-    const carouselItems = [
-        {
-            id: 1,
-            title: "Plasma Cutting",
-            image: plasmaCuttingImg
-        },
-        {
-            id: 2,
-            title: "Laser Engraving",
-            image: lasserEngravingImg
-        },
-        {
-            id: 3,
-            title: "3D Printing",
-            image: PrintingImg
+    //? Services data (for carousel - Dynamic)
+    const getServicesData = () => {
+        //* if we have data from the API we use them, if not we use the defaults
+        if (heroData?.featuredServices && heroData?.featuredServices.length > 0) {
+            return heroData.featuredServices.map(service => ({
+                id: service.id,
+                title: service.name,
+                image: getServiceImage(service)
+            }));
         }
-    ];
+
+        return [
+            {
+                id: 1,
+                title: "Plasma Cutting",
+                image: plasmaCuttingImg
+            },
+            {
+                id: 2,
+                title: "Laser Engraving",
+                image: lasserEngravingImg
+            },
+            {
+                id: 3,
+                title: "3D Printing",
+                image: FillPrinting
+            }
+        ];
+    };
+
+    //? Get Service image
+    const getServiceImage = (service) => {
+        //* try API images first
+        if (service.image_url) {
+            return service.image_url;
+        } 
+
+        //* Fallback to local images based on service types
+        const localImageMap = {
+            'plasma_cutting': plasmaCuttingImg,
+            'laser_engraving': lasserEngravingImg,
+            '3d_printing': FillPrinting,
+        }
+
+        return localImageMap[service.service_type] || plasmaCuttingImg; 
+    }
+
+    //? Get services for carousel and cards
+    const serviceData = getServicesData();
+
+    //? Carousel items
+    const carouselItems = serviceData.map(service => ({
+        id: service.id,
+        title: service.title,
+        image: service.image
+    }));
+
+    //? <|------------------Functions------------------|>
+    
+
+    //? <|------------------Hooks------------------|>
 
 
-    //? Functions
-
-
-    //? Hooks
-
-
-    //? What is gonna be rendered
+    //? <|------------------Render------------------|>
     return (
         <>
         {/*//? Hero Section */}
-        <div className='intro_section'>
-            <div className='welcome_text'>
+        <div className='hero-section'>
+            <div className='hero-welcome-text'>
                 {/*//*  Welcome Text */}
                 <h2>
                     <SplitText
@@ -62,7 +109,7 @@ function HeroSection() {
                     />
                 </h2>
                 <h1>
-                    <span className="company_name">
+                    <span className="hero-company-name">
                         <SplitText
                             text={companyName}
                             className="text-2xl font-semibold text-center"
@@ -78,11 +125,11 @@ function HeroSection() {
                         />
                     </span>
                 </h1>
-                <p>Cutting-Edge Solutions, Crafted to Perfection</p>
+                <p className="hero-tagline">{tagline}</p>
             </div>
             
             {/*//* Card Display - Desktop only */}
-            <div className="card_display_container">
+            <div className="hero-cards-container">
                 <CardSwap
                     width={800}
                     height={400}
@@ -91,42 +138,30 @@ function HeroSection() {
                     delay={3000}
                     pauseOnHover={false}
                 >
-                    <Card>
-                        <div className="card_title">
-                            <h3>Plasma Cutting</h3>
-                        </div>
-
-                        <div className="card_photo">
-                            <img src={plasmaCuttingImg} alt="Plasma Cutting" />
-                        </div>
-                    </Card>
-                    
-                    <Card>
-                        <div className="card_title">
-                            <h3>Laser Engraving</h3>
-                        </div>
-                        <div className="card_photo">
-                            <div className="placeholder_image">
-                                <img src={lasserEngravingImg} alt="Laser Engraving" />
+                    {serviceData.map((service, index) => (
+                        <Card key={service.id}>
+                            <div className="hero-card-title">
+                                <h3>{service.title}</h3>
                             </div>
-                        </div>
-                    </Card>
-                    
-                    <Card>
-                        <div className="card_title">
-                            <h3>3D Printing</h3>
-                        </div>
-                        <div className="card_photo">
-                            <div className="placeholder_image">
-                                <img src={PrintingImg} alt="3D Printing" />
+                            <div className="hero-card-photo">
+                                <img 
+                                    src={service.image} 
+                                    alt={service.title}
+                                    onError={(e) => {
+                                        console.warn(`Failed to load image for ${service.title}:`, e.target.src);
+                                    }}
+                                    onLoad={() => {
+                                        console.log(`Image loaded successfully for ${service.title}`);
+                                    }}
+                                />
                             </div>
-                        </div>
-                    </Card>
+                        </Card>
+                    ))}
                 </CardSwap>
             </div>
 
             {/*//* Card Display - Mobile & Tablet only */}
-            <div className='carrusel_display_container' style={{ height: '800px', position: 'relative' }}>
+            <div className='hero-carousel-container' style={{ height: '800px', position: 'relative' }}>
                 <Carousel
                     items={carouselItems}
                     baseWidth={400}

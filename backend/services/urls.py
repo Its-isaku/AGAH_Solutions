@@ -3,6 +3,7 @@
 from django.urls import path
 from .views import (
     #* Public Views
+    HomepageView,
     TypeServiceListView,
     TypeServiceDetailView,
     CompanyConfigurationView,
@@ -22,6 +23,9 @@ from .views import (
 urlpatterns = [
     
     #? <|--------------Public API Endpoints (No Authentication Required)--------------|>
+    
+    #* Homepage endpoint
+    path('api/homepage/', HomepageView.as_view(), name='homepage-data'),
     
     #* Services endpoints
     path('api/services/', TypeServiceListView.as_view(), name='service-list'),

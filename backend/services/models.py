@@ -81,6 +81,12 @@ class TypeService(models.Model):
         help_text="Indicates if this is one of the 5 base services"
     )
     
+    #* Indicates if this service should be featured/highlighted
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Mark this service as featured to highlight it in the frontend"
+    )
+    
     #* Metadata class for the TypeService model 
     class Meta:
         ordering = ['order_display', 'name']                                                                                 #* Orders by order_display and then by name
@@ -127,6 +133,13 @@ class CompanyConfiguration(models.Model):
         default="AGAH Solutions",
         help_text="AGAH Solutions"
     )
+
+    #* Company tagline field 
+    company_tagline = models.CharField(
+        max_length=200,
+        default="Cutting-Edge Solutions, Crafted to Perfection",
+        help_text="Tagline principal que aparece en la página de inicio"
+    )
     
     #* Company email field
     contact_email = models.EmailField(
@@ -167,12 +180,17 @@ class CompanyConfiguration(models.Model):
         help_text="Average response time in hours"
     )
     
+    #* Timestamps (AGREGAR ESTOS CAMPOS)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     #* Company Meta 
     class Meta:
         verbose_name_plural = "Company Configurations"                                                                      #* Human-readable plural name for the model
         
     def __str__(self):
         return self.company_name                                                                                            #* Returns the company name when the object is printed
+
 
 
 #? <|--------------Order Model--------------|>
