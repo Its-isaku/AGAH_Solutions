@@ -3,6 +3,7 @@ import { useState } from 'react'
 import '../../style/Navbar.css'
 import SpotlightNavbar from './Spotlights/SpotlightNavbar';
 import LOGO from '../../img/AGAH_LOGO.png' 
+import { Link } from 'react-router-dom';
 
 //?  Component 
 function Navbar() {
@@ -43,18 +44,18 @@ function Navbar() {
                     {/*//* Navigation Links */}
                     <nav className={`Navbar_Links ${isMenuOpen ? 'active' : ''}`}>
                         <ul>
-                            <li><a href="#home" onClick={closeMenu}>Home</a></li>
-                            <li><a href="#about" onClick={closeMenu}>About Us</a></li> 
-                            <li><a href="#services" onClick={closeMenu}>Services</a></li>
-                            <li><a href="#contact" onClick={closeMenu}>Contact</a></li>
+                            <li><Link to="/" onClick={closeMenu}>Home</Link></li>
+                            <li><Link to="/about" onClick={closeMenu}>About Us</Link></li> 
+                            <li><Link to="/services" onClick={closeMenu}>Services</Link></li>
+                            <li><Link to="/contact" onClick={closeMenu}>Contact</Link></li>
                         </ul>
                     </nav>
 
                     {/*//* Account */}
                     <div className={`Navbar_Account ${isMenuOpen ? 'active' : ''}`}>
-                        <a href="#login" onClick={closeMenu}>Login</a> {/*//* will make this dinamic later */}
-                        <a href="#home" onClick={closeMenu}>CART</a>
-                        <a href="#home" onClick={closeMenu}>ORDERS</a>
+                        <Link to="#login" onClick={closeMenu}>Login</Link> {/*//* will make this dinamic later */}
+                        <Link to="#home" onClick={closeMenu}>CART</Link>
+                        <Link to="#home" onClick={closeMenu}>ORDERS</Link>
                     </div>
                 </div>
             </SpotlightNavbar>    

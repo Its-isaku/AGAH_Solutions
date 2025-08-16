@@ -2,6 +2,7 @@
 import '../../style/Footer.css'
 import SpotlightFooter from './Spotlights/SpotlightFooter';
 import { FaSquareFacebook } from "react-icons/fa6";
+import { Link } from 'react-router-dom';
 
 //?  Component 
 function Footer() {
@@ -32,10 +33,10 @@ function Footer() {
                             <h2>Quick Links</h2>
                         </div>
                         <ul>
-                            <li><a href="#home">Home</a></li>
-                            <li><a href="#about">About Us</a></li>
-                            <li><a href="#services">Services</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/about">About Us</Link></li>
+                            <li><Link to="/services">Services</Link></li>
+                            <li><Link to="/contact">Contact</Link></li>
                         </ul>
                     </div>
                     {/*//? Social Media */}
@@ -44,7 +45,7 @@ function Footer() {
                             <h2>Follow Us</h2>
                         </div>
                         <ul>
-                            <li><a href="#facebook"><span><FaSquareFacebook size={24} /></span> Facebook</a></li>
+                            <li><a href="https://www.facebook.com/share/1C39VW1ojV/?mibextid=wwXIfr"><span><FaSquareFacebook size={24} /></span> Facebook</a></li>
                         </ul>
                     </div>
                 </div>

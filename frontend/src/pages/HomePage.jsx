@@ -5,6 +5,8 @@ import '../style/HomePage.css'
 
 //* Components
 import HeroSection from '../components/HomePage/HeroSection';
+import MagicBento from '../components/HomePage/MagicBento';
+import GradientText from '../components/common/GradientText';
 
 //* API
 import api from '../services/api'; 
@@ -18,7 +20,7 @@ function HomePage() {
 
     //? Variables 
     const [homepageData, setHomepageData] = useState(null)                //* Homepage data
-    const [loading, setLoading] = useState(true )                         //* Loading state - set to true for initial loading
+    const [loading, setLoading] = useState(true)                         //* Loading state - set to true for initial loading
     const [error, setError] = useState(null)                              //* Error state
 
 
@@ -60,12 +62,6 @@ function HomePage() {
         }
     }
 
-    //* Handles retries
-    const handleRetry = () => {
-        console.log('Retrying...');
-        loadHomepageData();
-    } 
-
     //? Hooks
     useEffect(() => {
         loadHomepageData();
@@ -87,32 +83,76 @@ function HomePage() {
     //? What is gonna be rendered
     return (
         <>
-        {/*//? Hero Section */}
-        <HeroSection heroData={prepareHeroData()} />
+            {/*//? Hero Section */}
+            <HeroSection heroData={prepareHeroData()} />
 
-        {/*//?  Service Preview */}
-        <div className='info_section'>
-    
+            {/*//?  Service Preview */}
+
+            <div className="info_title">    
+                <h2>
+                    <GradientText
+                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                    animationSpeed={3}
+                    showBorder={false}
+                    className="custom-class"
+                    >
+                        Services Preview
+                    </GradientText>
+                </h2>
+            </div>
+
+            <div className='info_section'>
+                <MagicBento 
+                    textAutoHide={true}
+                    enableStars={false}
+                    enableSpotlight={true}
+                    enableBorderGlow={true}
+                    enableTilt={true}
+                    enableMagnetism={true}
+                    clickEffect={false}
+                    spotlightRadius={300}
+                    particleCount={12}
+                    glowColor="132, 0, 255"
+                />
+            </div>
+
+
+            {/*//? Lanyard */}
+            <div className="lanyard_title">
+                <h2>
+                    <GradientText
+                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                    animationSpeed={3}
+                    showBorder={false}
+                    className="custom-class"
+                    >
+                        Services Preview
+                    </GradientText>
+                </h2>
+            </div>
+
+            <div className='Lanyard'>
+                
+
+            </div>
+
+            {/*//?  About Us Preview */}
+            <div className="about_preview_title">
+                <h2>
+                    <GradientText
+                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
+                    animationSpeed={3}
+                    showBorder={false}
+                    className="custom-class"
+                    >
+                        About Us Preview
+                    </GradientText>
+                </h2>
+            </div>
             
-        </div>
-
-        {/*//? Lanyard */}
-        <div className='agah_carnet_section'>
+            <div className='about_preview'>
             
-
-        </div>
-
-        {/*//?  About Us Preview */}
-        <div className='featured_services_section'>
-
-
-        </div>
-
-        {/*//?  Contact Section */}
-        <div className='short_contact_section'>
-
-
-        </div>
+            </div>
         </>
     )
 }

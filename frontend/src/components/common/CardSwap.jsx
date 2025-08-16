@@ -15,7 +15,7 @@ export const Card = forwardRef(
         <div
             ref={ref}
             {...rest}
-            className={`card ${customClass ?? ""} ${rest.className ?? ""}`.trim()}
+            className={`card-cardswap ${customClass ?? ""} ${rest.className ?? ""}`.trim()}
         />
     )
 );
@@ -114,7 +114,7 @@ const CardSwap = ({
             tlRef.current = tl;
 
             tl.to(elFront, {
-                y: "+=300", // Reduced from 500 to 300
+                y: "+=500",
                 duration: config.durDrop,
                 ease: config.ease,
             });

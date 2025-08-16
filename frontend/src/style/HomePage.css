@@ -4,144 +4,60 @@
 .info_section {
     position: relative;
     z-index: 10;
-    height: 80vh;
-}
-
-.info_divider {
-    height: 20px;
-    background: linear-gradient(135deg, #4A90E2, #2c5aa0);
-    margin: 0;
-    position: relative;
-    z-index: 10;
-}
-
-/*? <|----------------- AGAH Carnet Section -----------------|> */
-.agah_carnet_section {
-    /* Estilos para la sección de Lanyard */
-    position: relative;
-    z-index: 10;
-    min-height: 60vh;
-    padding: 2rem 0;
-}
-
-/*? <|----------------- Featured Services Section -----------------|> */
-.featured_services_section {
-    /* Estilos para la sección About Us Preview */
-    position: relative;
-    z-index: 10;
-    min-height: 60vh;
-    padding: 2rem 0;
-}
-
-/*? <|----------------- Short Contact Section -----------------|> */
-.short_contact_section {
-    /* Estilos para la sección de contacto */
-    position: relative;
-    z-index: 10;
-    min-height: 40vh;
-    padding: 2rem 0;
-}
-
-/*? <|----------------- Services Preview (dentro de info_section) -----------------|> */
-.services-preview {
-    padding: 2rem;
-    text-align: center;
-}
-
-.services-preview h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #333;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.service-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    border: 1px solid #e5e7eb;
-}
-
-.service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.service-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-}
-
-.service-card p {
-    color: #666;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-}
-
-.service-price {
-    font-weight: bold;
-    color: #4A90E2;
-    font-size: 1.1rem;
-}
-
-/*? <|----------------- About Preview (dentro de featured_services_section) -----------------|> */
-.about-preview {
-    padding: 2rem;
-    text-align: center;
-    background: #f8f9fa;
-}
-
-.about-preview h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #333;
-}
-
-.about-preview p {
-    font-size: 1.1rem;
-    color: #666;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-/*? <|----------------- Contact Preview (dentro de short_contact_section) -----------------|> */
-.contact-preview {
-    padding: 2rem;
-    text-align: center;
-    background: #4A90E2;
-    color: white;
-    border-radius: 12px;
-    margin: 0 2rem;
-}
-
-.contact-preview h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-}
-
-.contact-info {
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.contact-info p {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
+    min-height: 100vh;
+    padding: 3rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+}
+
+.info_title{
+    display: flex;
+    justify-content: center;
+}
+
+.info_title h2{
+    font-size: 4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/*? <|----------------- AGAH Carnet Section -----------------|> */
+.Lanyard {
+    position: relative;
+    z-index: 10;
+    min-height: 60vh;
+    padding: 2rem 0;
+}
+
+.lanyard_title{
+    display: flex;
+    justify-content: center;
+}
+
+.lanyard_title h2{
+    font-size: 4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/*? <|----------------- About us preview -----------------|> */
+.about_preview {
+    position: relative;
+    z-index: 10;
+    min-height: 60vh;
+    padding: 2rem 0;
+}
+
+.about_preview_title{
+    display: flex;
+    justify-content: center;
+}
+
+.about_preview_title h2{
+    font-size: 4rem;
+    font-weight: 600;
+    margin: 0;
 }
 
 /*? <|----------------- Loading States (para la API) -----------------|> */
@@ -173,60 +89,8 @@
     100% { transform: rotate(360deg); }
 }
 
-/*? <|----------------- Error Notification (para la API) -----------------|> */
-.error-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #ff4444;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    max-width: 300px;
-}
-
-.error-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.error-content button {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.error-content button:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/*? <|----------------- Debug Info (para desarrollo) -----------------|> */
-.debug-info {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    z-index: 1000;
-    font-family: monospace;
-}
-
-.debug-info div {
-    margin-bottom: 3px;
-}
-
 /*? <|----------------- Responsive Design -----------------|> */
-/* Tablet (1024px and below) */
+/** Tablet (1024px and below) */
 @media (max-width: 1024px) {
     .info_section {
         height: auto;
@@ -244,7 +108,7 @@
     }
 }
 
-/* Mobile Large (768px and below) */
+/** Mobile Large (768px and below) */
 @media (max-width: 768px) {
     .info_section,
     .agah_carnet_section,
@@ -286,7 +150,7 @@
     }
 }
 
-/* Mobile Small (480px and below) */
+/** Mobile Small (480px and below) */
 @media (max-width: 480px) {
     .info_section,
     .agah_carnet_section,

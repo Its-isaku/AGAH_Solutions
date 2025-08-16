@@ -130,6 +130,7 @@ function HeroSection({heroData}) {
             
             {/*//* Card Display - Desktop only */}
             <div className="hero-cards-container">
+                {/* Temporalmente comentado para probar MagicBento */}
                 <CardSwap
                     width={800}
                     height={400}
