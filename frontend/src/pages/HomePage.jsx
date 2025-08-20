@@ -5,14 +5,15 @@ import '../style/HomePage.css'
 
 //* Components
 import HeroSection from '../components/HomePage/HeroSection';
-import MagicBento from '../components/HomePage/MagicBento';
-import GradientText from '../components/common/GradientText';
+import ServicePreview from '../components/HomePage/ServicePreview';
 
 //* API
 import api from '../services/api'; 
 
 //* States 
 import { useEffect, useState } from 'react';
+import AboutUsPreview from '../components/HomePage/AboutUsPreview';
+
 
 
 //?  Component 
@@ -87,72 +88,10 @@ function HomePage() {
             <HeroSection heroData={prepareHeroData()} />
 
             {/*//?  Service Preview */}
-
-            <div className="info_title">    
-                <h2>
-                    <GradientText
-                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-                    animationSpeed={3}
-                    showBorder={false}
-                    className="custom-class"
-                    >
-                        Services Preview
-                    </GradientText>
-                </h2>
-            </div>
-
-            <div className='info_section'>
-                <MagicBento 
-                    textAutoHide={true}
-                    enableStars={false}
-                    enableSpotlight={true}
-                    enableBorderGlow={true}
-                    enableTilt={true}
-                    enableMagnetism={true}
-                    clickEffect={false}
-                    spotlightRadius={300}
-                    particleCount={12}
-                    glowColor="132, 0, 255"
-                />
-            </div>
-
-
-            {/*//? Lanyard */}
-            <div className="lanyard_title">
-                <h2>
-                    <GradientText
-                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-                    animationSpeed={3}
-                    showBorder={false}
-                    className="custom-class"
-                    >
-                        Services Preview
-                    </GradientText>
-                </h2>
-            </div>
-
-            <div className='Lanyard'>
-                
-
-            </div>
+            <ServicePreview />
 
             {/*//?  About Us Preview */}
-            <div className="about_preview_title">
-                <h2>
-                    <GradientText
-                    colors={["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]}
-                    animationSpeed={3}
-                    showBorder={false}
-                    className="custom-class"
-                    >
-                        About Us Preview
-                    </GradientText>
-                </h2>
-            </div>
-            
-            <div className='about_preview'>
-            
-            </div>
+            <AboutUsPreview />
         </>
     )
 }

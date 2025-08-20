@@ -1,219 +1,296 @@
 #? Admin configuration for the services app
-from django.contrib import admin                                                   #* Django admin import
-from django.utils.html import format_html                                          #* HTML formatting for admin display
-from django.forms import ModelForm                                                 #* Model forms for custom form handling
-from django.core.exceptions import ValidationError                                 #* Validation error handling
-from .models import TypeService, Order, OrderItem, CompanyConfiguration           #* Import all models from services app
+from django.contrib import admin
+from django.utils.html import format_html
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+from .models import TypeService, CompanyConfiguration, Order, OrderItem
 
-
-#? <|--------------Custom Form for Type Service Admin--------------|>
-class TypeServiceForm(ModelForm):
-
-    class Meta:
-        model = TypeService                                                         #* Which model this form is for
-        fields = '__all__'                                                          #* Include all fields
+#? <|--------------Helper Functions--------------|>
+def create_base_services():
+    """Create the 5 base services if they don't exist"""
+    base_services = [
+        {
+            'name': 'Plasma Cutting',
+            'type': 'plasma_cutting',
+            'description': 'High-precision plasma cutting for metal fabrication',
+            'short_description': 'Precision metal cutting with plasma technology'
+        },
+        {
+            'name': 'Laser Engraving',
+            'type': 'laser_engraving',
+            'description': 'Detailed laser engraving for personalization and marking',
+            'short_description': 'Professional laser engraving services'
+        },
+        {
+            'name': 'Laser Cutting',
+            'type': 'laser_cutting',
+            'description': 'Precise laser cutting for various materials',
+            'short_description': 'High-precision laser cutting'
+        },
+        {
+            'name': '3D Printing',
+            'type': '3d_printing',
+            'description': 'Advanced 3D printing solutions for prototypes and production',
+            'short_description': 'Professional 3D printing services'
+        },
+        {
+            'name': 'Resin Printing',
+            'type': 'resin_printing',
+            'description': 'High-detail resin printing for precise applications',
+            'short_description': 'Ultra-detailed resin 3D printing'
+        }
+    ]
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.instance.pk:                                                    #* Only for new objects (no primary key yet)
-            #* For new services, only show name and type fields
-            self.fields['type'].widget.attrs['placeholder'] = 'Auto-generated from name'  #* Placeholder text
-            self.fields['type'].required = False                                    #* Make type field optional
-            #* Focus on the name field when form loads
-            self.fields['name'].widget.attrs['autofocus'] = True                    #* Auto-focus on name field
+    for service_data in base_services:
+        TypeService.objects.get_or_create(
+            type=service_data['type'],
+            defaults={
+                'name': service_data['name'],
+                'description': service_data['description'],
+                'short_description': service_data['short_description'],
+                'is_base_service': True,
+                'is_active': True
+            }
+        )
 
 
 #? <|--------------Type Service Admin Configuration--------------|>
-@admin.register(TypeService)                                                       #* Register TypeService model with admin
+@admin.register(TypeService)
 class TypeServiceAdmin(admin.ModelAdmin):
     
-    form = TypeServiceForm                                                          #* Use custom form defined above
+    #* Fields to display in the list view
+    list_display = [
+        'name', 'type', 'is_base_service_display', 'base_price',
+        'active', 'is_featured', 'order_display'
+    ]
     
-    #* Fields to display in the list view (like columns in a table)
-    list_display = ['name', 'type', 'active_display', 'order_display', 'is_base_service', 'active', 'is_featured']
+    #* Filters for the right sidebar
+    list_filter = ['active', 'is_featured', 'is_base_service', 'type']
     
-    #* Filters that appear on the right side of the list view
-    list_filter = ['active', 'is_base_service', 'type', 'is_featured']                            #* Filter by active status, base service, and type
+    #* Searchable fields
+    search_fields = ['name', 'description', 'short_description']
     
-    #* Fields that can be searched from the search box
-    search_fields = ['name', 'type', 'description']                                #* Search by name, type, or description
+    #* Fields that can be edited directly from the list view
+    list_editable = ['active', 'is_featured', 'base_price']
     
-    #* Fields that can be edited directly in the list view (without opening detail)
-    list_editable = ['active', 'is_featured']                                                      #* Can toggle active status from list
+    #* Default ordering
+    ordering = ['order_display', 'name']
     
-    #* Fields that cannot be edited (read-only)
-    readonly_fields = ['type', 'order_display']                                    #* Auto-generated fields
+    #* Organization of fields in the detail form - CORREGIDO
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'type', 'description', 'short_description')
+        }),
+        ('Pricing', {
+            'fields': ('base_price',)
+        }),
+        ('Display Settings', {
+            'fields': ('active', 'is_featured', 'order_display')
+        }),
+        ('Media', {
+            'fields': ('principal_image',),  
+            'classes': ('collapse',)
+        }),
+    )
+    
+    #* Custom mass actions
+    actions = ['mark_as_featured', 'mark_as_not_featured']
+    
+    def is_base_service_display(self, obj):
+        return "Base" if obj.is_base_service else "Additional"
+    is_base_service_display.short_description = 'Service Type'
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = []
+        if obj and obj.is_base_service:
+            readonly_fields.extend(['type', 'is_base_service'])
+        return readonly_fields
+    
+    def mark_as_featured(self, request, queryset):
+        updated = queryset.update(is_featured=True)
+        self.message_user(request, f'{updated} services marked as featured.')
+    mark_as_featured.short_description = 'Mark as featured services'
+    
+    def mark_as_not_featured(self, request, queryset):
+        updated = queryset.update(is_featured=False)
+        self.message_user(request, f'{updated} services removed from featured.')
+    mark_as_not_featured.short_description = 'Remove from featured'
+
+
+#? <|--------------Company Configuration Admin - CORREGIDO--------------|>
+@admin.register(CompanyConfiguration)
+class CompanyConfigurationAdmin(admin.ModelAdmin):
+    
+    #* Fields to display in the list view - CAMPOS CORREGIDOS
+    list_display = [
+        'company_name', 
+        'company_tagline',
+        'company_phone', 
+        'contact_email',
+        'updated_at'
+    ]
     
     #* Organization of fields in the detail form
     fieldsets = (
-        ('Basic Information', {                                                     #* First section: Basic info
-            'fields': ('name', 'type')
+        ('Company Information', {
+            'fields': ('company_name', 'company_tagline', 'about_us', 'company_mission', 'company_vision')
         }),
-        ('Content', {                                                               #* Second section: Content
-            'fields': ('description', 'short_description', 'principal_image')
+        ('Contact Information', {
+            'fields': ('contact_email', 'company_phone', 'company_address')
         }),
-        ('Pricing & Display', {                                                     #* Third section: Pricing and display
-            'fields': ('base_price', 'active', 'is_featured', 'order_display', 'is_base_service')
+        ('Service Configuration', {
+            'fields': ('company_time_response_hours',)
         }),
-    )
-    
-    #* Special fieldset for adding new services (simpler form)
-    add_fieldsets = (
-        ('Add New Service', {
-            'classes': ('wide',),                                                   #* Make form wider
-            'fields': ('name',),                                                    #* Only show name field
-            'description': 'Just enter the service name. Everything else will be auto-generated or can be edited later.'
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
         }),
     )
     
-    def get_fieldsets(self, request, obj=None):
-        if not obj:                                                                 #* Adding new object
-            return self.add_fieldsets
-        return super().get_fieldsets(request, obj)                                  #* Editing existing object
+    #* Read-only fields
+    readonly_fields = ['created_at', 'updated_at']
     
-    def active_display(self, obj):
-        if obj.active:
-            return format_html('<span style="color: green; font-weight: bold;">✓ Active</span>')
-        else:
-            return format_html('<span style="color: red; font-weight: bold;">✗ Inactive</span>')
-    active_display.short_description = 'Status'                                    #* Column header name
-    active_display.admin_order_field = 'active'                                    #* Allow sorting by this field
+    #* Search functionality
+    search_fields = ['company_name', 'company_tagline', 'contact_email']
     
-    #* Custom mass actions that appear in the dropdown above the list
-    actions = ['activate_services', 'deactivate_services', 'mark_as_featured', 'mark_as_not_featured']
+    def has_add_permission(self, request):
+        if CompanyConfiguration.objects.exists():
+            return False
+        return True
     
-    def activate_services(self, request, queryset):
-        updated = queryset.update(active=True)                                      #* Update all selected objects
-        self.message_user(request, f'{updated} services activated.')               #* Show success message
-    activate_services.short_description = 'Activate selected services'            #* Text shown in dropdown
-    
-    def deactivate_services(self, request, queryset):
-        updated = queryset.update(active=False)                                     #* Update all selected objects
-        self.message_user(request, f'{updated} services deactivated.')             #* Show success message
-    deactivate_services.short_description = 'Deactivate selected services'        #* Text shown in dropdown
-    
-    def mark_as_featured(self, request, queryset):
-        updated = queryset.update(is_featured=True)                                 #* Mark as featured
-        self.message_user(request, f'{updated} services marked as featured.')      #* Show success message
-    mark_as_featured.short_description = 'Mark as featured services'              #* Text shown in dropdown
-    
-    def mark_as_not_featured(self, request, queryset):
-        updated = queryset.update(is_featured=False)                                #* Remove from featured
-        self.message_user(request, f'{updated} services removed from featured.')   #* Show success message
-    mark_as_not_featured.short_description = 'Remove from featured'               #* Text shown in dropdown
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 #? <|--------------Order Item Inline Admin--------------|>
 class OrderItemInline(admin.TabularInline):
-    model = OrderItem                                                               #* Model to inline
-    extra = 0                                                                       #* Number of empty forms to show
+    model = OrderItem
+    extra = 0
     
-    #* Fields to show in the inline table
+    #* Fields to show in the inline table - SIMPLIFICADO
     fields = [
-        'service', 'description', 'quantity',                                      #* Basic info
-        'length_dimensions', 'width_dimensions', 'height_dimensions',              #* Dimensions
-        'design_file', 'needs_custom_design', 'custom_design_price',               #* Design and pricing
-        'estimated_unit_price', 'final_unit_price'                                 #* Calculated prices
+        'service', 'quantity',
+        'length_dimensions', 'width_dimensions', 'height_dimensions',
+        'needs_custom_design', 'custom_design_price',
+        'estimated_unit_price', 'final_unit_price'
     ]
     
     #* Fields that are read-only in the inline
-    readonly_fields = ['estimated_unit_price']                                     #* Auto-calculated field
+    readonly_fields = ['estimated_unit_price']
+    
+    #* AGREGAR ESTE MÉTODO PARA CREAR LINK AL ORDERITEM INDIVIDUAL
+    def get_fields(self, request, obj=None):
+        fields = list(super().get_fields(request, obj))
+        if obj: 
+            fields.insert(0, 'edit_item_link')
+        return fields
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj))
+        if obj:  
+            readonly.append('edit_item_link')
+        return readonly
+    
+    def edit_item_link(self, obj):
+        if obj.pk:
+            return format_html(
+                '<a href="/admin/services/orderitem/{}/change/" target="_blank">✏️ Edit Details</a>',
+                obj.pk
+            )
+        return "Save order first"
+    edit_item_link.short_description = 'Actions'
 
 
 #? <|--------------Order Admin Configuration--------------|>
-@admin.register(Order)                                                             #* Register Order model with admin
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    inlines = [OrderItemInline]                                                     #* Include OrderItem inline
+    inlines = [OrderItemInline]
     
     #* Fields to display in the list view
     list_display = [
-        'order_number', 'customer_name', 'customer_email',                         #* Basic order info
-        'user_display', 'state_display', 'created_at',                             #* User and status info
-        'get_total_items', 'get_estimated_total', 'state'                           #* Calculated fields and state
+        'order_number', 'customer_name', 'customer_email',
+        'user_display', 'state_display', 'created_at',
+        'get_total_items', 'get_estimated_total', 'state'
     ]
     
     #* Filters for the right sidebar
-    list_filter = [
-        'state', 'created_at'                                                      #* Filter by status and date
-    ]
+    list_filter = ['state', 'created_at']
     
     #* Searchable fields
     search_fields = [
-        'order_number', 'customer_name', 'customer_email',                         #* Order and customer info
-        'user__email', 'user__first_name', 'user__last_name'                       #* User info
+        'order_number', 'customer_name', 'customer_email',
+        'customer_phone', 'user__email', 'user__first_name', 'user__last_name'
     ]
     
     #* Fields that can be edited directly from the list view
-    list_editable = ['state']                                                       #* Can change status from list
+    list_editable = ['state']
     
     #* Read-only fields in the detail form
     readonly_fields = [
-        'order_number', 'created_at', 'user',                                      #* System-generated fields
-        'get_total_items', 'get_estimated_total', 'get_final_total'                #* Calculated fields
+        'order_number', 'created_at', 'user',
+        'get_total_items', 'get_estimated_total', 'get_final_total'
     ]
     
-    #* Organization of fields in the detail form
+    #* Organization of fields in the detail form - CORREGIDO
     fieldsets = (
-        ('Order Information', {                                                     #* Order basics
+        ('Order Information', {
             'fields': ('order_number', 'state', 'created_at')
         }),
-        ('Customer Information', {                                                  #* Customer details
-            'fields': ('user', 'customer_name', 'customer_email', 'customer_phone')
+        ('Customer Details', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone', 'user')
         }),
-        ('Order Details', {                                                         #* Order specifics
-            'fields': ('additional_notes', 'assigned_user')
+        ('Order Management', {
+            'fields': ('estimaded_price', 'final_price', 'estimated_completion_date_days', 'assigned_user')
         }),
-        ('Pricing Information', {                                                   #* Pricing details
-            'fields': ('estimaded_price', 'final_price', 'estimated_completion_date_days')
+        ('Additional Information', {
+            'fields': ('additional_notes',),  
+            'classes': ('collapse',)
         }),
-        ('Calculated Totals', {                                                     #* Auto-calculated totals
+        ('Calculations', {
             'fields': ('get_total_items', 'get_estimated_total', 'get_final_total'),
-            'classes': ('collapse',)                                                #* Collapsible section
+            'classes': ('collapse',)
         }),
     )
     
+    #* Custom display methods
     def user_display(self, obj):
         if obj.user:
-            return format_html(
-                '<span style="color: blue;">👤 {}</span>',                         #* Blue icon for registered users
-                obj.user.get_full_name()
-            )
-        else:
-            return format_html('<span style="color: gray;">👥 Guest</span>')        #* Gray icon for guest orders
-    user_display.short_description = 'User'                                        #* Column header
-    user_display.admin_order_field = 'user'                                        #* Allow sorting
+            return f"{obj.user.first_name} {obj.user.last_name}" if obj.user.first_name else obj.user.email
+        return "Guest Order"
+    user_display.short_description = 'User'
+    user_display.admin_order_field = 'user'
     
     def state_display(self, obj):
         colors = {
-            'pending': 'orange',                                                    #* Orange for pending
-            'estimated': 'blue',                                                    #* Blue for estimated
-            'confirmed': 'green',                                                   #* Green for confirmed
-            'in_progress': 'purple',                                                #* Purple for in progress
-            'completed': 'darkgreen',                                               #* Dark green for completed
-            'canceled': 'red',                                                      #* Red for canceled
+            'pending': '#ffc107',
+            'estimated': '#17a2b8',
+            'confirmed': '#007bff',
+            'in_progress': '#fd7e14',
+            'completed': '#28a745',
+            'canceled': 'red',
         }
         
-        color = colors.get(obj.state, 'gray')                                       #* Default to gray if state not found
+        color = colors.get(obj.state, 'gray')
         return format_html(
             '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px; font-size: 11px;">{}</span>',
             color, obj.get_state_display()
         )
-    state_display.short_description = 'Status'                                     #* Column header
-    state_display.admin_order_field = 'state'                                      #* Allow sorting
+    state_display.short_description = 'Status'
+    state_display.admin_order_field = 'state'
     
     def get_total_items(self, obj):
-        return obj.items.count()                                                    #* Count related OrderItems
-    get_total_items.short_description = 'Items'                                    #* Column header
+        return obj.items.count()
+    get_total_items.short_description = 'Items'
     
     def get_estimated_total(self, obj):
         total = sum(item.get_estimated_total_with_design() for item in obj.items.all())
-        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
-    get_estimated_total.short_description = 'Estimated Total'                      #* Column header
+        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"
+    get_estimated_total.short_description = 'Estimated Total'
     
     def get_final_total(self, obj):
         total = sum(item.get_final_total_with_design() for item in obj.items.all())
-        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
-    get_final_total.short_description = 'Final Total'                              #* Column header
+        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"
+    get_final_total.short_description = 'Final Total'
     
     #* Custom mass actions for changing order status
     actions = ['mark_as_estimated', 'mark_as_confirmed', 'mark_as_in_progress', 'mark_as_completed']
@@ -240,194 +317,208 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 #? <|--------------Order Item Admin Configuration--------------|>
-@admin.register(OrderItem)                                                         #* Register OrderItem model with admin
+@admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     
     #* Fields to display in the list view
     list_display = [
-        'order_link', 'service', 'quantity', 'dimensions_display',                 #* Basic item info
-        'needs_custom_design', 'custom_design_price',                              #* Design info
-        'estimated_unit_price', 'final_unit_price', 'get_total_display'            #* Pricing info
+        'id', 'order_number_display', 'service', 'quantity', 'dimensions_display',
+        'needs_custom_design', 'custom_design_price',
+        'estimated_unit_price', 'final_unit_price', 'get_total_display'
     ]
     
     #* Filters for the right sidebar
     list_filter = [
-        'service__type', 'needs_custom_design', 'service'                          #* Filter by service type, design need, service
+        'service__type', 'needs_custom_design', 'service'
     ]
     
     #* Searchable fields
     search_fields = [
-        'order__order_number', 'order__customer_name',                             #* Order info
-        'service__name', 'description'                                             #* Item info
+        'order__order_number', 'order__customer_name',
+        'service__name', 'description'
     ]
     
     #* Read-only fields
-    readonly_fields = ['estimated_unit_price']                                     #* Auto-calculated field
+    readonly_fields = ['estimated_unit_price', 'area_display', 'total_price_display']
     
-    #* Organization of fields in the detail form
-    fieldsets = (
-        ('Order & Service', {                                                       #* Basic order and service info
-            'fields': ('order', 'service', 'description', 'quantity')
-        }),
-        ('Dimensions', {                                                            #* Item dimensions
-            'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions')
-        }),
-        ('Files & Design', {                                                        #* Design files and custom design
-            'fields': ('design_file', 'needs_custom_design', 'custom_design_price')
-        }),
-        ('Pricing', {                                                               #* Price information
-            'fields': ('estimated_unit_price', 'final_unit_price')
-        }),
-        ('Plasma Cutting Calculations', {                                           #* Plasma-specific calculation fields
-            'fields': (
-                'plasma_design_programming_time', 'plasma_cutting_time',
-                'plasma_post_process_time', 'plasma_material_cost', 'plasma_consumables'
-            ),
-            'classes': ('collapse',)                                                #* Collapsible section
-        }),
-        ('Laser Cutting/Engraving Calculations', {                                 #* Laser-specific calculation fields
-            'fields': (
-                'laser_design_programming_time', 'laser_cutting_time',
-                'laser_post_process_time', 'laser_material_cost', 'laser_consumables'
-            ),
-            'classes': ('collapse',)                                                #* Collapsible section
-        }),
-        ('3D Printing Calculations', {                                              #* 3D printing-specific calculation fields
-            'fields': (
-                'printing_design_programming_time', 'printing_time', 'printing_material_used',
-                'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
-            ),
-            'classes': ('collapse',)                                                #* Collapsible section
-        }),
-    )
-    
-    def order_link(self, obj):
-        return format_html(
-            '<a href="/admin/services/order/{}/change/">{}</a>',                    #* Create HTML link
-            obj.order.id, obj.order.order_number
+    #* MÉTODO DINÁMICO PARA MOSTRAR SOLO CAMPOS RELEVANTES POR SERVICIO
+    def get_fieldsets(self, request, obj=None):
+        
+        base_fieldsets = [
+            ('Order & Service', {
+                'fields': ('order', 'service', 'description', 'quantity')
+            }),
+            ('Dimensions (in inches)', {
+                'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions', 'area_display'),
+                'description': 'All dimensions must be in inches'
+            }),
+            ('Files & Design', {
+                'fields': ('design_file', 'needs_custom_design', 'custom_design_price')
+            }),
+        ]
+
+        if obj and obj.service:
+            service_type = obj.service.type
+            
+            if service_type == 'plasma_cutting':
+                base_fieldsets.append(
+                    ('Plasma Cutting Calculations', {
+                        'fields': (
+                            'plasma_design_programming_time', 'plasma_cutting_time',
+                            'plasma_post_process_time', 'plasma_material_cost', 'plasma_consumables'
+                        ),
+                        'description': 'Formula: ((A*3.33)+(B*16.5)+(C*1.5)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3*1.08'
+                    })
+                )
+            elif service_type in ['laser_cutting', 'laser_engraving']:
+                base_fieldsets.append(
+                    ('Laser Cutting/Engraving Calculations', {
+                        'fields': (
+                            'laser_design_programming_time', 'laser_cutting_time',
+                            'laser_post_process_time', 'laser_material_cost', 'laser_consumables'
+                        ),
+                        'description': 'Formula: ((A*1.2)+(B*1.7)+(C*1)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3*1.08'
+                    })
+                )
+            elif service_type == '3d_printing':
+                base_fieldsets.append(
+                    ('3D Printing Calculations', {
+                        'fields': (
+                            'printing_design_programming_time', 'printing_time', 'printing_material_used',
+                            'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
+                        ),
+                        'description': 'Formula: (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F)*2))+G)*1.6*1.08'
+                    })
+                )
+            elif service_type == 'resin_printing':
+                base_fieldsets.append(
+                    ('Resin Printing Calculations', {
+                        'fields': (
+                            'printing_design_programming_time', 'printing_time', 'printing_material_used',
+                            'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
+                        ),
+                        'description': 'Formula: (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F)*2))+G)*1.6*1.08'
+                    })
+                )
+        else:
+            # Si no hay objeto (creando nuevo), mostrar todas las secciones colapsadas
+            base_fieldsets.extend([
+                ('Plasma Cutting Calculations', {
+                    'fields': (
+                        'plasma_design_programming_time', 'plasma_cutting_time',
+                        'plasma_post_process_time', 'plasma_material_cost', 'plasma_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Solo visible si seleccionas servicio de Plasma Cutting'
+                }),
+                ('Laser Cutting/Engraving Calculations', {
+                    'fields': (
+                        'laser_design_programming_time', 'laser_cutting_time',
+                        'laser_post_process_time', 'laser_material_cost', 'laser_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Solo visible si seleccionas servicio de Laser'
+                }),
+                ('3D Printing Calculations', {
+                    'fields': (
+                        'printing_design_programming_time', 'printing_time', 'printing_material_used',
+                        'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Para servicios de 3D Printing'
+                }),
+                ('Resin Printing Calculations', {
+                    'fields': (
+                        'printing_design_programming_time', 'printing_time', 'printing_material_used',
+                        'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
+                    ),
+                    'classes': ('collapse',),
+                    'description': 'Para servicios de Resin Printing'
+                }),
+            ])
+        
+        # Agregar la sección de Final Pricing al final
+        base_fieldsets.append(
+            ('Final Pricing', {
+                'fields': ('estimated_unit_price', 'final_unit_price', 'total_price_display'),
+                'description': 'Estimated price is from initial quote. Final price updates when you modify calculation fields above.'
+            })
         )
-    order_link.short_description = 'Order'                                         #* Column header
-    order_link.admin_order_field = 'order'                                         #* Allow sorting
+        
+        return base_fieldsets
+    
+    def order_number_display(self, obj):
+        """Muestra el número de orden - NO REDIRECT AL ORDER"""
+        return obj.order.order_number
+    order_number_display.short_description = 'Order'
+    order_number_display.admin_order_field = 'order'
     
     def dimensions_display(self, obj):
+        """Muestra las dimensiones en formato legible"""
         if obj.length_dimensions and obj.width_dimensions:
-            dims = f"{obj.length_dimensions} × {obj.width_dimensions}"              #* Length × Width
+            dims = f"{obj.length_dimensions} × {obj.width_dimensions}"
             if obj.height_dimensions:
-                dims += f" × {obj.height_dimensions}"                               #* Add height if present
-            return f"{dims} in"                                                     #* Add units
-        return "Not specified"                                                      #* No dimensions provided
-    dimensions_display.short_description = 'Dimensions'                            #* Column header
+                dims += f" × {obj.height_dimensions}"
+            return f"{dims} in"
+        return "Not specified"
+    dimensions_display.short_description = 'Dimensions (L×W×H)'
     
     def get_total_display(self, obj):
-        total = obj.get_final_total_with_design()                                   #* Get total including design
-        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"             #* Format with currency
-    get_total_display.short_description = 'Total Price'                            #* Column header
-
-
-#? <|--------------Company Configuration Admin--------------|>
-
-@admin.register(CompanyConfiguration)
-class CompanyConfigurationAdmin(admin.ModelAdmin):
+        """Muestra el precio total incluyendo diseño"""
+        total = obj.get_final_total_with_design()
+        return f"${total:,.2f} MXN" if total > 0 else "Not calculated"
+    get_total_display.short_description = 'Total Price'
     
-    #* Fields to display in the list view
-    list_display = [
-        'company_name', 
-        'company_tagline',                                                          #* Show tagline in list
-        'company_phone', 
-        'contact_email',
-        'updated_at'
-    ]
+    def area_display(self, obj):
+        """Muestra el área calculada en in²"""
+        if obj.length_dimensions and obj.width_dimensions:
+            area = float(obj.length_dimensions) * float(obj.width_dimensions)
+            return f"{area:.2f} in²"
+        return "Not calculated"
+    area_display.short_description = 'Area (in²)'
     
-    #* Fields organization in the form
-    fieldsets = (
-        ('Información Básica de la Empresa', {
-            'fields': ('company_name', 'company_tagline')                          #* Company name and tagline
-        }),
-        ('Información de Contacto', {
-            'fields': ('contact_email', 'company_phone', 'company_address')        #* Contact information
-        }),
-        ('Acerca de la Empresa', {
-            'fields': ('about_us', 'company_mission', 'company_vision')            #* About company
-        }),
-        ('Configuración de Servicio', {
-            'fields': ('company_time_response_hours',)                             #* Service settings
-        }),
-        ('Metadatos', {
-            'fields': ('created_at', 'updated_at'),                                #* Timestamps
-            'classes': ('collapse',)                                               #* Collapsible section
-        }),
-    )
+    def total_price_display(self, obj):
+        """Muestra el precio total final (final_unit_price x quantity)"""
+        if obj.final_unit_price and obj.quantity:
+            total_final = float(obj.final_unit_price) * obj.quantity
+            if obj.needs_custom_design and obj.custom_design_price:
+                total_final += float(obj.custom_design_price)
+            return f"${total_final:,.2f} MXN"
+        return "Not calculated"
+    total_price_display.short_description = 'Total Final Price'
     
-    #* Read-only fields
-    readonly_fields = ['created_at', 'updated_at']                                 #* Timestamps are read-only
-    
-    #* Search functionality
-    search_fields = ['company_name', 'company_tagline', 'contact_email']           #* Search by these fields
-    
-    def has_add_permission(self, request):
-        #* Only allow one company configuration
-        if CompanyConfiguration.objects.exists():
-            return False
-        return True                                                                 #* Allow adding if none exists
-    
-    def has_delete_permission(self, request, obj=None):
-        #* Prevent deletion of company configuration
-        return False   
+    def save_model(self, request, obj, form, change):
+        """Guarda el modelo y recalcula precios automáticamente"""
+        super().save_model(request, obj, form, change)
+        
+        if hasattr(obj, 'calculate_automatic_pricing'):
+            obj.calculate_automatic_pricing()
+            obj.save()
 
 
-#? <|--------------Custom Admin Actions & Utilities--------------|>
+#? <|--------------FUNCIONES AUXILIARES PARA EL ADMIN--------------|>
 
-def create_base_services():
-    
-    base_services_data = [
-        {
-            'type': 'plasma',                                                       #* Service type identifier
-            'name': 'Plasma Cutting',                                               #* Display name
-            'short_description': 'Precision metal cutting with plasma technology', #* Brief description
-            'is_base_service': True,                                                #* Mark as base service
-            'order_display': 1                                                      #* Display order
-        },
-        {
-            'type': 'laser_engraving',
-            'name': 'Laser Engraving',
-            'short_description': 'Detailed engraving on wood and other materials',
-            'is_base_service': True,
-            'order_display': 2
-        },
-        {
-            'type': 'laser_cutting',
-            'name': 'Laser Cutting',
-            'short_description': 'Precise cutting of wood and thin materials',
-            'is_base_service': True,
-            'order_display': 3
-        },
-        {
-            'type': '3D_printing',
-            'name': '3D Printing',
-            'short_description': 'Additive manufacturing with filament technology',
-            'is_base_service': True,
-            'order_display': 4
-        },
-        {
-            'type': 'resin_printing',
-            'name': 'Resin Printing',
-            'short_description': 'High-detail 3D printing with resin technology',
-            'is_base_service': True,
-            'order_display': 5
-        }
-    ]
-    
-    #* Create each service if it doesn't already exist
-    for service_data in base_services_data:
-        TypeService.objects.get_or_create(                                          #* Create only if doesn't exist
-            type=service_data['type'],                                              #* Find by type
-            defaults=service_data                                                   #* Use this data if creating new
-        )
-
-
-#? <|--------------Admin Panel Customization--------------|>
-
-#* Customize the admin panel header and titles
-admin.site.site_header = "AGAH Solutions Admin"                                    #* Main header text
-admin.site.site_title = "AGAH Solutions Admin Portal"                             #* Browser tab title
-admin.site.index_title = "Welcome to the AGAH Solutions Admin Portal"             #* Welcome message on admin home
+def get_service_calculation_fields(service_type):
+    fields_map = {
+        'plasma_cutting': [
+            'plasma_design_programming_time', 'plasma_cutting_time',
+            'plasma_post_process_time', 'plasma_material_cost', 'plasma_consumables'
+        ],
+        'laser_cutting': [
+            'laser_design_programming_time', 'laser_cutting_time',
+            'laser_post_process_time', 'laser_material_cost', 'laser_consumables'
+        ],
+        'laser_engraving': [
+            'laser_design_programming_time', 'laser_cutting_time',
+            'laser_post_process_time', 'laser_material_cost', 'laser_consumables'
+        ],
+        '3d_printing': [
+            'printing_design_programming_time', 'printing_time', 'printing_material_used',
+            'printing_post_process_time', 'printing_material_cost', 'printing_consumables'
+        ],
+        'resin_printing': [
+            'resin_design_programming_time', 'resin_printing_time', 'resin_material_used',
+            'resin_post_process_time', 'resin_material_cost', 'resin_consumables'
+        ]
+    }
+    return fields_map.get(service_type, [])
