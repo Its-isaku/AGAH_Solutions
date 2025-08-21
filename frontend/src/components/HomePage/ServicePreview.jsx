@@ -26,7 +26,8 @@ function ServicePreview() {
                     showBorder={false}
                     className="custom-class"
                     >
-                        Services Preview
+                        {/* Lo que ofrecemos */}
+                        Service Preview
                     </GradientText>
                 </h2>
             </div>
