@@ -1,21 +1,85 @@
-//?  Imports
+//?  <|------------------------Imports------------------------|>
+
+//* Imports  
 import '../style/AboutUs.css'
+import '../style/SpotlightAboutUs.css';
+
+//* Components
+import SpotlightAboutUs from './../components/common/Spotlights/SpotlightAboutUs';
 
 
-//?  Component 
+//* API 
+import api from '../services/api';
+
+//* States
+import { useEffect, useState } from 'react';
+
+
+//?  <|-----------------------Component-----------------------|> 
 function AboutUs() {
-    //? Variables 
+
+    //? <|---------------------Variables---------------------|> 
+    const [aboutUsData, setAboutUsData] = useState(null);                              //* About Us data
+    const [error, setError] = useState(null);                                          //* Error state
+
+    //?  <|---------------------Functions---------------------|>
+
+    //* Loads About Us Data
+    const loadAboutusData = async () => {
+        try {
+            if (error) setError(null);
+
+            const data = await api.aboutUs.getAboutInfo();
+
+            if (data) {
+                setAboutUsData(data);
+            } else {
+                setError("Failed to Load About Us Data");
+                console.log("Failed to Load About Us Data");
+            }
+        } catch (err) {
+            setError(err?.message || "Failed to Load About Us Data");
+            console.log("Failed to Load About Us Data");
+        }
+    }
+
+    //?  <|-----------------------Hooks-----------------------|>
+    useEffect(() => {
+        loadAboutusData();
+    }, []);
 
 
-    //? Functions
-
-
-    //? What is gonna be rendered
+    //?  <|-------------What is gonna be rendered-------------|>
     return (
         <>
-        {/*? Content */}
-        <h1>About Us</h1>
+        {/*//* lanyard Section  */}
+        <div className="AboutUs_lanyard">
+            <p>test</p>
+        </div>
 
+        <div className="AboutUs_container">
+            {/*//* Main Info Section  */}
+            <div className="AboutUs_info">
+                <SpotlightAboutUs className="custom-spotlight-AboutUs Main-Info" spotlightColor="rgba(0, 229, 255, 0.2)">
+                    <h2>Our Story</h2>
+                    {aboutUsData?.aboutUs || "Loading..."}
+                </SpotlightAboutUs>
+            </div>
+
+            {/*//* Mission & Vision Section  */}
+            <div className="AboutUs_missionVision">
+                <SpotlightAboutUs className="custom-spotlight-AboutUs" spotlightColor="rgba(0, 229, 255, 0.2)">
+                    <h2>Mission</h2>
+                    <p>{aboutUsData?.mission || "Loading..."}</p>
+                </SpotlightAboutUs>
+
+                <SpotlightAboutUs className="custom-spotlight-AboutUs" spotlightColor="rgba(0, 229, 255, 0.2)">
+                    <h2>Vision</h2>
+                    <p>{aboutUsData?.vision || "Loading..."}</p>
+                </SpotlightAboutUs>
+            </div>
+
+        </div>
         </>
     )
 }

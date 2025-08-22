@@ -6,13 +6,13 @@ import '../style/HomePage.css'
 //* Components
 import HeroSection from '../components/HomePage/HeroSection';
 import ServicePreview from '../components/HomePage/ServicePreview';
+import AboutUsPreview from '../components/HomePage/AboutUsPreview';
 
 //* API
 import api from '../services/api'; 
 
 //* States 
 import { useEffect, useState } from 'react';
-import AboutUsPreview from '../components/HomePage/AboutUsPreview';
 
 
 

@@ -1,15 +1,14 @@
 //? Import Axios
-import axios from 'axios';                                                                      //* Import Axios for making HTTP requests
+import axios from 'axios';
 
 //? Base API Class
 class BaseAPI {
-
     //* Constructor for BaseAPI
     constructor() {
-        this.baseURL = 'http://127.0.0.1:8000';                                                 //* Base URL for the API
-        this.api = axios.create({                                                               //* Axios instance
-            baseURL: this.baseURL,                                                              //* Base URL for the Axios instance
-            headers: {                                                                          //* Headers for the Axios instance
+        this.baseURL = 'http://127.0.0.1:8000';
+        this.api = axios.create({
+            baseURL: this.baseURL,
+            headers: {
                 'Content-Type': 'application/json',
             },
         });
@@ -26,6 +25,9 @@ class BaseAPI {
 
     //* Helper method to handle errors
     handleError(error, defaultMessage = 'An error occurred') {
+        if (error.response?.data?.error) {
+            throw new Error(error.response.data.error);
+        }
         if (error.response?.data?.message) {
             throw new Error(error.response.data.message);
         }
@@ -36,75 +38,65 @@ class BaseAPI {
     }
 }
 
-
 //? <|------------------Home Page APIs------------------|>
-class HomepageAPI {
-    constructor() {
-        this.baseURL = 'http://localhost:8000/api';
-        this.api = axios.create({ 
-            baseURL: this.baseURL,
-            timeout: 10000,  // 10 second timeout
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-    }
-
+class HomepageAPI extends BaseAPI {
     //* Get homepage data (featured services, stats, company info)
     async getHomepageData() {
         try {
-            const response = await this.api.get('/homepage/');
+            const response = await this.api.get('/api/homepage/');
 
-            if (response.status === 200 && response.data) {
+            // Backend now returns {success, data}
+            if (response.data.success) {
                 return {
                     success: true,
-                    data: response.data
+                    data: response.data.data
                 };
             } else {
-                console.warn('Unexpected response format:', response);
                 return {
                     success: false,
-                    error: 'Formato de respuesta inesperado'
+                    error: response.data.error || 'Failed to load homepage data'
                 };
             }
         } catch (error) {
             console.error('Homepage API Error:', error);
-            console.error('Error details:', {
-                message: error.message,
-                status: error.response?.status,
-                data: error.response?.data,
-                config: error.config
-            });
-            
             return {
                 success: false,
-                error: error.response?.data?.message || error.message || 'Error al cargar datos del homepage'
+                error: error.response?.data?.error || error.message || 'Error al cargar datos del homepage'
             };
         }
     }
 }
 
-
 //? <|------------------Services APIs-------------------|>
 class ServicesAPI extends BaseAPI {
-
     //* Function to get all services
     async getServices() {
         try {
             const response = await this.api.get('/api/services/');
-            return response.data;
+            
+            // Backend now returns {success, data}
+            if (response.data.success) {
+                return response.data.data; // Array of services
+            } else {
+                throw new Error(response.data.error || 'Failed to load services');
+            }
         } catch (error) {
             this.handleError(error, 'Failed to load services');
         }
     }
 
-    //* Function to get service details from a specific service type
-    async getServiceDetail(serviceType) {
+    //* Function to get service details by ID
+    async getServiceDetail(serviceId) {
         try {
-            const response = await this.api.get(`/api/services/${serviceType}/`);
-            return response.data;
+            const response = await this.api.get(`/api/services/${serviceId}/`);
+            
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.error || 'Failed to load service details');
+            }
         } catch (error) {
-            this.handleError(error, `Failed to load service details for ${serviceType}`);
+            this.handleError(error, `Failed to load service details for ${serviceId}`);
         }
     }
 
@@ -130,9 +122,24 @@ class ServicesAPI extends BaseAPI {
 }
 
 //? <|-------------------About Us APIs------------------|>
-class AboutUsAPI extends BaseAPI{
+class AboutUsAPI extends BaseAPI {
+    //* Function to get company information
+    async getCompanyInfo() {
+        try {
+            const response = await this.api.get('/api/company/');
+            
+            // Backend now returns {success, data}
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.error || 'Failed to load company information');
+            }
+        } catch (error) {
+            this.handleError(error, 'Failed to load company information');
+        }
+    }
 
-    //* Class to get About Us information
+    //* Function to get About Us information (filtered)
     async getAboutInfo() {
         try {
             const companyInfo = await this.getCompanyInfo();
@@ -146,31 +153,48 @@ class AboutUsAPI extends BaseAPI{
             this.handleError(error, 'Failed to load about information');
         }
     }
-
-    //* Function to get company information
-    async getCompanyInfo() {
-        try {
-            const response = await this.api.get('/api/company/');
-            return response.data;
-        } catch (error) {
-            this.handleError(error, 'Failed to load company information');
-        }
-    }
 }
 
 //? <|-------------------Contact APIs-------------------|>
 class ContactAPI extends BaseAPI {
-    
+    //* Function to get company information (for contact info)
+    async getCompanyInfo() {
+        try {
+            const response = await this.api.get('/api/company/');
+            
+            if (response.data.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data.error || 'Failed to load company information');
+            }
+        } catch (error) {
+            this.handleError(error, 'Failed to load company information');
+        }
+    }
+
     //* Function to send contact form
     async sendContactForm(formData) {
         try {
             const response = await this.api.post('/api/contact/', formData);
-            return response.data;
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to send contact form'
+                };
+            }
         } catch (error) {
-            this.handleError(error, 'Failed to send contact form');
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Failed to send contact form'
+            };
         }
     }
-
 
     //* Function to get contact information
     async getContactInfo() {
@@ -225,12 +249,6 @@ class ContactAPI extends BaseAPI {
             errors.push('Invalid email format');
         }
         
-        //* Validate dangerous characters
-        const dangerousChars = ['<', '>', '&', '"', "'"];
-        if (formData.name && dangerousChars.some(char => formData.name.includes(char))) {
-            errors.push('Name contains invalid characters');
-        }
-        
         if (errors.length > 0) {
             throw new Error(errors.join(', '));
         }
@@ -245,128 +263,59 @@ class ContactAPI extends BaseAPI {
     }
 }
 
-
-//? <|-------------------Orders APIs--------------------|>
-class OrdersAPI extends BaseAPI {
-
-    //* Function to create a new order
-    async createOrder(orderData) {
-        try {
-            const response = await this.api.post('/api/orders/create/', orderData);
-            return response.data;
-        } catch (error) {
-            this.handleError(error, 'Failed to create order');
-        }
-    }
-
-    //* Function to get orders by customer email
-    async getOrdersByCustomer(email) {
-        try {
-            const response = await this.api.get(`/api/orders/customer/?email=${encodeURIComponent(email)}`);
-            return response.data;
-        } catch (error) {
-            this.handleError(error, 'Failed to load customer orders');
-        }
-    }
-
-    //* Function to track order by order number
-    async trackOrder(orderNumber) {
-        try {
-            const response = await this.api.get(`/api/orders/track/${encodeURIComponent(orderNumber)}/`);
-            return response.data;
-        } catch (error) {
-            this.handleError(error, `Failed to track order ${orderNumber}`);
-        }
-    }
-
-    //* Function to validate order data
-    async validateOrderData(orderData) {
-        const errors = [];
-        
-        if (!orderData.customer_name?.trim()) {
-            errors.push('Customer name is required');
-        }
-        
-        if (!orderData.customer_email?.trim()) {
-            errors.push('Customer email is required');
-        }
-        
-        if (!orderData.customer_phone?.trim()) {
-            errors.push('Customer phone is required');
-        }
-        
-        if (!orderData.items || orderData.items.length === 0) {
-            errors.push('Order must have at least one item');
-        }
-        
-        if (orderData.items && orderData.items.length > 50) {
-            errors.push('Order cannot have more than 50 items');
-        }
-        
-        //* Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (orderData.customer_email && !emailRegex.test(orderData.customer_email)) {
-            errors.push('Invalid email format');
-        }
-        
-        if (errors.length > 0) {
-            throw new Error(errors.join(', '));
-        }
-        
-        return true;
-    }
-
-    //* Function to create validated order
-    async createValidatedOrder(orderData) {
-        await this.validateOrderData(orderData);
-        return await this.createOrder(orderData);
-    }
-
-    //* Function to get order statistics by customer email
-    async getOrderStatistics(email) {
-        try {
-            const orders = await this.getOrdersByCustomer(email);
-            
-            const stats = {
-                total: orders.length,
-                pending: orders.filter(o => o.state === 'pending').length,
-                estimated: orders.filter(o => o.state === 'estimated').length,
-                confirmed: orders.filter(o => o.state === 'confirmed').length,
-                inProgress: orders.filter(o => o.state === 'in_progress').length,
-                completed: orders.filter(o => o.state === 'completed').length,
-                canceled: orders.filter(o => o.state === 'canceled').length,
-            };
-            
-            return stats;
-        } catch (error) {
-            this.handleError(error, 'Failed to load order statistics');
-        }
-    }
-}
-
-
 //? <|--------------------Cart APIs---------------------|>
 class CartAPI extends BaseAPI {
-
-    //* Function to add item to cart
+    //* Function to add item to cart (cart managed in frontend)
     async addItemToCart(itemData) {
         try {
-            const response = await this.api.post('/api/cart/add-item/', itemData);
-            return response.data;
+            // Since cart is managed in frontend, just validate the item
+            await this.validateCartItem(itemData);
+            return {
+                success: true,
+                data: itemData,
+                message: 'Item added to cart'
+            };
         } catch (error) {
-            this.handleError(error, 'Failed to add item to cart');
+            return {
+                success: false,
+                error: error.message
+            };
         }
     }
 
     //* Function to calculate cart total
     async calculateCartTotal(cartItems) {
         try {
-            const response = await this.api.post('/api/cart/calculate-total/', {
-                cart_items: cartItems
+            // Calculate locally since we don't have a backend endpoint for this
+            let subtotal = 0;
+            let designTotal = 0;
+            
+            cartItems.forEach(item => {
+                const itemPrice = item.estimated_price || 0;
+                const quantity = item.quantity || 1;
+                subtotal += itemPrice * quantity;
+                
+                if (item.needs_custom_design && item.custom_design_price) {
+                    designTotal += item.custom_design_price;
+                }
             });
-            return response.data;
+            
+            const total = subtotal + designTotal;
+            
+            return {
+                success: true,
+                data: {
+                    subtotal,
+                    design_total: designTotal,
+                    total,
+                    items_count: cartItems.length
+                }
+            };
         } catch (error) {
-            this.handleError(error, 'Failed to calculate cart total');
+            return {
+                success: false,
+                error: error.message || 'Failed to calculate cart total'
+            };
         }
     }
 
@@ -408,8 +357,176 @@ class CartAPI extends BaseAPI {
     }
 }
 
+//? <|-------------------Orders APIs--------------------|>
+class OrdersAPI extends BaseAPI {
+    //* Function to create a new order
+    async createOrder(orderData) {
+        try {
+            const response = await this.api.post('/api/orders/create/', orderData);
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    data: response.data.data,
+                    message: response.data.message || 'Order created successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to create order'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Failed to create order'
+            };
+        }
+    }
 
-//? <|--------------------Main  API class---------------------|>
+    //* Function to get user's orders (requires authentication)
+    async getUserOrders() {
+        try {
+            const response = await this.api.get('/api/orders/my-orders/');
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    data: response.data.data, // Array of orders
+                    count: response.data.count
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to load orders'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Failed to load orders'
+            };
+        }
+    }
+
+    //* Function to get specific order detail
+    async getOrderDetail(orderId) {
+        try {
+            const response = await this.api.get(`/api/orders/my-orders/${orderId}/`);
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    data: response.data.data
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to load order details'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Failed to load order details'
+            };
+        }
+    }
+
+    //* Function to track order (public, no auth required)
+    async trackOrder(orderNumber, customerEmail) {
+        try {
+            const response = await this.api.post('/api/orders/track/', {
+                order_number: orderNumber,
+                customer_email: customerEmail
+            });
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    data: response.data.data
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Order not found'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Failed to track order'
+            };
+        }
+    }
+
+    //* Function to validate order data
+    async validateOrderData(orderData) {
+        const errors = [];
+        
+        if (!orderData.customer_phone?.trim()) {
+            errors.push('Customer phone is required');
+        }
+        
+        if (!orderData.items || orderData.items.length === 0) {
+            errors.push('Order must have at least one item');
+        }
+        
+        if (orderData.items && orderData.items.length > 50) {
+            errors.push('Order cannot have more than 50 items');
+        }
+        
+        if (errors.length > 0) {
+            throw new Error(errors.join(', '));
+        }
+        
+        return true;
+    }
+
+    //* Function to create validated order
+    async createValidatedOrder(orderData) {
+        await this.validateOrderData(orderData);
+        return await this.createOrder(orderData);
+    }
+
+    //* Function to get order statistics
+    async getOrderStatistics() {
+        try {
+            const result = await this.getUserOrders();
+            
+            if (!result.success) {
+                return {
+                    success: false,
+                    error: result.error
+                };
+            }
+            
+            const orders = result.data;
+            
+            const stats = {
+                total: orders.length,
+                pending: orders.filter(o => o.state === 'pending').length,
+                estimated: orders.filter(o => o.state === 'estimated').length,
+                confirmed: orders.filter(o => o.state === 'confirmed').length,
+                inProgress: orders.filter(o => o.state === 'in_progress').length,
+                completed: orders.filter(o => o.state === 'completed').length,
+                canceled: orders.filter(o => o.state === 'canceled').length,
+            };
+            
+            return {
+                success: true,
+                data: stats
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message || 'Failed to load order statistics'
+            };
+        }
+    }
+}
+
+//? <|--------------------Main API class---------------------|>
 class AGAHAPI {
     constructor() {
         this.homepage = new HomepageAPI();
@@ -422,24 +539,24 @@ class AGAHAPI {
 
     //* Method to set base URL if needed
     setBaseURL(url) {
-        const apis = [this.homepage, this.services, this.cart, this.orders, this.contact];
+        const apis = [this.homepage, this.services, this.aboutUs, this.cart, this.orders, this.contact];
         apis.forEach(api => {
             api.baseURL = url;
             api.api.defaults.baseURL = url;
         });
     }
 
-    //* Method to add global headers (Login, auth token)
+    //* Method to add global headers (auth token)
     setAuthHeader(token) {
-        const apis = [this.homepage, this.services, this.cart, this.orders, this.contact];
+        const apis = [this.homepage, this.services, this.aboutUs, this.cart, this.orders, this.contact];
         apis.forEach(api => {
             api.api.defaults.headers.Authorization = `Bearer ${token}`;
         });
     }
 
-    //* Method to remove auth headers (Logout)
+    //* Method to remove auth headers (logout)
     removeAuthHeader() {
-        const apis = [this.homepage, this.services, this.cart, this.orders, this.contact];
+        const apis = [this.homepage, this.services, this.aboutUs, this.cart, this.orders, this.contact];
         apis.forEach(api => {
             delete api.api.defaults.headers.Authorization;
         });

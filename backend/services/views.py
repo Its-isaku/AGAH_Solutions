@@ -16,9 +16,7 @@ from .serializers import (
 
 #? <|------------------Homepage View------------------|>
 class HomepageView(APIView):
-    """
-    Returns homepage data combining services, company info and stats
-    """
+
     permission_classes = [permissions.AllowAny]
     
     def get(self, request):
@@ -48,7 +46,7 @@ class HomepageView(APIView):
                 print(f"Error getting featured services: {e}")
                 featured_services = TypeService.objects.none()  
             
-            #* Calculate basic stats (CORRECCIÓN AQUÍ: usar 'state' no 'status')
+            #* Calculate basic stats
             try:
                 total_orders = Order.objects.count()
                 completed_orders = Order.objects.filter(state='completed').count()  
@@ -86,7 +84,10 @@ class HomepageView(APIView):
             
             print(f"Returning homepage data with {len(homepage_data['featured_services'])} featured services")
             
-            return Response(homepage_data, status=status.HTTP_200_OK)
+            return Response({
+                'success': True,
+                'data': homepage_data
+            }, status=status.HTTP_200_OK)
             
         except Exception as e:
             print(f"CRITICAL ERROR: {str(e)}")
@@ -111,40 +112,104 @@ class HomepageView(APIView):
                 }
             }
             
-            return Response(fallback_data, status=status.HTTP_200_OK)
-            
+            return Response({
+                'success': True,
+                'data': fallback_data,
+                'message': 'Using fallback data'
+            }, status=status.HTTP_200_OK)
 
 
 #? <|--------------Public Views (No Authentication Required)--------------|>
 
-class TypeServiceListView(generics.ListAPIView):
+class TypeServiceListView(APIView):
     """
     Public endpoint to list all active services
-    Used by: Homepage, Services page
+    MODIFICADO: Ahora retorna datos directos sin paginación y con success
     """
-    queryset = TypeService.objects.filter(active=True)
-    serializer_class = TypeServiceSerializer
-    permission_classes = [permissions.AllowAny]  #* Public access
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        try:
+            #* Get all active services
+            services = TypeService.objects.filter(active=True).order_by('order_display')
+            serializer = TypeServiceSerializer(services, many=True)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data,
+                'count': services.count()
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': []
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class TypeServiceDetailView(generics.RetrieveAPIView):
+class TypeServiceDetailView(APIView):
     """
     Public endpoint to get details of a specific service
-    Used by: Service detail modals, order forms
+    MODIFICADO: Ahora retorna datos directos con success
     """
-    queryset = TypeService.objects.filter(active=True)
-    serializer_class = TypeServiceSerializer
-    permission_classes = [permissions.AllowAny]  #* Public access
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request, pk):
+        try:
+            service = TypeService.objects.get(pk=pk, active=True)
+            serializer = TypeServiceSerializer(service)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except TypeService.DoesNotExist:
+            return Response({
+                'success': False,
+                'error': 'Service not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class CompanyConfigurationView(generics.ListAPIView):
+class CompanyConfigurationView(APIView):
     """
     Public endpoint to get company information
-    Used by: About page, Contact page, Footer
+    MODIFICADO: Ahora retorna datos directos sin paginación y con success
     """
-    queryset = CompanyConfiguration.objects.all()
-    serializer_class = CompanyConfigurationSerializer
-    permission_classes = [permissions.AllowAny]  #* Public access
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        try:
+            #* Get the first (and should be only) company configuration
+            company = CompanyConfiguration.objects.first()
+            
+            if company:
+                serializer = CompanyConfigurationSerializer(company)
+                return Response({
+                    'success': True,
+                    'data': serializer.data
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'success': False,
+                    'error': 'No company configuration found',
+                    'data': None
+                }, status=status.HTTP_404_NOT_FOUND)
+                
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ContactFormView(APIView):
@@ -152,7 +217,7 @@ class ContactFormView(APIView):
     Public endpoint for contact form submissions
     Used by: Contact page
     """
-    permission_classes = [permissions.AllowAny]  #* Public access
+    permission_classes = [permissions.AllowAny]
     
     def post(self, request):
         serializer = ContactFormSerializer(data=request.data)
@@ -184,73 +249,110 @@ class ContactFormView(APIView):
                 )
                 
                 return Response({
+                    'success': True,
                     'message': 'Su mensaje ha sido enviado exitosamente. Nos pondremos en contacto con usted pronto.'
                 }, status=status.HTTP_200_OK)
                 
             except Exception as e:
                 return Response({
-                    'error': 'Error al enviar el mensaje. Por favor, inténtelo de nuevo más tarde.'
+                    'success': False,
+                    'error': 'Error al enviar el mensaje. Por favor, inténtelo de nuevo más tarde.',
+                    'details': str(e)
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'success': False,
+            'error': 'Invalid form data',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
-#? <|--------------Protected Views (Authentication Required)--------------|>
-
-class OrderCreateView(generics.CreateAPIView):
+class OrderTrackingView(APIView):
     """
-    Protected endpoint to create new orders
-    Requires: User authentication
-    Used by: Checkout process
+    Public endpoint for order tracking by order number
+    Allows tracking without login (for customer convenience)
     """
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    permission_classes = [permissions.AllowAny]
     
-    def perform_create(self, serializer):
-        #* Automatically assign the authenticated user and their data
-        serializer.save(
-            user=self.request.user,
-            customer_name=self.request.user.get_full_name(),
-            customer_email=self.request.user.email
-        )
-    
-    def create(self, request, *args, **kwargs):
-        #* Custom create to send confirmation email
-        response = super().create(request, *args, **kwargs)
+    def post(self, request):
+        order_number = request.data.get('order_number', '').strip()
+        customer_email = request.data.get('customer_email', '').strip().lower()
         
-        if response.status_code == status.HTTP_201_CREATED:
-            order = Order.objects.get(id=response.data['id'])
+        if not order_number or not customer_email:
+            return Response({
+                'success': False,
+                'error': 'El número de pedido y el email del cliente son requeridos.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            #* Find order by number and email for security
+            order = Order.objects.get(
+                order_number=order_number,
+                customer_email=customer_email
+            )
             
-            #* Send order confirmation email
+            serializer = OrderSerializer(order)
+            return Response({
+                'success': True,
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except Order.DoesNotExist:
+            return Response({
+                'success': False,
+                'error': 'Pedido no encontrado. Por favor, verifique su número de pedido y dirección de email.',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+
+
+#? <|--------------Protected Views (User Authentication Required)--------------|>
+
+class OrderCreateView(APIView):
+    """
+    Protected endpoint to create a new order
+    Requires: User authentication
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        #* Prepare order data with user info
+        order_data = request.data.copy()
+        order_data['user'] = request.user.id
+        order_data['customer_name'] = request.user.get_full_name() or request.user.username
+        order_data['customer_email'] = request.user.email
+        
+        serializer = OrderSerializer(data=order_data)
+        
+        if serializer.is_valid():
+            order = serializer.save()
+            
+            #* Send confirmation email
             try:
                 self.send_order_confirmation_email(order)
             except Exception as e:
-                print(f"Failed to send order confirmation email: {e}")
+                print(f"Failed to send confirmation email: {e}")
+            
+            return Response({
+                'success': True,
+                'data': serializer.data,
+                'message': 'Order created successfully'
+            }, status=status.HTTP_201_CREATED)
         
-        return response
+        return Response({
+            'success': False,
+            'error': 'Invalid order data',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
     
     def send_order_confirmation_email(self, order):
         """Send order confirmation email to customer"""
         subject = f"Order Confirmation - {order.order_number}"
-        
-        #* Build order items list
-        items_list = ""
-        for item in order.items.all():
-            items_list += f"- {item.service.name} x{item.quantity}\n"
-        
         message = f"""
-        Hola {order.customer_name},
+        Estimado/a {order.customer_name},
         
-        ¡Gracias por su pedido! Hemos recibido su solicitud y la procesaremos en breve.
+        Gracias por su pedido. Hemos recibido su solicitud con el número de pedido: {order.order_number}
         
-        Detalles del Pedido:
-        Número de Pedido: {order.order_number}
-        Fecha del Pedido: {order.created_at.strftime('%d de %B de %Y a las %I:%M %p')}
-        
-        Servicios Solicitados:
-        {items_list}
-        
-        Próximos Pasos:
+        Próximos pasos:
         1. Nuestro equipo revisará su pedido y archivos de diseño
         2. Le enviaremos una cotización detallada para su aprobación
         3. Una vez que apruebe la cotización, comenzaremos la producción
@@ -272,117 +374,188 @@ class OrderCreateView(generics.CreateAPIView):
         )
 
 
-class UserOrdersListView(generics.ListAPIView):
+class UserOrdersListView(APIView):
     """
     Protected endpoint to list current user's orders
-    Requires: User authentication
-    Used by: My Orders page, Order history
+    MODIFICADO: Ahora retorna datos directos sin paginación y con success
     """
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    permission_classes = [permissions.IsAuthenticated]
     
-    def get_queryset(self):
-        #* Only return orders for the authenticated user
-        return Order.objects.filter(user=self.request.user)
+    def get(self, request):
+        try:
+            #* Get all orders for the authenticated user
+            orders = Order.objects.filter(user=request.user).order_by('-created_at')
+            serializer = OrderSerializer(orders, many=True)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data,
+                'count': orders.count()
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': []
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class UserOrderDetailView(generics.RetrieveAPIView):
+class UserOrderDetailView(APIView):
     """
     Protected endpoint to get details of user's specific order
-    Requires: User authentication + ownership
-    Used by: Order detail page, Order tracking
+    MODIFICADO: Ahora retorna datos directos con success
     """
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    permission_classes = [permissions.IsAuthenticated]
     
-    def get_queryset(self):
-        #* Only return orders for the authenticated user
-        return Order.objects.filter(user=self.request.user)
-
-
-class OrderTrackingView(APIView):
-    """
-    Public endpoint for order tracking by order number
-    Allows tracking without login (for customer convenience)
-    Used by: Order tracking page
-    """
-    permission_classes = [permissions.AllowAny]  #* Public access
-    
-    def post(self, request):
-        order_number = request.data.get('order_number', '').strip()
-        customer_email = request.data.get('customer_email', '').strip().lower()
-        
-        if not order_number or not customer_email:
-            return Response({
-                'error': 'El número de pedido y el email del cliente son requeridos.'
-            }, status=status.HTTP_400_BAD_REQUEST)
-        
+    def get(self, request, pk):
         try:
-            #* Find order by number and email for security
-            order = Order.objects.get(
-                order_number=order_number,
-                customer_email=customer_email
-            )
-            
+            #* Get order only if it belongs to the authenticated user
+            order = Order.objects.get(pk=pk, user=request.user)
             serializer = OrderSerializer(order)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
             
         except Order.DoesNotExist:
             return Response({
-                'error': 'Pedido no encontrado. Por favor, verifique su número de pedido y dirección de email.'
+                'success': False,
+                'error': 'Order not found or you do not have permission to view it',
+                'data': None
             }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 #? <|--------------Admin Views (Staff/Admin Only)--------------|>
 
-class AdminOrderListView(generics.ListAPIView):
+class AdminOrderListView(APIView):
     """
     Admin endpoint to list all orders
-    Requires: Staff or admin permissions
-    Used by: Admin dashboard, Order management
+    MODIFICADO: Ahora retorna datos directos sin paginación y con success
     """
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    permission_classes = [permissions.IsAuthenticated]
     
-    def get_queryset(self):
-        #* Only allow staff and admin users
-        if not (self.request.user.is_staff or 
-                self.request.user.user_type in ['admin', 'staff']):
-            return Order.objects.none()  #* Return empty queryset
+    def get(self, request):
+        #* Check if user is staff or admin
+        if not (request.user.is_staff or 
+                request.user.user_type in ['admin', 'staff']):
+            return Response({
+                'success': False,
+                'error': 'You do not have permission to access this resource',
+                'data': []
+            }, status=status.HTTP_403_FORBIDDEN)
         
-        return Order.objects.all()
+        try:
+            #* Get all orders
+            orders = Order.objects.all().order_by('-created_at')
+            serializer = OrderSerializer(orders, many=True)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data,
+                'count': orders.count()
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': []
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class AdminOrderDetailView(generics.RetrieveUpdateAPIView):
+class AdminOrderDetailView(APIView):
     """
     Admin endpoint to view and update specific orders
-    Requires: Staff or admin permissions
-    Used by: Admin order management, Status updates
+    MODIFICADO: Ahora retorna datos directos con success
     """
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticated]  #* REQUIRES LOGIN
+    permission_classes = [permissions.IsAuthenticated]
     
-    def get_queryset(self):
-        #* Only allow staff and admin users
-        if not (self.request.user.is_staff or 
-                self.request.user.user_type in ['admin', 'staff']):
-            return Order.objects.none()  #* Return empty queryset
+    def get(self, request, pk):
+        #* Check if user is staff or admin
+        if not (request.user.is_staff or 
+                request.user.user_type in ['admin', 'staff']):
+            return Response({
+                'success': False,
+                'error': 'You do not have permission to access this resource',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
         
-        return Order.objects.all()
+        try:
+            order = Order.objects.get(pk=pk)
+            serializer = OrderSerializer(order)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except Order.DoesNotExist:
+            return Response({
+                'success': False,
+                'error': 'Order not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e),
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    def perform_update(self, serializer):
-        #* Track who updated the order
-        serializer.save(assigned_user=self.request.user)
+    def put(self, request, pk):
+        #* Check if user is staff or admin
+        if not (request.user.is_staff or 
+                request.user.user_type in ['admin', 'staff']):
+            return Response({
+                'success': False,
+                'error': 'You do not have permission to access this resource'
+            }, status=status.HTTP_403_FORBIDDEN)
         
-        #* Send status update email if state changed
-        if 'state' in serializer.validated_data:
-            order = serializer.instance
-            try:
-                self.send_status_update_email(order)
-            except Exception as e:
-                print(f"Failed to send status update email: {e}")
+        try:
+            order = Order.objects.get(pk=pk)
+            serializer = OrderSerializer(order, data=request.data, partial=True)
+            
+            if serializer.is_valid():
+                #* Track who updated the order
+                serializer.save(assigned_user=request.user)
+                
+                #* Send status update email if state changed
+                if 'state' in request.data:
+                    try:
+                        self.send_status_update_email(order)
+                    except Exception as e:
+                        print(f"Failed to send status update email: {e}")
+                
+                return Response({
+                    'success': True,
+                    'data': serializer.data,
+                    'message': 'Order updated successfully'
+                }, status=status.HTTP_200_OK)
+            
+            return Response({
+                'success': False,
+                'error': 'Invalid data',
+                'errors': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Order.DoesNotExist:
+            return Response({
+                'success': False,
+                'error': 'Order not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def send_status_update_email(self, order):
         """Send order status update email to customer"""
@@ -399,16 +572,14 @@ class AdminOrderDetailView(generics.RetrieveUpdateAPIView):
         status_message = status_messages.get(order.state, 'El estado de su pedido ha sido actualizado.')
         
         message = f"""
-        Hola {order.customer_name},
+        Estimado/a {order.customer_name},
         
-        El estado de su pedido ha sido actualizado:
+        Le informamos que el estado de su pedido {order.order_number} ha sido actualizado.
         
-        Número de Pedido: {order.order_number}
-        Estado Actual: {order.get_state_display()}
-        
+        Estado actual: {order.get_state_display()}
         {status_message}
         
-        Puede rastrear su pedido en cualquier momento usando su número de pedido en nuestro sitio web.
+        Puede rastrear su pedido en cualquier momento en nuestro sitio web.
         
         Si tiene alguna pregunta, no dude en contactarnos.
         

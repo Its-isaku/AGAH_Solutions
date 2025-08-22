@@ -1,4 +1,4 @@
-//? import axios 
+//? Import axios
 import axios from 'axios';
 
 //? <|--------------------Auth API class---------------------|>
@@ -35,6 +35,7 @@ class AuthAPI {
             (response) => response,
             (error) => {
                 if (error.response?.status === 401) {
+                    // Token expired or invalid
                     this.logout();
                     window.location.href = '/login';
                 }
@@ -43,27 +44,37 @@ class AuthAPI {
         );
     }
 
-    //* Login user with email/username and password
+    //* Login user with email and password
     async login(credentials) {
         try {
-            const response = await this.api.post('/login/', credentials);
+            const response = await this.api.post('/login/', {
+                email: credentials.email || credentials.username,
+                password: credentials.password
+            });
             
-            //* Store token and user data
-            if (response.data.token) {
-                this.setToken(response.data.token);
-                this.setUser(response.data.user);
+            // Backend now returns {success, data}
+            if (response.data.success) {
+                const { token, user } = response.data.data;
+                
+                // Store token and user data
+                this.setToken(token);
+                this.setUser(user);
+                
+                return {
+                    success: true,
+                    data: response.data.data,
+                    message: response.data.message || 'Login successful'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Login failed'
+                };
             }
-            
-            return {
-                success: true,
-                data: response.data,
-                message: 'Inicio de sesión exitoso'
-            };
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.message || 'Error al iniciar sesión',
-                details: error.response?.data
+                error: error.response?.data?.error || error.message || 'Error al iniciar sesión'
             };
         }
     }
@@ -73,106 +84,77 @@ class AuthAPI {
         try {
             const response = await this.api.post('/signup/', userData);
             
-            //* Auto-login after successful registration
-            if (response.data.token) {
-                this.setToken(response.data.token);
-                this.setUser(response.data.user);
+            // Backend now returns {success, data}
+            if (response.data.success) {
+                const { token, user } = response.data.data;
+                
+                // Auto-login after successful registration
+                if (token) {
+                    this.setToken(token);
+                    this.setUser(user);
+                }
+                
+                return {
+                    success: true,
+                    data: response.data.data,
+                    message: response.data.message || 'Account created successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Registration failed'
+                };
             }
-            
-            return {
-                success: true,
-                data: response.data,
-                message: 'Cuenta creada exitosamente'
-            };
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.message || 'Error en el registro',
-                details: error.response?.data
+                error: error.response?.data?.error || error.message || 'Error en el registro'
             };
         }
     }
 
-    //* Logout user (clear local storage and redirect)
-    logout() {
+    //* Logout user
+    async logout() {
         try {
-            //* Remove token and user data from storage
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
-            
-            //* Clear axios default headers
-            delete this.api.defaults.headers.Authorization;
+            // Try to logout from backend
+            const token = this.getToken();
+            if (token) {
+                await this.api.post('/logout/');
+            }
+        } catch (error) {
+            // Even if backend logout fails, clear local data
+            console.error('Logout error:', error);
+        } finally {
+            // Always clear local storage
+            this.clearAuth();
             
             return {
                 success: true,
                 message: 'Sesión cerrada exitosamente'
             };
-        } catch (error) {
-            return {
-                success: false,
-                error: 'Error al cerrar sesión'
-            };
         }
     }
 
-    //* Request password reset email
-    async resetPassword(email) {
-        try {
-            const response = await this.api.post('/password-reset/', { email });
-            
-            return {
-                success: true,
-                data: response.data,
-                message: 'Correo de restablecimiento de contraseña enviado'
-            };
-        } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.message || 'Error al restablecer contraseña',
-                details: error.response?.data
-            };
-        }
-    }
-
-    //* Confirm password reset with token
-    async confirmPasswordReset(token, newPassword) {
-        try {
-            const response = await this.api.post('/password-reset-confirm/', {
-                token,
-                new_password: newPassword
-            });
-            
-            return {
-                success: true,
-                data: response.data,
-                message: 'Contraseña restablecida exitosamente'
-            };
-        } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.message || 'Error al confirmar restablecimiento de contraseña',
-                details: error.response?.data
-            };
-        }
-    }
-
-    //* Get current user profile
+    //* Get user profile
     async getProfile() {
         try {
             const response = await this.api.get('/profile/');
             
-            //* Update stored user data
-            this.setUser(response.data);
-            
-            return {
-                success: true,
-                data: response.data
-            };
+            if (response.data.success) {
+                return {
+                    success: true,
+                    data: response.data.data
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to load profile'
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.message || 'Error al obtener el perfil',
-                details: error.response?.data
+                error: error.response?.data?.error || error.message || 'Error loading profile'
             };
         }
     }
@@ -182,46 +164,111 @@ class AuthAPI {
         try {
             const response = await this.api.put('/profile/', profileData);
             
-            //* Update stored user data
-            this.setUser(response.data);
-            
-            return {
-                success: true,
-                data: response.data,
-                message: 'Perfil actualizado exitosamente'
-            };
+            if (response.data.success) {
+                // Update stored user data
+                const updatedUser = response.data.data;
+                this.setUser(updatedUser);
+                
+                return {
+                    success: true,
+                    data: updatedUser,
+                    message: response.data.message || 'Profile updated successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to update profile'
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.message || 'Error al actualizar el perfil',
-                details: error.response?.data
+                error: error.response?.data?.error || error.message || 'Error updating profile'
             };
         }
     }
 
-    //* Change user password (when logged in)
-    async changePassword(currentPassword, newPassword) {
+    //* Change password
+    async changePassword(passwordData) {
         try {
-            const response = await this.api.post('/change-password/', {
-                current_password: currentPassword,
+            const response = await this.api.post('/change-password/', passwordData);
+            
+            if (response.data.success) {
+                // Update token if returned
+                if (response.data.data?.token) {
+                    this.setToken(response.data.data.token);
+                }
+                
+                return {
+                    success: true,
+                    message: response.data.message || 'Password changed successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to change password'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Error changing password'
+            };
+        }
+    }
+
+    //* Request password reset
+    async requestPasswordReset(email) {
+        try {
+            const response = await this.api.post('/password-reset/', { email });
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message || 'Password reset email sent'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to send reset email'
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.error || error.message || 'Error requesting password reset'
+            };
+        }
+    }
+
+    //* Reset password with token
+    async resetPassword(token, newPassword) {
+        try {
+            const response = await this.api.post('/password-reset-confirm/', {
+                token,
                 new_password: newPassword
             });
             
-            return {
-                success: true,
-                data: response.data,
-                message: 'Contraseña cambiada exitosamente'
-            };
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message || 'Password reset successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to reset password'
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.message || 'Error al cambiar la contraseña',
-                details: error.response?.data
+                error: error.response?.data?.error || error.message || 'Error resetting password'
             };
         }
     }
 
-    //* Check if user is authenticated
+    //* Verify if user is authenticated
     isAuthenticated() {
         const token = this.getToken();
         const user = this.getUser();
@@ -236,6 +283,7 @@ class AuthAPI {
     //* Store authentication token
     setToken(token) {
         localStorage.setItem('authToken', token);
+        // Also update default header for this instance
         this.api.defaults.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -250,18 +298,35 @@ class AuthAPI {
         localStorage.setItem('userData', JSON.stringify(userData));
     }
 
+    //* Clear all auth data
+    clearAuth() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        delete this.api.defaults.headers.Authorization;
+    }
+
     //* Verify if token is still valid
     async verifyToken() {
         try {
-            const response = await this.api.post('/verify-token/');
-            return {
-                success: true,
-                valid: response.data.valid
-            };
+            const response = await this.api.get('/verify-token/');
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    valid: response.data.valid,
+                    data: response.data.data
+                };
+            } else {
+                return {
+                    success: false,
+                    valid: false
+                };
+            }
         } catch (error) {
             return {
                 success: false,
-                valid: false
+                valid: false,
+                error: error.response?.data?.error || error.message
             };
         }
     }
@@ -271,22 +336,44 @@ class AuthAPI {
         try {
             const response = await this.api.post('/refresh-token/');
             
-            if (response.data.token) {
-                this.setToken(response.data.token);
+            if (response.data.success && response.data.data?.token) {
+                this.setToken(response.data.data.token);
+                
+                return {
+                    success: true,
+                    data: response.data.data
+                };
+            } else {
+                // If refresh fails, logout
+                this.clearAuth();
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to refresh token'
+                };
             }
-            
-            return {
-                success: true,
-                data: response.data
-            };
         } catch (error) {
-            this.logout();
+            // If refresh fails, logout
+            this.clearAuth();
             return {
                 success: false,
-                error: 'Error al renovar el token'
+                error: error.response?.data?.error || error.message || 'Error refreshing token'
             };
         }
     }
+
+    //* Check if user is admin or staff
+    isAdmin() {
+        const user = this.getUser();
+        return user && (user.is_staff || user.user_type === 'admin' || user.user_type === 'staff');
+    }
+
+    //* Check if user is customer
+    isCustomer() {
+        const user = this.getUser();
+        return user && user.user_type === 'customer';
+    }
 }
 
-export default AuthAPI;
+// Create and export singleton instance
+const authAPI = new AuthAPI();
+export default authAPI;
