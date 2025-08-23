@@ -1,8 +1,9 @@
 //?  <|------------------------Imports------------------------|>
 
 //* Imports  
-import '../style/AboutUs.css'
+import '../style/AboutUs.css';
 import '../style/SpotlightAboutUs.css';
+import FullLogo from '../img/AGAH_FullLogo.png';
 
 //* Components
 import SpotlightAboutUs from './../components/common/Spotlights/SpotlightAboutUs';
@@ -53,8 +54,8 @@ function AboutUs() {
     return (
         <>
         {/*//* lanyard Section  */}
-        <div className="AboutUs_lanyard">
-            <p>test</p>
+        <div className="AboutUs_FullLogo">
+            <img src={FullLogo} alt="AGAH Solutions Full Logo" />   
         </div>
 
         <div className="AboutUs_container">

@@ -1,9 +1,15 @@
-.AboutUs_lanyard {
+.AboutUs_FullLogo {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 6rem;
+    height: 300px;
+    margin-top: 2rem;
+}
+
+.AboutUs_FullLogo img {
+    width: auto;
+    height: 100%;
 }
 
 .AboutUs_container{
