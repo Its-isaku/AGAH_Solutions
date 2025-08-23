@@ -2608,3 +2608,10 @@ INFO 2025-08-23 11:53:40,582 basehttp 10764 19616 "GET /api/company/ HTTP/1.1" 2
 INFO 2025-08-23 11:53:40,590 basehttp 10764 7296 "GET /api/company/ HTTP/1.1" 200 2449
 INFO 2025-08-23 11:54:02,367 basehttp 10764 7296 "GET /api/company/ HTTP/1.1" 200 2449
 INFO 2025-08-23 11:54:02,374 basehttp 10764 19616 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-23 12:14:59,079 autoreload 19880 25808 Watching for file changes with StatReloader
+INFO 2025-08-23 12:18:09,588 autoreload 35572 36568 Watching for file changes with StatReloader
+INFO 2025-08-23 12:18:16,101 basehttp 35572 1060 "GET /api/homepage/ HTTP/1.1" 200 1332
+INFO 2025-08-23 12:18:16,110 basehttp 35572 32856 "GET /api/homepage/ HTTP/1.1" 200 1332
+INFO 2025-08-23 12:18:26,532 basehttp 35572 32856 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-23 12:18:26,537 basehttp 35572 1060 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-23 12:18:42,057 basehttp 35572 1060 "POST /api/contact/ HTTP/1.1" 200 113

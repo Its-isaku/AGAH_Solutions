@@ -82,6 +82,22 @@ class User(AbstractUser):
         help_text="User's email address (used for login instead of username)"
     )
     
+    #* Override groups and user_permissions to avoid conflicts
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_user_set',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
+    
     #* Additional profile fields
     phone = models.CharField(
         max_length=15,                                                             #* International phone number format
