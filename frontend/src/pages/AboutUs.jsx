@@ -61,23 +61,23 @@ function AboutUs() {
         <div className="AboutUs_container">
             {/*//* Main Info Section  */}
             <div className="AboutUs_info">
-                <SpotlightAboutUs className="custom-spotlight-AboutUs Main-Info" spotlightColor="rgba(0, 229, 255, 0.2)">
+                <div className="aboutUs-card">
                     <h2>Our Story</h2>
-                    {aboutUsData?.aboutUs || "Loading..."}
-                </SpotlightAboutUs>
+                    {aboutUsData?.aboutUs || "Loading..."} 
+                </div>
             </div>
 
             {/*//* Mission & Vision Section  */}
             <div className="AboutUs_missionVision">
-                <SpotlightAboutUs className="custom-spotlight-AboutUs" spotlightColor="rgba(0, 229, 255, 0.2)">
+                <div className="aboutUs-card">
                     <h2>Mission</h2>
                     <p>{aboutUsData?.mission || "Loading..."}</p>
-                </SpotlightAboutUs>
+                </div>
 
-                <SpotlightAboutUs className="custom-spotlight-AboutUs" spotlightColor="rgba(0, 229, 255, 0.2)">
+                <div className="aboutUs-card">
                     <h2>Vision</h2>
                     <p>{aboutUsData?.vision || "Loading..."}</p>
-                </SpotlightAboutUs>
+                </div>
             </div>
 
         </div>

@@ -79,10 +79,10 @@ class AuthAPI {
         }
     }
 
-    //* Register new user
+    //* Register new user - FIXED ENDPOINT
     async signup(userData) {
         try {
-            const response = await this.api.post('/signup/', userData);
+            const response = await this.api.post('/register/', userData);
             
             // Backend now returns {success, data}
             if (response.data.success) {
@@ -217,55 +217,22 @@ class AuthAPI {
         }
     }
 
-    //* Request password reset
+    //* Request password reset - TEMPORARILY DISABLED
     async requestPasswordReset(email) {
-        try {
-            const response = await this.api.post('/password-reset/', { email });
-            
-            if (response.data.success) {
-                return {
-                    success: true,
-                    message: response.data.message || 'Password reset email sent'
-                };
-            } else {
-                return {
-                    success: false,
-                    error: response.data.error || 'Failed to send reset email'
-                };
-            }
-        } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.error || error.message || 'Error requesting password reset'
-            };
-        }
+        // TODO: Implement password reset views in backend first
+        return {
+            success: false,
+            error: 'Password reset functionality not yet implemented'
+        };
     }
 
-    //* Reset password with token
+    //* Reset password with token - TEMPORARILY DISABLED
     async resetPassword(token, newPassword) {
-        try {
-            const response = await this.api.post('/password-reset-confirm/', {
-                token,
-                new_password: newPassword
-            });
-            
-            if (response.data.success) {
-                return {
-                    success: true,
-                    message: response.data.message || 'Password reset successfully'
-                };
-            } else {
-                return {
-                    success: false,
-                    error: response.data.error || 'Failed to reset password'
-                };
-            }
-        } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.error || error.message || 'Error resetting password'
-            };
-        }
+        // TODO: Implement password reset views in backend first
+        return {
+            success: false,
+            error: 'Password reset functionality not yet implemented'
+        };
     }
 
     //* Verify if user is authenticated
@@ -308,7 +275,7 @@ class AuthAPI {
     //* Verify if token is still valid
     async verifyToken() {
         try {
-            const response = await this.api.get('/verify-token/');
+            const response = await this.api.get('/status/');
             
             if (response.data.success) {
                 return {
@@ -331,36 +298,6 @@ class AuthAPI {
         }
     }
 
-    //* Refresh authentication token
-    async refreshToken() {
-        try {
-            const response = await this.api.post('/refresh-token/');
-            
-            if (response.data.success && response.data.data?.token) {
-                this.setToken(response.data.data.token);
-                
-                return {
-                    success: true,
-                    data: response.data.data
-                };
-            } else {
-                // If refresh fails, logout
-                this.clearAuth();
-                return {
-                    success: false,
-                    error: response.data.error || 'Failed to refresh token'
-                };
-            }
-        } catch (error) {
-            // If refresh fails, logout
-            this.clearAuth();
-            return {
-                success: false,
-                error: error.response?.data?.error || error.message || 'Error refreshing token'
-            };
-        }
-    }
-
     //* Check if user is admin or staff
     isAdmin() {
         const user = this.getUser();
@@ -374,6 +311,6 @@ class AuthAPI {
     }
 }
 
-// Create and export singleton instance
+//* Create and export singleton instance
 const authAPI = new AuthAPI();
 export default authAPI;

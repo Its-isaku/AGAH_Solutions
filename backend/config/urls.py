@@ -26,6 +26,9 @@ urlpatterns = [
     
     #* Services app URLs (API endpoints)
     path('', include('services.urls')),
+    
+    #* Auth app URLs (Authentication endpoints) - ADDED
+    path('', include('user_auth.urls')),
 ]
 
 #* Serve media files in development

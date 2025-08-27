@@ -51,7 +51,6 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
-        extra_fields.setdefault('is_verified', True)  #* Superuser is auto-verified
         extra_fields.setdefault('user_type', 'admin')
         
         #* Validate superuser fields
@@ -72,7 +71,6 @@ class User(AbstractUser):
     - Email-based authentication instead of username
     - Additional profile fields (phone, company)
     - User type classification (customer, admin, staff)
-    - Email verification system
     - Account status tracking
     """
     
@@ -80,22 +78,6 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True,                                                               #* Email must be unique across all users
         help_text="User's email address (used for login instead of username)"
-    )
-    
-    #* Override groups and user_permissions to avoid conflicts
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_user_set',
-        blank=True,
-        help_text='The groups this user belongs to.',
-        verbose_name='groups',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_user_set',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions',
     )
     
     #* Additional profile fields
@@ -128,31 +110,25 @@ class User(AbstractUser):
         help_text="Type of user account (determines permissions)"
     )
     
-    #* Account verification and status fields
-    is_verified = models.BooleanField(
-        default=False,                                                             #* New accounts start unverified
-        help_text="Has the user verified their email address?"
-    )
-    
-    #* Timestamp fields for tracking account lifecycle
+    #* Timestamps for record keeping
     created_at = models.DateTimeField(
-        auto_now_add=True,                                                         #* Automatically set when user is created
+        auto_now_add=True,                                                         #* Set once when user is created
         help_text="When the user account was created"
     )
     
     updated_at = models.DateTimeField(
-        auto_now=True,                                                             #* Automatically updated on each save
+        auto_now=True,                                                             #* Update every time user is saved
         help_text="When the user account was last updated"
     )
     
-    #* Configure authentication to use email instead of username
-    USERNAME_FIELD = 'email'                                                       #* Use email for login instead of username
-    REQUIRED_FIELDS = ['first_name', 'last_name']                                  #* Required when creating superuser via command line
+    #* Set email as the unique identifier for authentication
+    USERNAME_FIELD = 'email'                                                       #* Use email instead of username for login
+    REQUIRED_FIELDS = []                                                           #* No additional required fields for superuser creation
     
-    #* Use custom manager
-    objects = UserManager()                                                         #* Use our custom UserManager
+    #* Link to custom user manager
+    objects = UserManager()
     
-    #* Meta configuration for the User model
+    #* Meta configuration for User model
     class Meta:
         verbose_name = "User"                                                      #* Singular name in admin
         verbose_name_plural = "Users"                                             #* Plural name in admin
@@ -161,33 +137,31 @@ class User(AbstractUser):
     def __str__(self):
         """
         String representation of the user
-        Returns: Full name and email for easy identification
+        Returns: User's email for identification
         """
-        return f"{self.first_name} {self.last_name} ({self.email})"               #* Display format in admin and queries
+        return self.email
     
     def get_full_name(self):
         """
-        Method to get user's full name
-        Returns: First name + last name, handles empty names gracefully
+        Get the user's full name
+        Returns: First and last name combined, or email if no name provided
         """
-        return f"{self.first_name} {self.last_name}".strip()                      #* Strip removes extra spaces if names are empty
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        elif self.first_name:
+            return self.first_name
+        else:
+            return self.email
     
-    def is_customer(self):
+    def get_display_name(self):
         """
-        Check if user is a customer
-        Returns: Boolean indicating if user type is customer
+        Get display name for UI purposes
+        Returns: First name if available, otherwise email
         """
-        return self.user_type == 'customer'
-    
-    def is_admin_user(self):
-        """
-        Check if user has admin privileges
-        Returns: Boolean indicating if user is admin or superuser
-        """
-        return self.user_type == 'admin' or self.is_superuser
+        return self.first_name if self.first_name else self.email
 
 
-#? <|--------------Password Reset Token Model--------------|>
+#? <|--------------Password Reset Token Model (Keep this)--------------|>
 class PasswordResetToken(models.Model):
     """
     Model for handling password reset tokens
@@ -240,9 +214,9 @@ class PasswordResetToken(models.Model):
     def __str__(self):
         """
         String representation of the password reset token
-        Returns: User email and partial token for identification
+        Returns: User email and purpose for identification
         """
-        return f"Reset token for {self.user.email}"
+        return f"Password reset token for {self.user.email}"
     
     def is_valid(self):
         """
@@ -268,88 +242,4 @@ class PasswordResetToken(models.Model):
         if not self.expires_at:
             #* Set token to expire in 1 hour from creation
             self.expires_at = timezone.now() + timezone.timedelta(hours=1)
-        super().save(*args, **kwargs)                                              #* Call parent save method
-
-
-#? <|--------------Email Verification Token Model--------------|>
-class EmailVerificationToken(models.Model):
-    """
-    Model for handling email verification tokens
-    Purpose: Verify user email addresses after registration
-    Features:
-    - Unique UUID tokens for security
-    - Automatic expiration (24 hours)
-    - One-time use tokens
-    - User association for validation
-    """
-    
-    #* Link to user requiring email verification
-    user = models.ForeignKey(
-        User,                                                                      #* Reference to custom User model
-        on_delete=models.CASCADE,                                                  #* Delete tokens when user is deleted
-        related_name='email_verification_tokens',                                  #* Reverse relation name
-        help_text="User who needs email verification"
-    )
-    
-    #* Unique token for email verification link
-    token = models.UUIDField(
-        default=uuid.uuid4,                                                        #* Generate random UUID
-        unique=True,                                                               #* Ensure token uniqueness
-        help_text="Unique token sent in verification email"
-    )
-    
-    #* Timestamp when token was created
-    created_at = models.DateTimeField(
-        auto_now_add=True,                                                         #* Set automatically when token is created
-        help_text="When the verification token was generated"
-    )
-    
-    #* Timestamp when token expires
-    expires_at = models.DateTimeField(
-        help_text="When the token expires and becomes invalid"
-    )
-    
-    #* Track if token has been used
-    is_used = models.BooleanField(
-        default=False,                                                             #* New tokens start as unused
-        help_text="Has this token been used to verify email?"
-    )
-    
-    #* Meta configuration for EmailVerificationToken model
-    class Meta:
-        verbose_name = "Email Verification Token"                                  #* Singular name in admin
-        verbose_name_plural = "Email Verification Tokens"                         #* Plural name in admin
-        ordering = ['-created_at']                                                #* Order by newest first
-    
-    def __str__(self):
-        """
-        String representation of the email verification token
-        Returns: User email and purpose for identification
-        """
-        return f"Verification token for {self.user.email}"
-    
-    def is_valid(self):
-        """
-        Check if token is still valid for use
-        Returns: Boolean indicating if token can be used
-        Conditions: Not used AND not expired
-        """
-        return not self.is_used and timezone.now() < self.expires_at
-    
-    def mark_as_used(self):
-        """
-        Mark token as used (one-time use security)
-        Action: Sets is_used to True and saves to database
-        """
-        self.is_used = True
-        self.save()
-    
-    def save(self, *args, **kwargs):
-        """
-        Override save method to automatically set expiration time
-        Logic: If expiration not set, set it to 24 hours from creation
-        """
-        if not self.expires_at:
-            #* Set token to expire in 24 hours from creation (longer than password reset)
-            self.expires_at = timezone.now() + timezone.timedelta(hours=24)
         super().save(*args, **kwargs)                                              #* Call parent save method

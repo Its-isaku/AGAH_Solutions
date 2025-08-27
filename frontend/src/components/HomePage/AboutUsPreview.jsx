@@ -5,6 +5,9 @@ import GradientText from '../common/GradientText';
 import SpotlightCard from '../common/Spotlights/SpotlightCard';
 import { Link } from 'react-router-dom';
 
+//* Css
+import "../../style/HomePage.css"
+
 
 //?  Component 
 function AboutUsPreview() {
@@ -39,7 +42,7 @@ function AboutUsPreview() {
             </div>
             
             <div className='about_preview'>
-                <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(0, 229, 255, 0.2)">
+                <div className="Aboutus-Preview-card">
                     <div className="about_preview_Info">
                         <div className="text">
                             {/* <h2>Quienes somos</h2> */}
@@ -59,11 +62,7 @@ function AboutUsPreview() {
                             </Link>
                         </div>
                     </div>
-                    
-                    <div className="about_preview_img">
-
-                    </div>
-                </SpotlightCard>
+                </div>
             </div>
         </>
     )

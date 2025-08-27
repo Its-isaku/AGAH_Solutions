@@ -1,0 +1,359 @@
+/* AUTH.CSS - Estilos compartidos para Login, SignUp y ResetPassword */
+/* Usando el mismo estilo del contact page */
+
+/*? <|---------- PAGE CONTAINER ---------|> */
+.auth-page-container {
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-content {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/*? <|---------- AUTH CARD CONTAINER ---------|> */
+.auth-card-container {
+    background-color: rgba(54, 52, 71, 0.9);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    margin: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(120, 183, 208, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.auth-card-container h1 {
+    color: #F4E7E1;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid rgba(120, 183, 208, 0.338);
+    padding-bottom: 1rem;
+}
+
+/*? <|---------- ALERTS ---------|> */
+.alert-error,
+.alert-success {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.alert-error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+}
+
+.alert-success {
+    background-color: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #86efac;
+}
+
+/*? <|---------- FORM STYLES ---------|> */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.half {
+    flex: 1;
+}
+
+.form-group label {
+    color: #F4E7E1;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    padding: 0.75rem;
+    border: 1px solid rgba(120, 183, 208, 0.3);
+    border-radius: 0.5rem;
+    background-color: rgba(26, 26, 26, 0.8);
+    color: #F4E7E1;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #78B7D0;
+    box-shadow: 0 0 0 2px rgba(120, 183, 208, 0.2);
+    background-color: rgba(26, 26, 26, 0.95);
+}
+
+.form-group input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: rgba(26, 26, 26, 0.5);
+}
+
+/*? <|---------- PASSWORD CONTAINER ---------|> */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    padding-right: 3rem;
+    flex: 1;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #78B7D0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+    transition: all 0.3s ease;
+    border-radius: 0.25rem;
+}
+
+.password-toggle-btn:hover {
+    background-color: rgba(120, 183, 208, 0.1);
+    transform: scale(1.1);
+}
+
+.password-toggle-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/*? <|---------- SUBMIT BUTTON (CALL TO ACTION STYLE) ---------|> */
+.submit-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    width: 100%;
+    height: 56px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.submit-btn:hover:not(:disabled) {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/*? <|---------- AUTH LINKS (CONTACT PAGE HOVER EFFECT) ---------|> */
+.auth-links {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.forgot-link,
+.signup-link,
+.login-link,
+.back-link {
+    color: #78B7D0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 0.5rem 0;
+    margin: 0.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+}
+
+/* Contact page hover effect - animated bar */
+.forgot-link::before,
+.signup-link::before,
+.login-link::before,
+.back-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #78B7D0;
+    transition: all 0.5s ease;
+}
+
+.forgot-link:hover,
+.signup-link:hover,
+.login-link:hover,
+.back-link:hover {
+    color: #F4E7E1;
+    transform: translateY(-2px);
+}
+
+.forgot-link:hover::before,
+.signup-link:hover::before,
+.login-link:hover::before,
+.back-link:hover::before {
+    width: 100%;
+}
+
+.separator {
+    margin: 1.5rem 0;
+    color: #999;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+.separator span {
+    position: relative;
+    background-color: rgba(54, 52, 71, 0.9);
+    padding: 0 1rem;
+    z-index: 1;
+}
+
+.separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: rgba(120, 183, 208, 0.2);
+    transform: translateY(-50%);
+}
+
+/*? <|---------- RESPONSIVE DESIGN ---------|> */
+/** Tablet (1024px and below) */
+@media (max-width: 1024px) {
+    .auth-page-container {
+        padding: 1.5rem 1rem;
+    }
+    
+    .auth-card-container {
+        padding: 2rem;
+        margin: 0.5rem;
+    }
+    
+    .auth-card-container h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/** Mobile Large (768px and below) */
+@media (max-width: 768px) {
+    .auth-page-container {
+        padding: 1rem 0.5rem;
+        min-height: 100vh;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+    
+    .auth-content {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .auth-card-container {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+        border-radius: 1rem;
+        max-width: 400px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .auth-card-container h1 {
+        font-size: 1.6rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .form-group.half {
+        flex: none;
+    }
+}
+
+/** Mobile Small (480px and below) */
+@media (max-width: 480px) {
+    .auth-page-container {
+        padding: 0.5rem 0.25rem;
+        padding-top: 1.5rem;
+    }
+    
+    .auth-content {
+        max-width: 100%;
+    }
+    
+    .auth-card-container {
+        padding: 1.25rem;
+        border-radius: 0.75rem;
+        margin: 0 0.25rem;
+        max-width: 350px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .auth-card-container h1 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .auth-form {
+        gap: 1rem;
+    }
+    
+    .form-group input {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+    
+    .submit-btn {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+        height: 48px;
+    }
+    
+    .password-toggle-btn {
+        font-size: 1rem;
+        right: 0.6rem;
+    }
+}

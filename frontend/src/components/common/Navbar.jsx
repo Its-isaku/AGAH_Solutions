@@ -53,7 +53,7 @@ function Navbar() {
 
                     {/*//* Account */}
                     <div className={`Navbar_Account ${isMenuOpen ? 'active' : ''}`}>
-                        <Link to="#login" onClick={closeMenu}>Login</Link> {/*//* will make this dinamic later */}
+                        <Link to="/login" onClick={closeMenu}>Login</Link> {/*//* will make this dinamic later */}
                         <Link to="#home" onClick={closeMenu}>CART</Link>
                         <Link to="#home" onClick={closeMenu}>ORDERS</Link>
                     </div>

@@ -18,8 +18,8 @@
     gap: 1.5rem;
     justify-content: center;
     align-items: center;
-    margin-top: 1.5rem;
-}
+    margin: 1.5rem auto 0 auto;
+    width: 80%}
 
 .AboutUs_info{
     display: flex;
@@ -31,8 +31,81 @@
 .AboutUs_missionVision{
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
-    align-items: center;
-    margin: 0 10rem;
+    gap: 2rem;
+    justify-content: center;
+    align-items: stretch;
+    width: 70%;
     margin-bottom: 1.5rem;
+}
+
+.aboutUs-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 1px solid rgba(120, 183, 208, 0.2);
+    position: relative;
+    flex: 1;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.aboutUs-card::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(132, 0, 255, 0.1) 0%, 
+        transparent 50%, 
+        rgba(120, 183, 208, 0.1) 100%);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.aboutUs-card:hover::before {
+    opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .AboutUs_container {
+        width: 95%;
+        padding: 0 1rem;
+    }
+    
+    .AboutUs_missionVision {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .aboutUs-card {
+        min-height: auto;
+    }
+    
+    .AboutUs_FullLogo {
+        height: 200px;
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .AboutUs_container {
+        width: 98%;
+        gap: 1rem;
+    }
+    
+    .aboutUs-card {
+        padding: 1.5rem;
+    }
+    
+    .AboutUs_FullLogo {
+        height: 150px;
+    }
 }

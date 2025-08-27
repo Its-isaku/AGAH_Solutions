@@ -6,7 +6,10 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.conf import settings
+
 
 User = get_user_model()
 
@@ -101,19 +104,14 @@ class SignupView(APIView):
                     'error': 'User with this email already exists'
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            #* Create user
+            #* Create user - No email verification needed
             user = User.objects.create_user(
-                username=email,  # Use email as username
                 email=email,
                 password=password,
                 first_name=first_name,
-                last_name=last_name
+                last_name=last_name,
+                user_type='customer'
             )
-            
-            #* Set user type if custom field exists
-            if hasattr(user, 'user_type'):
-                user.user_type = 'customer'
-                user.save()
             
             #* Create token
             token, created = Token.objects.get_or_create(user=user)
@@ -121,11 +119,11 @@ class SignupView(APIView):
             #* Login user
             login(request, user)
             
-            #* Send welcome email
+            #* Send beautiful welcome email
             try:
                 self.send_welcome_email(user)
-            except:
-                pass  # Don't fail registration if email fails
+            except Exception as e:
+                print(f"Welcome email failed: {e}")  # Log error but don't fail registration
             
             return Response({
                 'success': True,
@@ -150,30 +148,49 @@ class SignupView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def send_welcome_email(self, user):
-        """Send welcome email to new user"""
-        subject = "Welcome to AGAH Solutions"
-        message = f"""
-        Dear {user.first_name or 'Customer'},
+        """Send beautiful welcome email using HTML template"""
+        subject = "¡Bienvenido a AGAH Solutions!"
         
-        Welcome to AGAH Solutions! Your account has been created successfully.
+        # Context for the template
+        context = {
+            'user_name': user.get_display_name(),
+            'website_url': 'http://localhost:3000',  # Update with your actual domain
+            'user': user
+        }
         
-        You can now:
-        - Browse our services
-        - Create orders
-        - Track your order status
-        - Contact our support team
+        # Render HTML template
+        html_message = render_to_string('emails/welcome_email.html', context)
         
-        If you have any questions, please don't hesitate to contact us.
+        # Create plain text version
+        plain_message = f"""
+        Hola {user.get_display_name()},
         
-        Best regards,
-        AGAH Solutions Team
+        ¡Bienvenido a AGAH Solutions! Tu cuenta ha sido creada exitosamente.
+        
+        Ahora puedes:
+        - Explorar nuestro catálogo completo de servicios
+        - Crear y gestionar tus pedidos personalizados  
+        - Hacer seguimiento del estado de tus proyectos
+        - Contactar con nuestro equipo de soporte especializado
+        - Acceder a cotizaciones detalladas y estimados
+        
+        Si tienes alguna pregunta, no dudes en contactarnos.
+        
+        Saludos,
+        El equipo de AGAH Solutions
+        
+        AGAH Solutions
+        Email: agahsolutions@gmail.com
+        Teléfono: +52 665 127 0811
         """
         
+        # Send email
         send_mail(
             subject=subject,
-            message=message,
+            message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
+            html_message=html_message,  # This sends the beautiful HTML version
             fail_silently=True,
         )
 

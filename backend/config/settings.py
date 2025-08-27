@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'services.apps.ServiceConfig',
-    'auth.apps.AuthConfig',
+    'user_auth.apps.AuthConfig',
 ]
 
 MIDDLEWARE = [
@@ -99,7 +99,7 @@ DATABASES = {
 
 #? <|--------------Custom User Model--------------|>
 
-AUTH_USER_MODEL = 'custom_auth.User'
+AUTH_USER_MODEL = 'user_auth.User'
 
 #? <|--------------Password Validation--------------|>
 
