@@ -1,5 +1,3 @@
-//?frontend/src/components/homepage/HeroSection.jsx
-
 //?  <|----------------------Imports----------------------|>
 
 //* css 

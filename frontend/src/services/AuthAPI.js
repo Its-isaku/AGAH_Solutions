@@ -79,7 +79,7 @@ class AuthAPI {
         }
     }
 
-    //* Register new user - FIXED ENDPOINT
+    //* Register new user
     async signup(userData) {
         try {
             const response = await this.api.post('/register/', userData);

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precio Final de Tu Pedido - AGAH Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #F4E7E1;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #363447 0%, #2a2838 100%);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(120, 183, 208, 0.3);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #78B7D0 0%, #5aa3c4 50%, #3d8fb8 100%);
+            padding: 2.5rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #F4E7E1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            color: #F4E7E1;
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+        
+        .email-body {
+            padding: 2.5rem;
+        }
+        
+        .final-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #F4E7E1;
+            text-align: center;
+        }
+        
+        .order-info {
+            background: linear-gradient(135deg, rgba(120, 183, 208, 0.2) 0%, rgba(120, 183, 208, 0.1) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(120, 183, 208, 0.4);
+        }
+        
+        .order-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #78B7D0;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .price-comparison {
+            background-color: rgba(26, 26, 26, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(120, 183, 208, 0.3);
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.75rem 0;
+            padding: 0.5rem;
+        }
+        
+        .price-estimated {
+            color: #F4E7E1;
+            opacity: 0.7;
+            text-decoration: line-through;
+        }
+        
+        .price-final {
+            color: #78B7D0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .total-final {
+            background: linear-gradient(135deg, rgba(120, 183, 208, 0.3) 0%, rgba(120, 183, 208, 0.1) 100%);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid #78B7D0;
+            text-align: center;
+        }
+        
+        .total-amount {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #78B7D0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .savings {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .payment-section {
+            background-color: rgba(26, 26, 26, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(120, 183, 208, 0.3);
+        }
+        
+        .payment-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #78B7D0;
+            text-align: center;
+        }
+        
+        .payment-methods {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .payment-methods li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #F4E7E1;
+        }
+        
+        .payment-methods li::before {
+            content: "💳";
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: #F4E7E1;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            color: #78B7D0;
+            border-color: #78B7D0;
+            transform: translateY(-2px);
+        }
+        
+        .cta-button.cancel {
+            border-color: rgba(220, 53, 69, 0.4);
+            color: #fca5a5;
+        }
+        
+        .cta-button.cancel:hover {
+            color: #dc3545;
+            border-color: #dc3545;
+            transform: translateY(-2px);
+        }
+        
+        .contact-info {
+            background-color: rgba(26, 26, 26, 0.5);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            border: 1px solid rgba(120, 183, 208, 0.2);
+        }
+        
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #78B7D0;
+        }
+        
+        .contact-item {
+            margin: 0.5rem 0;
+            color: #F4E7E1;
+        }
+        
+        .contact-item a {
+            color: #78B7D0;
+            text-decoration: none;
+        }
+        
+        .email-footer {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(54, 52, 71, 0.8) 100%);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #999;
+        }
+        
+        .footer-text {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">AGAH Solutions</div>
+            <div class="tagline">Cutting-Edge Solutions, Crafted to Perfection</div>
+        </div>
+        
+        <div class="email-body">
+            <h1 class="final-title">¡Tu Precio Final Está Listo!</h1>
+            
+            <div class="order-info">
+                <div class="order-number">Pedido #{{ order.order_number }}</div>
+                <p style="text-align: center; margin-bottom: 0;">
+                    Hola {{ customer_name }}, hemos revisado tu pedido y aquí está el precio final.
+                </p>
+            </div>
+            
+            <div class="price-comparison">
+                <div class="price-row">
+                    <span>Precio Estimado:</span>
+                    <span class="price-estimated">${{ order.estimaded_price|floatformat:2 }} MXN</span>
+                </div>
+                <div class="price-row">
+                    <span>Precio Final:</span>
+                    <span class="price-final">${{ order.final_price|floatformat:2 }} MXN</span>
+                </div>
+                {% if order.final_price < order.estimaded_price %}
+                <div class="price-row">
+                    <span>Ahorras:</span>
+                    <span class="savings">${{ order.estimaded_price|add:order.final_price|floatformat:2 }} MXN</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="total-final">
+                <div class="total-amount">
+                    ${{ order.final_price|floatformat:2 }} MXN
+                </div>
+                <p style="margin: 0; opacity: 0.9;">Total Final</p>
+            </div>
+
+            <div class="cta-section">
+                <a href="{{ website_url }}/orders/confirm?order={{ order.order_number }}" class="cta-button">
+                    Confirmar Pedido
+                </a>
+                <br>
+                <a href="{{ website_url }}/orders/cancel?order={{ order.order_number }}" class="cta-button cancel">
+                    Cancelar Pedido
+                </a>
+                <br>
+                <a href="{{ website_url }}/orders/track?order={{ order.order_number }}" class="cta-button">
+                    Ver Detalles
+                </a>
+            </div>
+            
+            <div class="contact-info">
+                <h3 class="contact-title">¿Necesitas hacer cambios?</h3>
+                <div class="contact-item">
+                    <strong>Email:</strong> 
+                    <a href="mailto:agahsolutions@gmail.com">agahsolutions@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Teléfono:</strong> 
+                    <a href="tel:+526651270811">+52 665 127 0811</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Respuesta promedio:</strong> 24 horas
+                </div>
+            </div>
+        </div>
+        
+        <div class="email-footer">
+            <div class="footer-text">
+                Gracias por confiar en AGAH Solutions para tus proyectos.
+            </div>
+            <div class="footer-text">
+                © 2025 AGAH Solutions. Todos los derechos reservados.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

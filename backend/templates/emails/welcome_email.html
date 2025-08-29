@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a AGAH Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #F4E7E1;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #363447 0%, #2a2838 100%);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(120, 183, 208, 0.3);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #78B7D0 0%, #5aa3c4 50%, #3d8fb8 100%);
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(244, 231, 225, 0.1) 0%, transparent 100%);
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #F4E7E1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            color: #F4E7E1;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .email-body {
+            padding: 2rem;
+        }
+        
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #F4E7E1;
+            text-align: center;
+        }
+        
+        .welcome-text {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #F4E7E1;
+        }
+        
+        .features-section {
+            background-color: rgba(120, 183, 208, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(120, 183, 208, 0.2);
+        }
+        
+        .features-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #78B7D0;
+            text-align: center;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .features-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #F4E7E1;
+        }
+        
+        .features-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #78B7D0;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #F4E7E1;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 1rem auto;
+            display: block;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+        
+        .cta-button:hover {
+            color: #78B7D0;
+            border-color: #78B7D0;
+            transform: translateY(-2px);
+        }
+        
+        .contact-info {
+            background-color: rgba(26, 26, 26, 0.5);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            border: 1px solid rgba(120, 183, 208, 0.2);
+        }
+        
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #78B7D0;
+        }
+        
+        .contact-item {
+            margin: 0.5rem 0;
+            color: #F4E7E1;
+        }
+        
+        .contact-item a {
+            color: #78B7D0;
+            text-decoration: none;
+        }
+        
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .email-footer {
+            background-color: rgba(26, 26, 26, 0.8);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #999;
+        }
+        
+        .footer-text {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .email-header,
+            .email-body {
+                padding: 1.5rem;
+            }
+            
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">AGAH Solutions</div>
+            <div class="tagline">Cutting-Edge Solutions, Crafted to Perfection</div>
+        </div>
+        
+        <div class="email-body">
+            <h1 class="welcome-title">¡Bienvenido {{ user_name }}!</h1>
+            
+            <p class="welcome-text">
+                Tu cuenta ha sido creada exitosamente. Estamos emocionados de tenerte como parte de la familia AGAH Solutions.
+            </p>
+            
+            <div class="features-section">
+                <h2 class="features-title">Ahora puedes disfrutar de:</h2>
+                <ul class="features-list">
+                    <li>Explorar nuestro catálogo completo de servicios</li>
+                    <li>Crear y gestionar tus pedidos personalizados</li>
+                    <li>Hacer seguimiento del estado de tus proyectos</li>
+                    <li>Contactar con nuestro equipo de soporte especializado</li>
+                    <li>Acceder a cotizaciones detalladas y estimados</li>
+                </ul>
+            </div>
+            
+            <a href="{{ website_url }}" class="cta-button">
+                Comenzar a Explorar
+            </a>
+            
+            <div class="contact-info">
+                <h3 class="contact-title">¿Necesitas ayuda?</h3>
+                <div class="contact-item">
+                    <strong>Email:</strong> 
+                    <a href="mailto:agahsolutions@gmail.com">agahsolutions@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Teléfono:</strong> 
+                    <a href="tel:+526651270811">+52 665 127 0811</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Respuesta promedio:</strong> 24 horas
+                </div>
+            </div>
+        </div>
+        
+        <div class="email-footer">
+            <div class="footer-text">
+                Gracias por confiar en AGAH Solutions para tus proyectos de fabricación digital.
+            </div>
+            <div class="footer-text">
+                © 2025 AGAH Solutions. Todos los derechos reservados.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

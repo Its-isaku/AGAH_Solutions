@@ -4,11 +4,14 @@ import '../../style/Navbar.css'
 import SpotlightNavbar from './Spotlights/SpotlightNavbar';
 import LOGO from '../../img/AGAH_LOGO.png' 
 import { Link } from 'react-router-dom';
+import authApi from "../../services/AuthAPI.js";
 
 //?  Component 
 function Navbar() {
     //? Variables 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     //? Functions
     const toggleMenu = () => {
@@ -18,6 +21,25 @@ function Navbar() {
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
+
+    //* get user data
+    const userData = async () => {
+        try {
+            const data =  await authApi.getUser();
+            setUser(data);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+
+    const UserLoggedIn = async () => {
+        try {
+            const auth = await authApi.isAuthenticated();
+            setIsAuthenticated(auth);
+        } catch (error) {
+            console.error("Error checking authentication status:", error);
+        }
+    }
 
     //? What is gonna be rendered
     return (
@@ -53,9 +75,15 @@ function Navbar() {
 
                     {/*//* Account */}
                     <div className={`Navbar_Account ${isMenuOpen ? 'active' : ''}`}>
-                        <Link to="/login" onClick={closeMenu}>Login</Link> {/*//* will make this dinamic later */}
-                        <Link to="#home" onClick={closeMenu}>CART</Link>
-                        <Link to="#home" onClick={closeMenu}>ORDERS</Link>
+                        {isAuthenticated ? (
+                            <>
+                                <p>{user?.name}</p>
+                                <Link to="#home" onClick={closeMenu}>CART</Link>
+                                <Link to="#home" onClick={closeMenu}>ORDERS</Link>
+                            </>
+                        ) : (
+                            <Link to="/login" onClick={closeMenu}>Login</Link>
+                        )}
                     </div>
                 </div>
             </SpotlightNavbar>    

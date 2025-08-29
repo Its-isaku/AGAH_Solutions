@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estimación de Tu Pedido - AGAH Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #F4E7E1;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #363447 0%, #2a2838 100%);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(120, 183, 208, 0.3);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #78B7D0 0%, #5aa3c4 50%, #3d8fb8 100%);
+            padding: 2.5rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #F4E7E1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            color: #F4E7E1;
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+        
+        .email-body {
+            padding: 2rem;
+        }
+        
+        @media (max-width: 600px) {
+            .email-body {
+                padding: 1.5rem;
+            }
+            
+            .order-info {
+                padding: 1rem;
+            }
+            
+            .total-section {
+                padding: 1rem;
+            }
+            
+            .total-amount {
+                font-size: 1.5rem;
+            }
+            
+            .estimate-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .estimate-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #F4E7E1;
+            text-align: center;
+        }
+        
+        .order-info {
+            background: linear-gradient(135deg, rgba(120, 183, 208, 0.2) 0%, rgba(120, 183, 208, 0.1) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(120, 183, 208, 0.4);
+        }
+        
+        .order-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #78B7D0;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: rgba(26, 26, 26, 0.3);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+        
+        .items-table th {
+            background: linear-gradient(135deg, #78B7D0 0%, #5aa3c4 100%);
+            color: #F4E7E1;
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .items-table td {
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid rgba(120, 183, 208, 0.2);
+            color: #F4E7E1;
+            word-wrap: break-word;
+            max-width: 0;
+        }
+        
+        .items-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Responsive table layout */
+        .items-table th:nth-child(1),
+        .items-table td:nth-child(1) {
+            width: 40%;
+        }
+        
+        .items-table th:nth-child(2),
+        .items-table td:nth-child(2) {
+            width: 15%;
+            text-align: center;
+        }
+        
+        .items-table th:nth-child(3),
+        .items-table td:nth-child(3) {
+            width: 22.5%;
+            text-align: right;
+        }
+        
+        .items-table th:nth-child(4),
+        .items-table td:nth-child(4) {
+            width: 22.5%;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .items-table {
+                font-size: 0.8rem;
+            }
+            
+            .items-table th,
+            .items-table td {
+                padding: 0.5rem 0.25rem;
+            }
+            
+            .items-table th:nth-child(3),
+            .items-table td:nth-child(3),
+            .items-table th:nth-child(4),
+            .items-table td:nth-child(4) {
+                font-size: 0.75rem;
+            }
+        }
+        
+        .total-section {
+            background: linear-gradient(135deg, rgba(244, 231, 225, 0.1) 0%, rgba(120, 183, 208, 0.1) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 2px solid rgba(120, 183, 208, 0.4);
+        }
+        
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #78B7D0;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .total-note {
+            text-align: center;
+            color: #F4E7E1;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .timeline-section {
+            background-color: rgba(26, 26, 26, 0.4);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(120, 183, 208, 0.3);
+        }
+        
+        .timeline-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #78B7D0;
+            text-align: center;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 0.75rem 0;
+            padding: 0.5rem;
+        }
+        
+        .timeline-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #78B7D0;
+            margin-right: 1rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            color: #F4E7E1;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 1rem auto;
+            display: block;
+            text-align: center;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+        
+        .cta-button:hover {
+            color: #78B7D0;
+            border-color: #78B7D0;
+            transform: translateY(-2px);
+        }
+        
+        .cta-text {
+            margin-top: 1rem;
+            color: #F4E7E1;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .contact-info {
+            background-color: rgba(26, 26, 26, 0.5);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            border: 1px solid rgba(120, 183, 208, 0.2);
+        }
+        
+        .contact-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #78B7D0;
+        }
+        
+        .contact-item {
+            margin: 0.5rem 0;
+            color: #F4E7E1;
+        }
+        
+        .contact-item a {
+            color: #78B7D0;
+            text-decoration: none;
+        }
+        
+        .email-footer {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(54, 52, 71, 0.8) 100%);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #999;
+        }
+        
+        .footer-text {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">AGAH Solutions</div>
+            <div class="tagline">Cutting-Edge Solutions, Crafted to Perfection</div>
+        </div>
+        
+        <div class="email-body">
+            <h1 class="estimate-title">Tu Estimación Está Lista</h1>
+            
+            <div class="order-info">
+                <div class="order-number">Pedido #{{ order.order_number }}</div>
+                
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.service.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.estimated_unit_price|floatformat:2 }} MXN</td>
+                            <td>${{ item.get_estimated_total_price|floatformat:2 }} MXN</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="total-section">
+                <div class="total-amount">
+                    Total Estimado: ${{ order.estimaded_price|floatformat:2 }} MXN
+                </div>
+                <div class="total-note">
+                    *Este es un precio estimado. El precio final puede variar según especificaciones adicionales.
+                </div>
+            </div>
+            
+            <div class="timeline-section">
+                <div class="timeline-title">Tiempo Estimado de Entrega</div>
+                <div class="timeline-item">
+                    <div class="timeline-icon"></div>
+                    <span>{{ order.estimated_completion_date_days }} días hábiles</span>
+                </div>
+            </div>
+            
+            <div class="cta-section">
+                <a href="{{ website_url }}/orders/track?order={{ order.order_number }}" class="cta-button">
+                    Ver Detalles del Pedido
+                </a>
+                <div class="cta-text">
+                    Revisa tu estimación y confirma para proceder con la producción
+                </div>
+            </div>
+            
+            <div class="contact-info">
+                <h3 class="contact-title">¿Tienes preguntas sobre tu estimación?</h3>
+                <div class="contact-item">
+                    <strong>Email:</strong> 
+                    <a href="mailto:agahsolutions@gmail.com">agahsolutions@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Teléfono:</strong> 
+                    <a href="tel:+526651270811">+52 665 127 0811</a>
+                </div>
+                <div class="contact-item">
+                    <strong>Respuesta promedio:</strong> 24 horas
+                </div>
+            </div>
+        </div>
+        
+        <div class="email-footer">
+            <div class="footer-text">
+                Gracias por confiar en AGAH Solutions para tus proyectos.
+            </div>
+            <div class="footer-text">
+                © 2025 AGAH Solutions. Todos los derechos reservados.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

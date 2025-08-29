@@ -2,7 +2,6 @@
 
 //* Components
 import GradientText from '../common/GradientText';
-import SpotlightCard from '../common/Spotlights/SpotlightCard';
 import { Link } from 'react-router-dom';
 
 //* Css
