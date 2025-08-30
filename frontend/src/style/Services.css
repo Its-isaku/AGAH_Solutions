@@ -1,0 +1,532 @@
+/* GENERAL SERVICE STYLES */
+.service-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #060010 0%, #1a0d2e 50%, #060010 100%);
+    color: #F4E7E1;
+    padding: 0;
+    margin: 0;
+}
+
+/* SERVICE HEADER */
+.service-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.service-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #F4E7E1;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+.service-subtitle {
+    font-size: 1.25rem;
+    color: #78B7D0;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* SERVICE CONTENT */
+.service-content {
+    padding: 4rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* SERVICE GRID */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+/* SERVICE CARD (AboutUs Style) */
+.service-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 0;
+    border: 1px solid rgba(120, 183, 208, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(132, 0, 255, 0.1) 0%, 
+        transparent 50%, 
+        rgba(120, 183, 208, 0.1) 100%);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.service-card:hover::before {
+    opacity: 1;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(120, 183, 208, 0.3);
+}
+
+/* Card Image */
+.service-card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a0d2e 0%, #060010 100%);
+}
+
+.service-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-card-image img {
+    transform: scale(1.05);
+}
+
+/* Card Body */
+.service-card-body {
+    padding: 2rem;
+}
+
+.service-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #F4E7E1;
+    margin-bottom: 1rem;
+}
+
+.service-card-description {
+    color: #78B7D0;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    min-height: 60px;
+}
+
+.service-card-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #7FC7AF;
+    margin-bottom: 1.5rem;
+}
+
+/* Service Card Button - Like previewBtn style */
+.service-card-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 56px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    text-transform: uppercase;
+}
+
+.service-card-button:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+/* LOADING & ERROR STATES */
+.service-loading,
+.service-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    color: #78B7D0;
+}
+
+/* Spinner */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(120, 183, 208, 0.2);
+    border-top-color: #78B7D0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Retry Button */
+.retry-button {
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.retry-button:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+}
+
+/* MODAL OVERLAY */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+    padding: 2rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* MODAL CONTENT */
+.modal-content {
+    background: linear-gradient(135deg, #1a0d2e 0%, #060010 100%);
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.3s ease;
+    border: 1px solid rgba(120, 183, 208, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(120, 183, 208, 0.2);
+    flex-shrink: 0;
+}
+
+.modal-header h2 {
+    color: #F4E7E1;
+    font-size: 1.75rem;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #78B7D0;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: #F4E7E1;
+}
+
+/* Modal Body - Scrollable properly */
+.modal-body {
+    padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(120, 183, 208, 0.3) transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(25, 25, 35, 0.3);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(120, 183, 208, 0.4);
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(120, 183, 208, 0.6);
+}
+
+/* FORM STYLES */
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h3 {
+    color: #78B7D0;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(120, 183, 208, 0.2);
+}
+
+.form-section h4 {
+    color: #7FC7AF;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    color: #F4E7E1;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(25, 25, 35, 0.7);
+    border: 1px solid rgba(120, 183, 208, 0.3);
+    border-radius: 8px;
+    color: #F4E7E1;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #78B7D0;
+    background: rgba(25, 25, 35, 0.9);
+    box-shadow: 0 0 10px rgba(120, 183, 208, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(120, 183, 208, 0.5);
+}
+
+/* File Input */
+.file-input {
+    padding: 0.5rem !important;
+    cursor: pointer;
+}
+
+.file-name {
+    color: #7FC7AF;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Dimensions Section */
+.form-section-dimensions {
+    margin-bottom: 1.5rem;
+}
+
+.form-row-dimensions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    margin: 1.5rem 0;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.75rem;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.checkbox-group span {
+    color: #F4E7E1;
+}
+
+/* MODAL FOOTER */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(120, 183, 208, 0.2);
+    flex-shrink: 0;
+}
+
+/* Modal Buttons - Like previewBtn style */
+.modal-button-cancel,
+.modal-button-submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2rem;
+    height: 56px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    text-transform: uppercase;
+}
+
+.modal-button-cancel {
+    border-color: rgba(120, 183, 208, 0.3);
+}
+
+.modal-button-cancel:hover {
+    color: #78B7D0;
+    transform: translateY(-2px);
+    border-color: rgba(120, 183, 208, 0.6);
+}
+
+.modal-button-submit {
+    background: linear-gradient(135deg, #78B7D0 0%, #7FC7AF 100%);
+    color: #060010;
+    border: none;
+}
+
+.modal-button-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(120, 183, 208, 0.4);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    /* Header adjustments */
+    .service-title {
+        font-size: 2.5rem;
+    }
+    
+    .service-subtitle {
+        font-size: 1rem;
+    }
+    
+    /* Grid adjustments */
+    .service-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    /* Modal adjustments */
+    .modal-overlay {
+        padding: 1rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .form-row-dimensions {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-button-cancel,
+    .modal-button-submit {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-header {
+        padding: 3rem 1rem;
+    }
+    
+    .service-content {
+        padding: 2rem 1rem;
+    }
+    
+    .service-card-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+}

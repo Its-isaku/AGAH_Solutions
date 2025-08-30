@@ -240,7 +240,8 @@ function Navbar() {
                                                 onClick={closeMenu}
                                             >
                                                 <FaKey />
-                                                <span>Cambiar Contraseña</span>
+                                                <span>Change Password</span>
+                                                {/* <span>Cambiar Contraseña</span> */}
                                             </Link>
                                             <button 
                                                 className="dropdown-item logout"

@@ -1,0 +1,31 @@
+/*? <|---------- GENERAL ORDER STYLES ---------|> */
+.order-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #060010 0%, #1a0d2e 50%, #060010 100%);
+    color: #F4E7E1;
+    padding: 0;
+    margin: 0;
+}
+
+/*? <|---------- ORDER HEADER ---------|> */
+.order-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.order-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #F4E7E1;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+.order-subtitle {
+    font-size: 1.25rem;
+    color: #78B7D0;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
