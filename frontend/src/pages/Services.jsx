@@ -12,8 +12,8 @@ function Services() {
     //? What is gonna be rendered
     return (
         <>
-        {/*? Content */}
-        <h1>Services</h1>
+        {/*//? Content */}
+        
 
         </>
     )

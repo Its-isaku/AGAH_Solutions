@@ -23,7 +23,8 @@ class AuthAPI {
             (config) => {
                 const token = this.getToken();
                 if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
+                    // Django REST Framework uses "Token" instead of "Bearer"
+                    config.headers.Authorization = `Token ${token}`;
                 }
                 return config;
             },
@@ -37,7 +38,15 @@ class AuthAPI {
                 if (error.response?.status === 401) {
                     // Token expired or invalid
                     this.logout();
-                    window.location.href = '/login';
+                    
+                    // En lugar de window.location.href, disparamos un evento personalizado
+                    // que será manejado por los componentes React de manera apropiada
+                    window.dispatchEvent(new CustomEvent('auth-expired', { 
+                        detail: { 
+                            redirect: '/login',
+                            message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.' 
+                        } 
+                    }));
                 }
                 return Promise.reject(error);
             }
@@ -74,7 +83,8 @@ class AuthAPI {
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.error || error.message || 'Error al iniciar sesión'
+                error: error.response?.data?.error || error.message || 'Login error'
+                // error: error.response?.data?.error || error.message || 'Error al iniciar sesión'
             };
         }
     }
@@ -108,7 +118,8 @@ class AuthAPI {
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.error || error.message || 'Error en el registro'
+                error: error.response?.data?.error || error.message || 'Registration error'
+                // error: error.response?.data?.error || error.message || 'Error en el registro'
             };
         }
     }
@@ -130,7 +141,8 @@ class AuthAPI {
             
             return {
                 success: true,
-                message: 'Sesión cerrada exitosamente'
+                message: 'Session closed successfully'
+                // message: 'Sesión cerrada exitosamente'
             };
         }
     }
@@ -191,6 +203,15 @@ class AuthAPI {
     //* Change password
     async changePassword(passwordData) {
         try {
+            //* Verify user is authenticated
+            if (!this.isAuthenticated()) {
+                return {
+                    success: false,
+                    error: 'You must be authenticated to change your password'
+                    // error: 'Debes estar autenticado para cambiar tu contraseña'
+                };
+            }
+
             const response = await this.api.post('/change-password/', passwordData);
             
             if (response.data.success) {
@@ -210,29 +231,65 @@ class AuthAPI {
                 };
             }
         } catch (error) {
+            console.error('Change password error:', error);
             return {
                 success: false,
-                error: error.response?.data?.error || error.message || 'Error changing password'
+                error: error.response?.data?.error || error.response?.data?.message || error.message || 'Error changing password'
             };
         }
     }
 
-    //* Request password reset - TEMPORARILY DISABLED
+    //* Request password reset
     async requestPasswordReset(email) {
-        // TODO: Implement password reset views in backend first
-        return {
-            success: false,
-            error: 'Password reset functionality not yet implemented'
-        };
+        try {
+            const response = await this.api.post('/request-password-reset/', { email });
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message || 'Password reset email sent successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to send password reset email'
+                };
+            }
+        } catch (error) {
+            console.error('Password reset request error:', error);
+            return {
+                success: false,
+                error: error.response?.data?.error || error.response?.data?.message || error.message || 'Error requesting password reset'
+            };
+        }
     }
 
-    //* Reset password with token - TEMPORARILY DISABLED
+    //* Reset password with token
     async resetPassword(token, newPassword) {
-        // TODO: Implement password reset views in backend first
-        return {
-            success: false,
-            error: 'Password reset functionality not yet implemented'
-        };
+        try {
+            const response = await this.api.post('/reset-password/', { 
+                token, 
+                new_password: newPassword 
+            });
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message || 'Password reset successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    error: response.data.error || 'Failed to reset password'
+                };
+            }
+        } catch (error) {
+            console.error('Password reset error:', error);
+            return {
+                success: false,
+                error: error.response?.data?.error || error.response?.data?.message || error.message || 'Error resetting password'
+            };
+        }
     }
 
     //* Verify if user is authenticated
@@ -250,8 +307,8 @@ class AuthAPI {
     //* Store authentication token
     setToken(token) {
         localStorage.setItem('authToken', token);
-        // Also update default header for this instance
-        this.api.defaults.headers.Authorization = `Bearer ${token}`;
+        // Also update default header for this instance - Django REST Framework uses "Token"
+        this.api.defaults.headers.Authorization = `Token ${token}`;
     }
 
     //* Get stored user data

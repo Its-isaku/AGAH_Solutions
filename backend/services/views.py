@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils import timezone
 from .models import TypeService, Order, OrderItem, CompanyConfiguration
 from .serializers import (
     TypeServiceSerializer,
@@ -213,58 +215,107 @@ class CompanyConfigurationView(APIView):
 
 
 class ContactFormView(APIView):
-    """
-    Public endpoint for contact form submissions
-    Used by: Contact page
-    """
     permission_classes = [permissions.AllowAny]
     
     def post(self, request):
-        serializer = ContactFormSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            #* Send email to company
-            try:
-                subject = f"Contact Form: {serializer.validated_data['subject']}"
-                message = f"""
-                Nueva consulta desde el formulario de contacto:
-                
-                Nombre: {serializer.validated_data['name']}
-                Email: {serializer.validated_data['email']}
-                Teléfono: {serializer.validated_data.get('phone', 'No proporcionado')}
-                Asunto: {serializer.validated_data['subject']}
-                
-                Mensaje:
-                {serializer.validated_data['message']}
-                
-                Enviado desde el formulario de contacto del sitio web de AGAH Solutions.
-                """
-                
-                send_mail(
-                    subject=subject,
-                    message=message,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[settings.CONTACT_EMAIL],
-                    fail_silently=False,
-                )
-                
-                return Response({
-                    'success': True,
-                    'message': 'Su mensaje ha sido enviado exitosamente. Nos pondremos en contacto con usted pronto.'
-                }, status=status.HTTP_200_OK)
-                
-            except Exception as e:
+        try:
+            #* Extract form data
+            name = request.data.get('name', '').strip()
+            email = request.data.get('email', '').strip()
+            phone = request.data.get('phone', '').strip()
+            subject = request.data.get('subject', '').strip()
+            message = request.data.get('message', '').strip()
+            
+            #* Basic validation
+            if not all([name, email, subject, message]):
                 return Response({
                     'success': False,
-                    'error': 'Error al enviar el mensaje. Por favor, inténtelo de nuevo más tarde.',
-                    'details': str(e)
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-        return Response({
-            'success': False,
-            'error': 'Invalid form data',
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+                    'error': 'Todos los campos requeridos deben ser llenados'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            #* Email validation
+            from django.core.validators import validate_email
+            from django.core.exceptions import ValidationError
+            
+            try:
+                validate_email(email)
+            except ValidationError:
+                return Response({
+                    'success': False,
+                    'error': 'Email inválido'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            #* Send notification email to company
+            try:
+                self.send_company_notification({
+                    'name': name,
+                    'email': email,
+                    'phone': phone,
+                    'subject': subject,
+                    'message': message
+                })
+            except Exception as e:
+                print(f"Error sending company notification: {e}")
+                #* Don't fail the request if email fails
+            
+            return Response({
+                'success': True,
+                'message': 'Tu mensaje ha sido enviado exitosamente. Te responderemos pronto.'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Contact form error: {e}")
+            return Response({
+                'success': False,
+                'error': 'Error interno del servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def send_company_notification(self, contact_data):
+        try:
+            context = {
+                'name': contact_data.get('name', ''),
+                'email': contact_data.get('email', ''),
+                'phone': contact_data.get('phone', ''),
+                'subject': contact_data.get('subject', ''),
+                'message': contact_data.get('message', ''),
+                'submitted_at': timezone.now(),
+                'company_time_response_hours': 24,  # Default from your config
+            }
+            
+            #* Render HTML template
+            html_message = render_to_string('emails/contact_form_company.html', context)
+            
+            #* Plain text version
+            plain_message = f"""
+                Nuevo mensaje de contacto recibido:
+
+                Nombre: {context['name']}
+                Email: {context['email']}
+                Teléfono: {context['phone']}
+                Asunto: {context['subject']}
+
+                Mensaje:
+                {context['message']}
+
+                Fecha: {context['submitted_at'].strftime('%d/%m/%Y %H:%M')}
+            """
+            
+            #* Send email
+            send_mail(
+                subject=f"Nuevo Contacto: {context['subject']}",
+                message=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.CONTACT_EMAIL],  #* Tu email de empresa
+                html_message=html_message,
+                fail_silently=True,
+            )
+            
+            print(f"Company notification sent for contact from {context['email']}")
+            return True
+            
+        except Exception as e:
+            print(f"Error sending company notification: {e}")
+            raise
 
 
 class OrderTrackingView(APIView):

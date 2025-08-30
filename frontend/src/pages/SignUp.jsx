@@ -41,35 +41,43 @@ function SignUp() {
 
     const validateForm = () => {
         if (!formData.firstName.trim()) {
-            setError('El nombre es requerido');
+            setError('First name is required');
+            // setError('El nombre es requerido');
             return false;
         }
         if (!formData.lastName.trim()) {
-            setError('El apellido es requerido');
+            setError('Last name is required');
+            // setError('El apellido es requerido');
             return false;
         }
         if (!formData.email.trim()) {
-            setError('El email es requerido');
+            setError('Email is required');
+            // setError('El email es requerido');
             return false;
         }
         if (!formData.email.includes('@')) {
-            setError('Por favor ingresa un email válido');
+            setError('Please enter a valid email');
+            // setError('Por favor ingresa un email válido');
             return false;
         }
         if (!formData.password) {
-            setError('La contraseña es requerida');
+            setError('Password is required');
+            // setError('La contraseña es requerida');
             return false;
         }
         if (formData.password.length < 6) {
-            setError('La contraseña debe tener al menos 6 caracteres');
+            setError('Password must be at least 6 characters');
+            // setError('La contraseña debe tener al menos 6 caracteres');
             return false;
         }
         if (!formData.confirmPassword) {
-            setError('Debes confirmar tu contraseña');
+            setError('You must confirm your password');
+            // setError('Debes confirmar tu contraseña');
             return false;
         }
         if (formData.password !== formData.confirmPassword) {
-            setError('Las contraseñas no coinciden');
+            setError('Passwords do not match');
+            // setError('Las contraseñas no coinciden');
             return false;
         }
         return true;
@@ -99,16 +107,19 @@ function SignUp() {
             const response = await authAPI.signup(signupData);
             
             if (response.success) {
-                setSuccess('¡Cuenta creada exitosamente! Iniciando sesión...');
+                setSuccess('Account created successfully! Logging in...');
+                // setSuccess('¡Cuenta creada exitosamente! Iniciando sesión...');
                 //* Redirect to dashboard or home after successful registration
                 setTimeout(() => {
                     navigate('/');
                 }, 2000);
             } else {
-                setError(response.error || 'Error al crear la cuenta');
+                setError(response.error || 'Error creating account');
+                // setError(response.error || 'Error al crear la cuenta');
             }
         } catch (error) {
-            setError('Error de conexión. Por favor, inténtalo de nuevo.');
+            setError('Connection error. Please try again.');
+            // setError('Error de conexión. Por favor, inténtalo de nuevo.');
         } finally {
             setLoading(false);
         }
@@ -122,13 +133,6 @@ function SignUp() {
         }
     };
 
-    //* Check if user is already authenticated (commented out to allow access)
-    // useEffect(() => {
-    //     if (authAPI.isAuthenticated()) {
-    //         navigate('/');
-    //     }
-    // }, [navigate]);
-
     //? What is gonna be rendered
     return (
         <>
@@ -136,7 +140,8 @@ function SignUp() {
         <div className="auth-page-container">
             <div className="auth-content">
                 <div className="auth-card-container">
-                    <h1>Crear Cuenta</h1>
+                    <h1>Create Account</h1>
+                    {/* <h1>Crear Cuenta</h1> */}
                     
                     {error && (
                         <div className="alert-error">
@@ -152,28 +157,32 @@ function SignUp() {
 
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">
-                            <label htmlFor="firstName">Nombre *</label>
+                            <label htmlFor="firstName">First Name *</label>
+                            {/* <label htmlFor="firstName">Nombre *</label> */}
                             <input
                                 type="text"
                                 id="firstName"
                                 name="firstName"
                                 value={formData.firstName}
                                 onChange={handleInputChange}
-                                placeholder="Tu nombre"
+                                placeholder="Your first name"
+                                // placeholder="Tu nombre"
                                 required
                                 disabled={loading}
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="lastName">Apellido *</label>
+                            <label htmlFor="lastName">Last Name *</label>
+                            {/* <label htmlFor="lastName">Apellido *</label> */}
                             <input
                                 type="text"
                                 id="lastName"
                                 name="lastName"
                                 value={formData.lastName}
                                 onChange={handleInputChange}
-                                placeholder="Tu apellido"
+                                placeholder="Your last name"
+                                // placeholder="Tu apellido"
                                 required
                                 disabled={loading}
                             />
@@ -194,7 +203,8 @@ function SignUp() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="phone">Teléfono</label>
+                            <label htmlFor="phone">Phone</label>
+                            {/* <label htmlFor="phone">Teléfono</label> */}
                             <input
                                 type="tel"
                                 id="phone"
@@ -207,7 +217,8 @@ function SignUp() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="password">Contraseña *</label>
+                            <label htmlFor="password">Password *</label>
+                            {/* <label htmlFor="password">Contraseña *</label> */}
                             <div className="password-container">
                                 <input
                                     type={showPassword ? 'text' : 'password'}
@@ -215,7 +226,8 @@ function SignUp() {
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    placeholder="Mínimo 6 caracteres"
+                                    placeholder="Minimum 6 characters"
+                                    // placeholder="Mínimo 6 caracteres"
                                     required
                                     disabled={loading}
                                 />
@@ -231,7 +243,8 @@ function SignUp() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="confirmPassword">Confirmar Contraseña *</label>
+                            <label htmlFor="confirmPassword">Confirm Password *</label>
+                            {/* <label htmlFor="confirmPassword">Confirmar Contraseña *</label> */}
                             <div className="password-container">
                                 <input
                                     type={showConfirmPassword ? 'text' : 'password'}
@@ -239,7 +252,8 @@ function SignUp() {
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
-                                    placeholder="Confirma tu contraseña"
+                                    placeholder="Confirm your password"
+                                    // placeholder="Confirma tu contraseña"
                                     required
                                     disabled={loading}
                                 />
@@ -259,16 +273,19 @@ function SignUp() {
                             className="submit-btn"
                             disabled={loading}
                         >
-                            {loading ? 'Creando cuenta...' : 'Crear Cuenta'}
+                            {loading ? 'Creating account...' : 'Create Account'}
+                            {/* {loading ? 'Creando cuenta...' : 'Crear Cuenta'} */}
                         </button>
                     </form>
 
                     <div className="auth-links">
                         <div className="separator">
-                            <span>¿Ya tienes cuenta?</span>
+                            <span>Already have an account?</span>
+                            {/* <span>¿Ya tienes cuenta?</span> */}
                         </div>
                         <Link to="/login" className="login-link">
-                            Iniciar Sesión
+                            Log In
+                            {/* Iniciar Sesión */}
                         </Link>
                     </div>
                 </div>

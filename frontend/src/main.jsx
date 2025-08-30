@@ -13,6 +13,7 @@ import Cart from './pages/Cart.jsx'
 import Orders from './pages/Orders.jsx'
 import Navbar from './components/common/Navbar.jsx'
 import Footer from './components/common/Footer.jsx'
+import ProtectedRoute from './components/common/ProtectedRoute.jsx'
 
 createRoot(document.getElementById('root')).render(
 <StrictMode>
@@ -20,15 +21,41 @@ createRoot(document.getElementById('root')).render(
     <Navbar />
     <main>
       <Routes>
+        {/*//? Public routes */}
+        {/* //? Rutas públicas */}
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<Orders />} />
+        
+        {/*//? Protected routes - require authentication */}
+        {/* //? Rutas protegidas - requieren autenticación */}
+        <Route 
+          path="/reset-password" 
+          element={
+            <ProtectedRoute>
+              <ResetPassword />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/cart" 
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/orders" 
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </main>
     <Footer />

@@ -1,6 +1,6 @@
 //?  Imports
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import authAPI from '../services/AuthAPI';
 import '../style/AuthStyle.css';
@@ -18,7 +18,7 @@ function Login() {
     const [success, setSuccess] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-
+    const location = useLocation();
 
     //? Functions
     const handleInputChange = (e) => {
@@ -33,15 +33,18 @@ function Login() {
 
     const validateForm = () => {
         if (!formData.email.trim()) {
-            setError('El email es requerido');
+            setError('Email is required');
+            // setError('El email es requerido');
             return false;
         }
         if (!formData.password) {
-            setError('La contraseña es requerida');
+            setError('Password is required');
+            // setError('La contraseña es requerida');
             return false;
         }
         if (formData.password.length < 6) {
-            setError('La contraseña debe tener al menos 6 caracteres');
+            setError('Password must be at least 6 characters');
+            // setError('La contraseña debe tener al menos 6 caracteres');
             return false;
         }
         return true;
@@ -49,6 +52,7 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        e.stopPropagation(); // Prevenir cualquier propagación del evento
         
         if (!validateForm()) return;
         
@@ -60,14 +64,52 @@ function Login() {
             const response = await authAPI.login(formData);
             
             if (response.success) {
-                setSuccess('¡Inicio de sesión exitoso!');
-                //* Immediate redirect after successful login
-                navigate('/orders');
+                setSuccess('Login successful!');
+                // setSuccess('¡Inicio de sesión exitoso!');
+                
+                //* Force navbar update
+                window.dispatchEvent(new Event('auth-change'));
+                
+                //* Check if there's a saved route to redirect to
+                const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+                
+                setTimeout(() => {
+                    if (redirectPath) {
+                        //* Clear saved route
+                        sessionStorage.removeItem('redirectAfterLogin');
+                        navigate(redirectPath);
+                    } else if (location.state?.from) {
+                        //* If came from a specific route
+                        navigate(location.state.from);
+                    } else {
+                        //* If no saved route, go to home
+                        navigate('/');
+                    }
+                }, 1000);
+                
             } else {
-                setError(response.error || 'Error al iniciar sesión');
+                //* Show specific server error and clear inputs
+                setError(response.error || 'Incorrect credentials');
+                // setError(response.error || 'Credenciales incorrectas');
+                //* Clear inputs to allow user to try again
+                setFormData({
+                    email: '',
+                    password: ''
+                });
+                //* Don't navigate or reload on error
+                return;
             }
         } catch (error) {
-            setError('Error de conexión. Por favor, inténtalo de nuevo.');
+            console.error('Login error:', error);
+            setError('Connection error. Please try again.');
+            // setError('Error de conexión. Por favor, inténtalo de nuevo.');
+            //* Clear inputs on connection error too
+            setFormData({
+                email: '',
+                password: ''
+            });
+            //* Don't navigate or reload on error
+            return;
         } finally {
             setLoading(false);
         }
@@ -77,12 +119,19 @@ function Login() {
         setShowPassword(!showPassword);
     };
 
-    //* Check if user is already authenticated (optional - remove if you want to allow access)
-    // useEffect(() => {
-    //     if (authAPI.isAuthenticated()) {
-    //         navigate('/');
-    //     }
-    // }, [navigate]);
+    //* Check if user is already authenticated (solo al montar el componente)
+    useEffect(() => {
+        const checkAuth = async () => {
+            //* Only verify on initial load, not during login process
+            if (!loading && !error && !success) {
+                const isAuth = await authAPI.isAuthenticated();
+                if (isAuth) {
+                    navigate('/');
+                }
+            }
+        };
+        checkAuth();
+    }, [navigate]); //* Removed loading, error, success from dependencies
 
     //? What is gonna be rendered
     return (
@@ -91,7 +140,8 @@ function Login() {
         <div className="auth-page-container">
             <div className="auth-content">
                 <div className="auth-card-container">
-                    <h1>Iniciar Sesión</h1>
+                    <h1>Log In</h1>
+                    {/* <h1>Iniciar Sesión</h1> */}
                     
                     {error && (
                         <div className="alert-error">
@@ -114,30 +164,33 @@ function Login() {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
-                                placeholder="tu@email.com"
+                                placeholder="your@email.com"
+                                // placeholder="tu@email.com"
                                 required
-                                disabled={loading}
+                                autoComplete="email"
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="password">Contraseña *</label>
-                            <div className="password-container">
+                            <label htmlFor="password">Password *</label>
+                            {/* <label htmlFor="password">Contraseña *</label> */}
+                            <div className="password-input-wrapper">
                                 <input
-                                    type={showPassword ? 'text' : 'password'}
+                                    type={showPassword ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    placeholder="Tu contraseña"
+                                    placeholder="••••••••"
                                     required
-                                    disabled={loading}
+                                    autoComplete="current-password"
                                 />
                                 <button
                                     type="button"
-                                    className="password-toggle-btn"
+                                    className="password-toggle"
                                     onClick={togglePasswordVisibility}
-                                    disabled={loading}
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    // aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                                 >
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </button>
@@ -149,21 +202,25 @@ function Login() {
                             className="submit-btn"
                             disabled={loading}
                         >
-                            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+                            {loading ? 'Logging in...' : 'Log In'}
+                            {/* {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'} */}
                         </button>
                     </form>
 
                     <div className="auth-links">
                         <Link to="/reset-password" className="forgot-link">
-                            ¿Olvidaste tu contraseña?
+                            Forgot your password?
+                            {/* ¿Olvidaste tu contraseña? */}
                         </Link>
                         
                         <div className="separator">
-                            <span>¿No tienes cuenta?</span>
+                            <span>Don't have an account?</span>
+                            {/* <span>¿No tienes cuenta?</span> */}
                         </div>
                         
                         <Link to="/signup" className="signup-link">
-                            Crear Cuenta Nueva
+                            Create New Account
+                            {/* Crear Cuenta Nueva */}
                         </Link>
                     </div>
                 </div>

@@ -73,31 +73,32 @@ function Contact() {
         
         //* Name validation
         if (!formData.name.trim()) {
-            newErrors.name = 'El nombre es requerido';
-            // newErrors.name = 'Name is required';
+            newErrors.name = 'Name is required';
+            // newErrors.name = 'El nombre es requerido';
         }
         
         //* Email validation
         if (!formData.email.trim()) {
-            newErrors.email = 'El email es requerido';
-            // newErrors.email = 'Email is required';
+            newErrors.email = 'Email is required';
+            // newErrors.email = 'El email es requerido';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = 'Formato de email inválido';
-            // newErrors.email = 'Invalid email format';
+            newErrors.email = 'Invalid email format';
+            // newErrors.email = 'Formato de email inválido';
         }
         
         //* Subject validation
         if (!formData.subject.trim()) {
-            newErrors.subject = 'El asunto es requerido';
-            // newErrors.subject = 'Subject is required';
+            newErrors.subject = 'Subject is required';
+            // newErrors.subject = 'El asunto es requerido';
         }
         
         //* Message validation
         if (!formData.message.trim()) {
-            newErrors.message = 'El mensaje es requerido';
-            // newErrors.message = 'Message is required';
+            newErrors.message = 'Message is required';
+            // newErrors.message = 'El mensaje es requerido';
         } else if (formData.message.trim().length < 10) {
-            newErrors.message = 'El mensaje debe tener al menos 10 caracteres';
+            newErrors.message = 'Message must be at least 10 characters';
+            // newErrors.message = 'El mensaje debe tener al menos 10 caracteres';
             // newErrors.message = 'Message must be at least 10 characters';
         }
         
@@ -160,11 +161,11 @@ function Contact() {
                 
                 {/*//* Header Section */}
                 <div className="contact-header">
-                    <h1 className="contact-title">Contáctanos</h1>
-                    {/* <h1 className="contact-title">Contact Us</h1> */}
+                    <h1 className="contact-title">Contact Us</h1>
+                    {/* <h1 className="contact-title">Contáctanos</h1> */}
                     <p className="contact-subtitle">
-                        ¿Tienes una idea innovadora? Estamos aquí para ayudarte a convertirla en realidad.
-                        {/* Do you have an innovative idea? We're here to help you turn it into reality. */}
+                        Do you have an innovative idea? We're here to help you turn it into reality.
+                        {/* ¿Tienes una idea innovadora? Estamos aquí para ayudarte a convertirla en realidad. */}
                     </p>
                 </div>
 
@@ -173,8 +174,8 @@ function Contact() {
                     {/*//* Contact Information Section */}
                     <div className="contact-info-section">
                         <div className="contact-info-card">
-                            <h2 className="section-title">Información de Contacto</h2>
-                            {/* <h2 className="section-title">Contact Information</h2> */}
+                            <h2 className="section-title">Contact Information</h2>
+                            {/* <h2 className="section-title">Información de Contacto</h2> */}
                             
                             <div className="contact-details">
                                 {/*//* Email Contact Item */}
@@ -190,8 +191,8 @@ function Contact() {
                                 <div className="contact-item">
                                     <div className="contact-icon phone-icon"><MdPhone /></div>
                                     <div className="contact-text">
-                                        <h3>Teléfono</h3>
-                                        {/* <h3>Phone</h3> */}
+                                        <h3>Phone</h3>
+                                        {/* <h3>Teléfono</h3> */}
                                         <p>{contactInfo.phone}</p>
                                     </div>
                                 </div>
@@ -200,8 +201,8 @@ function Contact() {
                                 <div className="contact-item">
                                     <div className="contact-icon address-icon"><MdLocationOn /></div>
                                     <div className="contact-text">
-                                        <h3>Dirección</h3>
-                                        {/* <h3>Address</h3> */}
+                                        <h3>Address</h3>
+                                        {/* <h3>Dirección</h3> */}
                                         <p>{contactInfo.address}</p>
                                     </div>
                                 </div>
@@ -210,12 +211,12 @@ function Contact() {
                                 <div className="contact-item">
                                     <div className="contact-icon hours-icon"><MdAccessTime /></div>
                                     <div className="contact-text">
-                                        <h3>Horario</h3>
-                                        {/* <h3>Hours</h3> */}
-                                        <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
-                                        {/* <p>Monday - Friday: 9:00 AM - 6:00 PM</p> */}
-                                        <p>Sábados: 10:00 AM - 2:00 PM</p>
-                                        {/* <p>Saturdays: 10:00 AM - 2:00 PM</p> */}
+                                        <h3>Hours</h3>
+                                        {/* <h3>Horario</h3> */}
+                                        <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                                        {/* <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p> */}
+                                        <p>Saturdays: 10:00 AM - 2:00 PM</p>
+                                        {/* <p>Sábados: 10:00 AM - 2:00 PM</p> */}
                                     </div>
                                 </div>
                             </div>
@@ -223,13 +224,13 @@ function Contact() {
 
                         {/*//* Quick Response Information Card */}
                         <div className="quick-response-card">
-                            <h3>Respuesta Rápida</h3>
-                            {/* <h3>Quick Response</h3> */}
+                            <h3>Quick Response</h3>
+                            {/* <h3>Respuesta Rápida</h3> */}
                             <p>
-                                Respondemos todos los mensajes dentro de las primeras 24 horas.
-                                Para proyectos urgentes, contáctanos directamente por teléfono.
-                                {/* We respond to all messages within the first 24 hours.
-                                For urgent projects, contact us directly by phone. */}
+                                We respond to all messages within the first 24 hours.
+                                For urgent projects, contact us directly by phone.
+                                {/* Respondemos todos los mensajes dentro de las primeras 24 horas.
+                                Para proyectos urgentes, contáctanos directamente por teléfono. */}
                             </p>
                         </div>
                     </div>
@@ -237,23 +238,23 @@ function Contact() {
                     {/*//* Contact Form Section */}
                     <div className="contact-form-section">
                         <div className="contact-form-card">
-                            <h2 className="section-title">Envíanos un Mensaje</h2> 
-                            {/* <h2 className="section-title">Send us a Message</h2> */}
+                            <h2 className="section-title">Send us a Message</h2> 
+                            {/* <h2 className="section-title">Envíanos un Mensaje</h2> */}
 
                             {/*//* Status Messages */}
                             {submitStatus === 'success' && (
                                 <div className="status-message success">
                                     <span className="status-icon"><MdCheck /></span>
-                                    <p>¡Mensaje enviado exitosamente! Te contactaremos pronto.</p>
-                                    {/* <p>Message sent successfully! We'll contact you soon.</p> */}
+                                    <p>Message sent successfully! We'll contact you soon.</p>
+                                    {/* <p>¡Mensaje enviado exitosamente! Te contactaremos pronto.</p> */}
                                 </div>
                             )}
 
                             {submitStatus === 'error' && (
                                 <div className="status-message error">
                                     <span className="status-icon"><MdClose /></span>
-                                    <p>Error al enviar el mensaje. Por favor, inténtalo de nuevo.</p>
-                                    {/* <p>Error sending message. Please try again.</p> */}
+                                    <p>Error sending message. Please try again.</p>
+                                    {/* <p>Error al enviar el mensaje. Por favor, inténtalo de nuevo.</p> */}
                                 </div>
                             )}
 
@@ -262,8 +263,8 @@ function Contact() {
                                 {/*//* First Row: Name and Email */}
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="name">Nombre *</label>
-                                        {/* <label htmlFor="name">Name *</label> */}
+                                        <label htmlFor="name">Name *</label>
+                                        {/* <label htmlFor="name">Nombre *</label> */}
                                         <input
                                             type="text"
                                             id="name"
@@ -271,8 +272,8 @@ function Contact() {
                                             value={formData.name}
                                             onChange={handleInputChange}
                                             className={errors.name ? 'error' : ''}
-                                            placeholder="Tu nombre completo"
-                                            // placeholder="Your full name"
+                                            placeholder="Your full name"
+                                            // placeholder="Tu nombre completo"
                                         />
                                         {errors.name && <span className="error-text">{errors.name}</span>}
                                     </div>
@@ -286,8 +287,8 @@ function Contact() {
                                             value={formData.email}
                                             onChange={handleInputChange}
                                             className={errors.email ? 'error' : ''}
-                                            placeholder="tu@email.com"
-                                            // placeholder="your@email.com"
+                                            placeholder="your@email.com"
+                                            // placeholder="tu@email.com"
                                         />
                                         {errors.email && <span className="error-text">{errors.email}</span>}
                                     </div>
@@ -296,8 +297,8 @@ function Contact() {
                                 {/*//* Second Row: Phone and Subject */}
                                 <div className="form-row">
                                     <div className="form-group">
-                                        <label htmlFor="phone">Teléfono</label>
-                                        {/* <label htmlFor="phone">Phone</label> */}
+                                        <label htmlFor="phone">Phone</label>
+                                        {/* <label htmlFor="phone">Teléfono</label> */}
                                         <input
                                             type="tel"
                                             id="phone"
@@ -309,8 +310,8 @@ function Contact() {
                                     </div>
 
                                     <div className="form-group">
-                                        <label htmlFor="subject">Asunto *</label>
-                                        {/* <label htmlFor="subject">Subject *</label> */}
+                                        <label htmlFor="subject">Subject *</label>
+                                        {/* <label htmlFor="subject">Asunto *</label> */}
                                         <input
                                             type="text"
                                             id="subject"
@@ -318,8 +319,8 @@ function Contact() {
                                             value={formData.subject}
                                             onChange={handleInputChange}
                                             className={errors.subject ? 'error' : ''}
-                                            placeholder="Tema de tu consulta"
-                                            // placeholder="Subject of your inquiry"
+                                            placeholder="Subject of your inquiry"
+                                            // placeholder="Tema de tu consulta"
                                         />
                                         {errors.subject && <span className="error-text">{errors.subject}</span>}
                                     </div>
@@ -327,8 +328,8 @@ function Contact() {
 
                                 {/*//* Message Text Area */}
                                 <div className="form-group full-width">
-                                    <label htmlFor="message">Mensaje *</label>
-                                    {/* <label htmlFor="message">Message *</label> */}
+                                    <label htmlFor="message">Message *</label>
+                                    {/* <label htmlFor="message">Mensaje *</label> */}
                                     <textarea
                                         id="message"
                                         name="message"
@@ -336,8 +337,8 @@ function Contact() {
                                         value={formData.message}
                                         onChange={handleInputChange}
                                         className={errors.message ? 'error' : ''}
-                                        placeholder="Cuéntanos sobre tu proyecto o consulta..."
-                                        // placeholder="Tell us about your project or inquiry..."
+                                        placeholder="Tell us about your project or inquiry..."
+                                        // placeholder="Cuéntanos sobre tu proyecto o consulta..."
                                     ></textarea>
                                     {errors.message && <span className="error-text">{errors.message}</span>}
                                 </div>
@@ -352,8 +353,8 @@ function Contact() {
                                         <span className="loading-spinner"></span>
                                     ) : (
                                         <>
-                                            Enviar Mensaje
-                                            {/* Send Message */}
+                                            Send Message
+                                            {/* Enviar Mensaje */}
                                         </>
                                     )}
                                 </button>
@@ -367,28 +368,28 @@ function Contact() {
                     {/*//* Free Consultation Card */}
                     <div className="info-card">
                         <div className="info-icon"><MdCheck /></div>
-                        <h3>Consulta Gratuita</h3>
-                        {/* <h3>Free Consultation</h3> */}
-                        <p>La primera consulta es completamente gratuita. Analiza tu proyecto sin compromiso.</p>
-                        {/* <p>The first consultation is completely free. Analyze your project without commitment.</p> */}
+                        <h3>Free Consultation</h3>
+                        {/* <h3>Consulta Gratuita</h3> */}
+                        <p>The first consultation is completely free. Analyze your project without commitment.</p>
+                        {/* <p>La primera consulta es completamente gratuita. Analiza tu proyecto sin compromiso.</p> */}
                     </div>
 
                     {/*//* 24h Response Card */}
                     <div className="info-card">
                         <div className="info-icon"><MdAccessTime /></div>
-                        <h3>Respuesta 24h</h3>
-                        {/* <h3>24h Response</h3> */}
-                        <p>Te contactamos en menos de 24 horas para discutir tu proyecto en detalle.</p>
-                        {/* <p>We contact you in less than 24 hours to discuss your project in detail.</p> */}
+                        <h3>24h Response</h3>
+                        {/* <h3>Respuesta 24h</h3> */}
+                        <p>We contact you in less than 24 hours to discuss your project in detail.</p>
+                        {/* <p>Te contactamos en menos de 24 horas para discutir tu proyecto en detalle.</p> */}
                     </div>
 
                     {/*//* Continuous Support Card */}
                     <div className="info-card">
                         <div className="info-icon"><MdSupport /></div>
-                        <h3>Soporte Continuo</h3>
-                        {/* <h3>Continuous Support</h3> */}
-                        <p>Mantente informado durante todo el proceso de desarrollo de tu proyecto.</p>
-                        {/* <p>Stay informed throughout your project's development process.</p> */}
+                        <h3>Continuous Support</h3>
+                        {/* <h3>Soporte Continuo</h3> */}
+                        <p>Stay informed throughout your project's development process.</p>
+                        {/* <p>Mantente informado durante todo el proceso de desarrollo de tu proyecto.</p> */}
                     </div>
                 </div>
             </div>

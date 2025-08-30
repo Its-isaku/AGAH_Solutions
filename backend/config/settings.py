@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     
     # Local apps
-    'services.apps.ServiceConfig',
+    'services.apps.ServicesConfig',
     'user_auth.apps.AuthConfig',
 ]
 

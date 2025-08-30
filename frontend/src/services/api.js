@@ -61,7 +61,7 @@ class HomepageAPI extends BaseAPI {
             console.error('Homepage API Error:', error);
             return {
                 success: false,
-                error: error.response?.data?.error || error.message || 'Error al cargar datos del homepage'
+                error: error.response?.data?.error || error.message || 'Failed to load homepage data'
             };
         }
     }

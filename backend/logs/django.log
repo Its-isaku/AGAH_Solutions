@@ -3340,3 +3340,403 @@ INFO 2025-08-28 19:59:26,021 basehttp 31004 6276 "GET /api/homepage/ HTTP/1.1" 2
 INFO 2025-08-28 19:59:26,021 basehttp 31004 42608 "GET /api/homepage/ HTTP/1.1" 200 1374
 INFO 2025-08-28 19:59:26,511 basehttp 31004 42608 "GET /api/homepage/ HTTP/1.1" 200 1374
 INFO 2025-08-28 19:59:26,511 basehttp 31004 6276 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 08:40:13,003 autoreload 22888 38468 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:10,356 autoreload 22888 38468 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:50:11,410 autoreload 9188 10272 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:29,071 autoreload 9188 10272 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:50:30,099 autoreload 1932 11768 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:31,722 autoreload 1932 11768 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:50:32,710 autoreload 1864 32212 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:39,705 autoreload 1864 32212 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:50:40,723 autoreload 19348 24740 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:46,533 autoreload 19348 24740 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:50:47,668 autoreload 6404 30916 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:49,292 autoreload 6404 30916 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:50:50,265 autoreload 26484 7220 Watching for file changes with StatReloader
+INFO 2025-08-30 08:50:59,336 autoreload 26484 7220 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:00,298 autoreload 33404 23548 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:05,048 autoreload 33404 23548 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:06,082 autoreload 19968 7800 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:18,280 autoreload 19968 7800 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:19,295 autoreload 28080 7852 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:24,156 autoreload 28080 7852 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:25,134 autoreload 25580 40020 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:26,671 autoreload 25580 40020 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:27,675 autoreload 27480 20568 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:30,303 autoreload 27480 20568 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:31,254 autoreload 31368 16748 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:36,025 autoreload 31368 16748 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:37,044 autoreload 25508 25328 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:38,623 autoreload 25508 25328 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:39,634 autoreload 31324 12804 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:43,298 autoreload 31324 12804 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:44,347 autoreload 16100 19304 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:48,107 autoreload 16100 19304 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:49,076 autoreload 39760 19608 Watching for file changes with StatReloader
+INFO 2025-08-30 08:51:52,882 autoreload 39760 19608 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:51:53,803 autoreload 31080 18096 Watching for file changes with StatReloader
+INFO 2025-08-30 08:52:00,659 autoreload 31080 18096 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-08-30 08:52:01,649 autoreload 26984 21012 Watching for file changes with StatReloader
+INFO 2025-08-30 08:54:47,391 autoreload 26984 21012 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\apps.py changed, reloading.
+INFO 2025-08-30 08:54:48,341 autoreload 8668 22224 Watching for file changes with StatReloader
+INFO 2025-08-30 08:55:18,761 autoreload 8668 22224 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\apps.py changed, reloading.
+INFO 2025-08-30 08:55:19,593 autoreload 37664 29044 Watching for file changes with StatReloader
+INFO 2025-08-30 09:07:02,949 autoreload 27844 18848 Watching for file changes with StatReloader
+INFO 2025-08-30 09:08:20,350 autoreload 12940 11444 Watching for file changes with StatReloader
+INFO 2025-08-30 09:09:57,596 autoreload 42388 38148 Watching for file changes with StatReloader
+INFO 2025-08-30 09:10:05,223 basehttp 42388 3044 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:10:05,236 basehttp 42388 33256 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:10:14,483 log 42388 20296 Not Found: /
+WARNING 2025-08-30 09:10:14,483 basehttp 42388 20296 "GET / HTTP/1.1" 404 6995
+WARNING 2025-08-30 09:10:14,819 log 42388 20296 Not Found: /favicon.ico
+WARNING 2025-08-30 09:10:14,820 basehttp 42388 20296 "GET /favicon.ico HTTP/1.1" 404 7046
+INFO 2025-08-30 09:10:24,135 basehttp 42388 32924 "GET /admin HTTP/1.1" 301 0
+INFO 2025-08-30 09:10:24,291 basehttp 42388 13336 "GET /admin/ HTTP/1.1" 200 13203
+INFO 2025-08-30 09:10:24,557 basehttp 42388 13336 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-08-30 09:10:24,566 basehttp 42388 9224 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-08-30 09:10:24,567 basehttp 42388 29496 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-08-30 09:10:24,568 basehttp 42388 3252 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-08-30 09:10:24,570 basehttp 42388 16088 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-08-30 09:10:24,593 basehttp 42388 23904 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-08-30 09:10:24,596 basehttp 42388 16088 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-08-30 09:10:24,616 basehttp 42388 23904 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-08-30 09:10:24,616 basehttp 42388 16088 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-08-30 09:10:24,617 basehttp 42388 3252 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-08-30 09:10:27,187 basehttp 42388 3252 "GET /admin/user_auth/user/ HTTP/1.1" 200 18777
+INFO 2025-08-30 09:10:27,275 basehttp 42388 3252 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-08-30 09:10:27,290 basehttp 42388 29496 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-08-30 09:10:27,307 basehttp 42388 23904 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 09:10:27,308 basehttp 42388 13336 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-08-30 09:10:27,308 basehttp 42388 9224 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-08-30 09:10:27,311 basehttp 42388 3252 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-08-30 09:10:27,320 basehttp 42388 29496 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-08-30 09:10:27,330 basehttp 42388 13336 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-08-30 09:10:27,351 basehttp 42388 29496 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-08-30 09:10:27,353 basehttp 42388 3252 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-08-30 09:10:27,370 basehttp 42388 3252 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-08-30 09:10:27,373 basehttp 42388 16088 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-08-30 09:10:27,396 basehttp 42388 16088 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-08-30 09:10:27,450 basehttp 42388 9224 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-08-30 09:10:27,480 basehttp 42388 9224 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-08-30 09:10:27,480 basehttp 42388 3252 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-08-30 09:10:27,482 basehttp 42388 16088 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-08-30 09:10:30,657 basehttp 42388 16088 "GET /admin/user_auth/user/3/change/ HTTP/1.1" 200 30801
+INFO 2025-08-30 09:10:30,743 basehttp 42388 16088 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-08-30 09:10:30,753 basehttp 42388 3252 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 09:10:30,757 basehttp 42388 3252 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-08-30 09:10:30,770 basehttp 42388 29496 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-08-30 09:10:30,775 basehttp 42388 16088 "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+INFO 2025-08-30 09:10:30,779 basehttp 42388 9224 "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+INFO 2025-08-30 09:10:30,828 basehttp 42388 9224 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-08-30 09:10:30,937 basehttp 42388 9224 "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+INFO 2025-08-30 09:10:33,386 basehttp 42388 9224 "GET /admin/user_auth/user/3/delete/ HTTP/1.1" 200 11570
+INFO 2025-08-30 09:10:33,502 basehttp 42388 9224 "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-08-30 09:10:34,579 basehttp 42388 9224 "POST /admin/user_auth/user/3/delete/ HTTP/1.1" 302 0
+INFO 2025-08-30 09:10:34,651 basehttp 42388 9224 "GET /admin/user_auth/user/ HTTP/1.1" 200 18225
+INFO 2025-08-30 09:10:34,741 basehttp 42388 9224 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 09:11:46,145 basehttp 42388 42200 "OPTIONS /api/auth/register/ HTTP/1.1" 200 0
+INFO 2025-08-30 09:11:50,335 basehttp 42388 42200 "POST /api/auth/register/ HTTP/1.1" 201 270
+INFO 2025-08-30 09:11:52,678 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:11:52,692 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:12:25,206 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:12:25,219 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:13:49,461 basehttp 42388 14116 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 09:13:49,472 basehttp 42388 37896 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 09:14:07,897 basehttp 42388 37896 "OPTIONS /api/contact/ HTTP/1.1" 200 0
+INFO 2025-08-30 09:14:09,232 basehttp 42388 37896 "POST /api/contact/ HTTP/1.1" 200 94
+INFO 2025-08-30 09:14:45,201 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:14:45,217 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:15:39,585 basehttp 42388 42200 "OPTIONS /api/auth/logout/ HTTP/1.1" 200 0
+WARNING 2025-08-30 09:15:39,587 log 42388 42200 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:15:39,587 basehttp 42388 42200 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:15:39,653 log 42388 42200 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:15:39,654 basehttp 42388 42200 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:15:43,485 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:15:43,494 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:15:53,693 basehttp 42388 42200 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-08-30 09:15:54,497 basehttp 42388 42200 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:15:56,897 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:15:56,905 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:15:59,483 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:15:59,496 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:16:01,405 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:16:01,417 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:16:13,903 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:16:13,911 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:16:20,589 basehttp 42388 14116 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:16:20,601 basehttp 42388 37896 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:19:05,056 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:19:05,072 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:19:07,238 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:19:07,239 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:19:07,283 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:19:07,283 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:19:10,125 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:19:10,137 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:19:19,824 log 42388 35072 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 09:19:19,824 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 401 53
+WARNING 2025-08-30 09:19:35,035 log 42388 35072 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 09:19:35,036 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 401 53
+INFO 2025-08-30 09:20:15,318 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:20:16,388 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:20:16,398 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:20:19,108 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:20:19,108 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:23:32,313 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:23:32,313 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:23:32,371 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:23:32,371 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:23:34,644 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:23:34,658 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:23:42,559 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:23:42,576 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:25,234 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:25:28,294 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:28,306 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:30,129 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:30,130 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:25:32,115 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:25:32,116 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:25:32,157 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:25:32,157 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:25:43,464 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:25:44,549 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:44,560 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:46,681 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:25:46,683 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:29:28,612 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:29:28,630 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:29:30,619 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:29:30,620 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:29:30,670 log 42388 35072 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:29:30,670 basehttp 42388 35072 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:29:43,181 log 42388 35072 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 09:29:43,181 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 401 53
+WARNING 2025-08-30 09:30:01,669 log 42388 35072 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 09:30:01,669 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 401 53
+INFO 2025-08-30 09:30:23,734 basehttp 42388 35072 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:30:24,788 basehttp 42388 29172 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:30:24,799 basehttp 42388 24068 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:39:22,465 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:39:22,465 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:39:22,518 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:39:22,518 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:39:22,544 basehttp 42388 22156 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:39:22,554 basehttp 42388 5864 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:42:31,063 basehttp 42388 40376 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:42:32,148 basehttp 42388 5864 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:42:32,161 basehttp 42388 22156 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:42:58,176 basehttp 42388 40376 "OPTIONS /api/auth/change-password/ HTTP/1.1" 200 0
+WARNING 2025-08-30 09:42:58,179 log 42388 40376 Unauthorized: /api/auth/change-password/
+WARNING 2025-08-30 09:42:58,179 basehttp 42388 40376 "POST /api/auth/change-password/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:42:58,210 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:42:58,210 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:42:58,243 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:42:58,244 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:43:13,926 basehttp 42388 40376 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:43:15,003 basehttp 42388 22156 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:43:15,019 basehttp 42388 5864 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:43:27,884 log 42388 40376 Unauthorized: /api/auth/change-password/
+WARNING 2025-08-30 09:43:27,885 basehttp 42388 40376 "POST /api/auth/change-password/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:43:27,918 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:43:27,918 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:43:27,952 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:43:27,953 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:43:36,144 basehttp 42388 40376 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:43:37,220 basehttp 42388 5864 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:43:37,232 basehttp 42388 22156 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:46:18,820 log 42388 40376 Unauthorized: /api/auth/change-password/
+WARNING 2025-08-30 09:46:18,821 basehttp 42388 40376 "POST /api/auth/change-password/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:46:18,856 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:46:18,856 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:46:18,893 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:46:18,893 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:46:31,374 basehttp 42388 40376 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:46:32,450 basehttp 42388 22156 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:46:32,468 basehttp 42388 5864 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:47:03,082 log 42388 40376 Unauthorized: /api/auth/change-password/
+WARNING 2025-08-30 09:47:03,082 basehttp 42388 40376 "POST /api/auth/change-password/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:47:03,117 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:47:03,117 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+WARNING 2025-08-30 09:47:03,200 log 42388 40376 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 09:47:03,200 basehttp 42388 40376 "POST /api/auth/logout/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:52:23,602 basehttp 42388 32320 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:52:24,713 basehttp 42388 18552 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:52:24,726 basehttp 42388 43700 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 09:53:15,459 log 42388 20308 Unauthorized: /api/auth/status/
+WARNING 2025-08-30 09:53:15,460 basehttp 42388 20308 "GET /api/auth/status/ HTTP/1.1" 401 58
+INFO 2025-08-30 09:54:41,656 basehttp 42388 32320 "POST /api/auth/change-password/ HTTP/1.1" 200 118
+INFO 2025-08-30 09:54:43,721 basehttp 42388 43700 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:54:43,731 basehttp 42388 18552 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:54:47,318 basehttp 42388 32320 "POST /api/auth/logout/ HTTP/1.1" 200 46
+WARNING 2025-08-30 09:54:55,958 log 42388 32320 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 09:54:55,958 basehttp 42388 32320 "POST /api/auth/login/ HTTP/1.1" 401 53
+INFO 2025-08-30 09:55:02,474 basehttp 42388 32320 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 09:55:03,555 basehttp 42388 18552 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:55:03,572 basehttp 42388 43700 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:55:17,046 basehttp 42388 32320 "POST /api/auth/change-password/ HTTP/1.1" 200 118
+INFO 2025-08-30 09:55:19,105 basehttp 42388 43700 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:55:19,119 basehttp 42388 18552 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:56:51,836 basehttp 42388 18552 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 09:56:51,846 basehttp 42388 43700 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:02:07,279 basehttp 42388 33880 "GET /admin/user_auth/user/ HTTP/1.1" 200 18795
+INFO 2025-08-30 10:02:07,369 basehttp 42388 42668 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-08-30 10:02:07,369 basehttp 42388 31848 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-08-30 10:02:07,369 basehttp 42388 6300 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-08-30 10:02:07,370 basehttp 42388 33880 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-08-30 10:02:07,371 basehttp 42388 15928 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-08-30 10:02:07,374 basehttp 42388 39368 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-08-30 10:02:07,378 basehttp 42388 15928 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-08-30 10:02:07,379 basehttp 42388 33880 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-08-30 10:02:07,379 basehttp 42388 6300 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-08-30 10:02:07,381 basehttp 42388 39368 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-08-30 10:02:07,389 basehttp 42388 42668 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 10:02:07,389 basehttp 42388 15928 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-08-30 10:02:07,390 basehttp 42388 6300 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-08-30 10:02:07,391 basehttp 42388 39368 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-08-30 10:02:07,394 basehttp 42388 15928 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-08-30 10:02:07,396 basehttp 42388 31848 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-08-30 10:02:07,397 basehttp 42388 33880 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-08-30 10:02:07,406 basehttp 42388 33880 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-08-30 10:02:07,417 basehttp 42388 33880 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-08-30 10:02:07,429 basehttp 42388 33880 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-08-30 10:02:07,448 basehttp 42388 31848 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-08-30 10:02:07,448 basehttp 42388 33880 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-08-30 10:02:07,449 basehttp 42388 15928 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-08-30 10:02:07,449 basehttp 42388 39368 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-08-30 10:02:07,686 log 42388 39368 Not Found: /favicon.ico
+WARNING 2025-08-30 10:02:07,686 basehttp 42388 39368 "GET /favicon.ico HTTP/1.1" 404 7046
+INFO 2025-08-30 10:02:11,287 basehttp 42388 39368 "GET /admin/user_auth/user/4/change/ HTTP/1.1" 200 30837
+INFO 2025-08-30 10:02:11,368 basehttp 42388 31848 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-08-30 10:02:11,370 basehttp 42388 15928 "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+INFO 2025-08-30 10:02:11,370 basehttp 42388 33880 "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+INFO 2025-08-30 10:02:11,371 basehttp 42388 39368 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-08-30 10:02:11,374 basehttp 42388 6300 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 10:02:11,378 basehttp 42388 6300 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-08-30 10:02:11,380 basehttp 42388 15928 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-08-30 10:02:11,508 basehttp 42388 15928 "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+INFO 2025-08-30 10:06:12,096 basehttp 42388 31240 "POST /api/auth/logout/ HTTP/1.1" 200 46
+INFO 2025-08-30 10:06:16,890 basehttp 42388 38904 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:06:16,902 basehttp 42388 38904 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 10:06:53,366 log 42388 31240 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 10:06:53,367 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 401 53
+WARNING 2025-08-30 10:07:33,713 log 42388 38940 Bad Request: /api/auth/login/
+WARNING 2025-08-30 10:07:33,714 basehttp 42388 38940 "POST /api/auth/login/ HTTP/1.1" 400 107
+WARNING 2025-08-30 10:07:40,880 log 42388 33028 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 10:07:40,880 basehttp 42388 33028 "POST /api/auth/login/ HTTP/1.1" 401 53
+WARNING 2025-08-30 10:09:26,965 log 42388 31240 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 10:09:26,965 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 401 53
+INFO 2025-08-30 10:10:04,945 basehttp 42388 7796 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+WARNING 2025-08-30 10:11:13,008 log 42388 31240 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 10:11:13,008 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 401 53
+WARNING 2025-08-30 10:13:35,607 log 42388 31240 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 10:13:35,607 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 401 53
+WARNING 2025-08-30 10:15:18,168 log 42388 31240 Unauthorized: /api/auth/login/
+WARNING 2025-08-30 10:15:18,168 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 401 53
+INFO 2025-08-30 10:15:26,928 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 10:15:27,992 basehttp 42388 40148 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:15:28,012 basehttp 42388 16412 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:15:47,564 basehttp 42388 16412 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:15:47,575 basehttp 42388 40148 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:15:48,931 basehttp 42388 40148 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:15:48,938 basehttp 42388 16412 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:15:53,295 basehttp 42388 16412 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:15:53,307 basehttp 42388 40148 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:15:56,853 basehttp 42388 31240 "POST /api/auth/logout/ HTTP/1.1" 200 46
+INFO 2025-08-30 10:15:58,324 basehttp 42388 40148 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:15:58,332 basehttp 42388 16412 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:16:09,445 basehttp 42388 31240 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 10:16:10,515 basehttp 42388 16412 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:16:10,527 basehttp 42388 40148 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:16:19,051 basehttp 42388 40148 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:16:19,057 basehttp 42388 16412 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:16:22,011 basehttp 42388 16412 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:16:22,016 basehttp 42388 40148 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:16:28,061 basehttp 42388 40148 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:16:28,073 basehttp 42388 16412 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:28:18,203 basehttp 42388 15724 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:28:18,208 basehttp 42388 24232 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:28:23,550 basehttp 42388 24232 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:28:23,568 basehttp 42388 15724 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:41:43,198 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:41:43,212 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:41:48,121 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:48,132 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:53,751 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:53,758 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:56,410 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:56,415 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:58,008 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:41:58,013 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:42:03,044 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:42:03,051 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:42:04,040 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:42:04,046 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:42:26,875 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:42:26,887 basehttp 42388 8960 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:42:32,247 basehttp 42388 31428 "POST /api/auth/logout/ HTTP/1.1" 200 46
+INFO 2025-08-30 10:43:03,300 basehttp 42388 31428 "POST /api/auth/login/ HTTP/1.1" 200 258
+INFO 2025-08-30 10:43:06,208 basehttp 42388 8960 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:43:06,223 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:44:34,415 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:44:34,460 basehttp 42388 8960 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:44:35,392 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:35,398 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:36,725 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:36,731 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:45,185 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:45,190 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:49,939 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:49,945 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:44:57,184 basehttp 42388 8960 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:44:57,200 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 10:45:43,312 log 42388 32276 Not Found: /
+WARNING 2025-08-30 10:45:43,314 basehttp 42388 32276 "GET / HTTP/1.1" 404 6995
+WARNING 2025-08-30 10:45:43,793 log 42388 32276 Not Found: /favicon.ico
+WARNING 2025-08-30 10:45:43,795 basehttp 42388 32276 "GET /favicon.ico HTTP/1.1" 404 7046
+INFO 2025-08-30 10:45:49,790 basehttp 42388 32276 "GET /admin HTTP/1.1" 301 0
+INFO 2025-08-30 10:45:49,820 basehttp 42388 29272 "GET /admin/ HTTP/1.1" 200 13515
+INFO 2025-08-30 10:45:49,935 basehttp 42388 29272 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-08-30 10:45:49,947 basehttp 42388 29272 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-08-30 10:45:49,948 basehttp 42388 23500 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-08-30 10:45:56,919 basehttp 42388 23500 "GET /admin/user_auth/user/ HTTP/1.1" 200 18795
+INFO 2025-08-30 10:45:57,032 basehttp 42388 23500 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 10:46:02,249 basehttp 42388 23500 "POST /admin/user_auth/user/ HTTP/1.1" 200 11706
+INFO 2025-08-30 10:46:02,332 basehttp 42388 23500 "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-08-30 10:46:03,227 basehttp 42388 23500 "POST /admin/user_auth/user/ HTTP/1.1" 302 0
+INFO 2025-08-30 10:46:03,255 basehttp 42388 23500 "GET /admin/user_auth/user/ HTTP/1.1" 200 18196
+INFO 2025-08-30 10:46:03,350 basehttp 42388 23500 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 10:46:07,450 basehttp 42388 34696 "GET /api/homepage/ HTTP/1.1" 200 1374
+INFO 2025-08-30 10:46:07,466 basehttp 42388 8960 "GET /api/homepage/ HTTP/1.1" 200 1374
+WARNING 2025-08-30 10:46:10,416 log 42388 31428 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 10:46:10,417 basehttp 42388 31428 "POST /api/auth/logout/ HTTP/1.1" 401 27
+WARNING 2025-08-30 10:46:10,440 log 42388 31428 Unauthorized: /api/auth/logout/
+WARNING 2025-08-30 10:46:10,440 basehttp 42388 31428 "POST /api/auth/logout/ HTTP/1.1" 401 27
+INFO 2025-08-30 10:46:13,323 basehttp 42388 23500 "GET /admin/user_auth/user/ HTTP/1.1" 200 18062
+INFO 2025-08-30 10:46:13,409 basehttp 42388 11908 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-08-30 10:46:13,410 basehttp 42388 29272 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-08-30 10:46:13,411 basehttp 42388 22264 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-08-30 10:46:13,417 basehttp 42388 22264 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-08-30 10:46:13,420 basehttp 42388 29272 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-08-30 10:46:13,424 basehttp 42388 40932 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-08-30 10:46:13,425 basehttp 42388 23500 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-08-30 10:46:13,445 basehttp 42388 14940 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-08-30 10:46:13,457 basehttp 42388 22264 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-08-30 10:46:13,468 basehttp 42388 14940 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-08-30 10:46:13,470 basehttp 42388 23500 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-08-30 10:46:13,472 basehttp 42388 29272 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-08-30 10:46:13,499 basehttp 42388 40932 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-08-30 10:46:13,529 basehttp 42388 23500 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-08-30 10:46:13,543 basehttp 42388 40932 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-08-30 10:46:13,561 basehttp 42388 11908 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-08-30 10:46:13,577 basehttp 42388 11908 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-08-30 10:46:13,610 basehttp 42388 11908 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-08-30 10:46:13,642 basehttp 42388 22264 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-08-30 10:46:13,658 basehttp 42388 11908 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-08-30 10:46:13,660 basehttp 42388 40932 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-08-30 10:46:13,669 basehttp 42388 22264 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-08-30 10:46:13,669 basehttp 42388 23500 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-08-30 10:46:13,794 log 42388 23500 Not Found: /favicon.ico
+WARNING 2025-08-30 10:46:13,794 basehttp 42388 23500 "GET /favicon.ico HTTP/1.1" 404 7046
+INFO 2025-08-30 10:46:36,165 basehttp 42388 8960 "GET /api/company/ HTTP/1.1" 200 2449
+INFO 2025-08-30 10:46:36,172 basehttp 42388 34696 "GET /api/company/ HTTP/1.1" 200 2449

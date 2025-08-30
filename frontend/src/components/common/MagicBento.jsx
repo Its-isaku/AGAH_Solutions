@@ -17,7 +17,8 @@ const MOBILE_BREAKPOINT = 768;
 const cardData = [
     {
         color: "#060010",
-        label: "Producción",
+        label: "Production",
+        // label: "Producción",
         // title: "Artículos Decorativos",
         // description: "Piezas únicas con diseño y funcionalidad",
         title: "Decorative Articles",
@@ -26,7 +27,8 @@ const cardData = [
     },
     {
         color: "#060010",
-        label: "Impresión",
+        label: "Printing",
+        // label: "Impresión",
         // title: "Impresión 3D",
         // description: "FDM y resina para prototipos y productos",
         title: "3D Printing",
@@ -35,7 +37,8 @@ const cardData = [
     },
     {
         color: "#060010",
-        label: "Grabado",
+        label: "Engraving",
+        // label: "Grabado",
         // title: "Grabado Láser",
         // description: "Personalización con tecnología de vanguardia",
         title: "Laser Engraving",
@@ -44,7 +47,8 @@ const cardData = [
     },
     {
         color: "#060010",
-        label: "Fabricación",
+        label: "Manufacturing",
+        // label: "Fabricación",
         // title: "Corte CNC Plasma",
         // description: "Precisión y calidad en cada corte metálico",
         title: "CNC Plasma Cutting",

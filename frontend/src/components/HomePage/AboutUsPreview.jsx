@@ -34,8 +34,8 @@ function AboutUsPreview() {
                     showBorder={false}
                     className="custom-class"
                     >
-                        {/* Acerca de AGAH Solutions */}
                         About us Preview
+                        {/* Acerca de AGAH Solutions */}
                     </GradientText>
                 </h2>
             </div>
@@ -44,20 +44,21 @@ function AboutUsPreview() {
                 <div className="Aboutus-Preview-card">
                     <div className="about_preview_Info">
                         <div className="text">
-                            {/* <h2>Quienes somos</h2> */}
                             <h2>About us</h2>
+                            {/* <h2>Quienes somos</h2> */}
                             <p>{previewText}</p>
                         </div>
 
                         <div className="text">
-                            {/* <h2>Nuestra Misión</h2> */}
                             <h2>Our Mission</h2>
+                            {/* <h2>Nuestra Misión</h2> */}
                             <p>{previewMission}</p>
                         </div>
 
                         <div className="previewBtn">
                             <Link to="/about" className="btn btn-primary">
                                 Learn More
+                                {/* Leer Más */}
                             </Link>
                         </div>
                     </div>

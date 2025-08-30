@@ -18,7 +18,7 @@ function HeroSection({heroData}) {
 
     //? <|------------------Variables------------------|> 
     const welcomeText = heroData?.welcomeText || "Welcome to";
-        // const welcomeText = "Bienvenidos a";
+    // const welcomeText = "Bienvenidos a";
     const companyName = heroData?.companyName || "AGAH Solutions";
     const tagline = heroData?.description || "Cutting-Edge Solutions, Crafted to Perfection";
     // const tagline = heroData?.description || "Soluciones Elaboradas a la Perfección";

@@ -63,7 +63,9 @@ function AboutUs() {
             <div className="AboutUs_info">
                 <div className="aboutUs-card">
                     <h2>Our Story</h2>
+                    {/* <h2>Nuestra Historia</h2> */}
                     {aboutUsData?.aboutUs || "Loading..."} 
+                    {/* {aboutUsData?.aboutUs || "Cargando..."} */}
                 </div>
             </div>
 
@@ -71,12 +73,16 @@ function AboutUs() {
             <div className="AboutUs_missionVision">
                 <div className="aboutUs-card">
                     <h2>Mission</h2>
+                    {/* <h2>Misión</h2> */}
                     <p>{aboutUsData?.mission || "Loading..."}</p>
+                    {/* <p>{aboutUsData?.mission || "Cargando..."}</p> */}
                 </div>
 
                 <div className="aboutUs-card">
                     <h2>Vision</h2>
+                    {/* <h2>Visión</h2> */}
                     <p>{aboutUsData?.vision || "Loading..."}</p>
+                    {/* <p>{aboutUsData?.vision || "Cargando..."}</p> */}
                 </div>
             </div>
 
