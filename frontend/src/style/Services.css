@@ -39,9 +39,10 @@
 
 /* SERVICE GRID */
 .service-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
+    justify-content: center;
     padding: 2rem 0;
 }
 
@@ -55,6 +56,9 @@
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
+    flex: 1 1 350px;
+    max-width: 350px;
+    min-width: 300px;
 }
 
 .service-card::before {
@@ -225,7 +229,7 @@
     background: linear-gradient(135deg, #1a0d2e 0%, #060010 100%);
     border-radius: 15px;
     width: 90%;
-    max-width: 800px;
+    max-width: 900px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
@@ -342,6 +346,8 @@
 .form-group input,
 .form-group textarea,
 .form-group select {
+    box-sizing: border-box;
+    max-width: 100%;
     width: 100%;
     padding: 0.75rem;
     background: rgba(25, 25, 35, 0.7);
@@ -422,7 +428,7 @@
     flex-shrink: 0;
 }
 
-/* Modal Buttons - Like previewBtn style */
+/* Modal Buttons */
 .modal-button-cancel,
 .modal-button-submit {
     display: flex;
@@ -444,23 +450,31 @@
 
 .modal-button-cancel {
     border-color: rgba(120, 183, 208, 0.3);
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .modal-button-cancel:hover {
-    color: #78B7D0;
+    background: transparent;
+    color: #ef4444;
+    border-color: #ef4444;
     transform: translateY(-2px);
-    border-color: rgba(120, 183, 208, 0.6);
 }
 
 .modal-button-submit {
-    background: linear-gradient(135deg, #78B7D0 0%, #7FC7AF 100%);
-    color: #060010;
-    border: none;
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 
 .modal-button-submit:hover {
+    background: transparent;
+    color: #78B7D0;
+    border-color: #78B7D0;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(120, 183, 208, 0.4);
 }
 
 /* RESPONSIVE DESIGN */
