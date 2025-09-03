@@ -390,13 +390,23 @@ class OrdersAPI extends BaseAPI {
             } else {
                 return {
                     success: false,
-                    error: response.data.error || 'Failed to create order'
+                    error: response.data.error || 'Failed to create order',
+                    errors: response.data.errors || null
                 };
             }
         } catch (error) {
+            // Log the full error details for debugging
+            console.error('Order creation error details:', {
+                message: error.message,
+                response: error.response?.data,
+                errors: error.response?.data?.errors,
+                status: error.response?.status
+            });
+            
             return {
                 success: false,
-                error: error.response?.data?.error || error.message || 'Failed to create order'
+                error: error.response?.data?.error || error.message || 'Failed to create order',
+                errors: error.response?.data?.errors || null
             };
         }
     }

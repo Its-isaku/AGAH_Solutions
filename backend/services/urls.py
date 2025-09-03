@@ -9,6 +9,7 @@ from .views import (
     CompanyConfigurationView,
     ContactFormView,
     OrderTrackingView,
+    PublicOrderCreateView,
     
     #* Protected Views (User Authentication Required)
     OrderCreateView,
@@ -40,11 +41,13 @@ urlpatterns = [
     #* Order tracking endpoint (public - requires order number + email)
     path('api/orders/track/', OrderTrackingView.as_view(), name='order-tracking'),
     
+    path('api/orders/create/', PublicOrderCreateView.as_view(), name='public-order-create'),
+    
     
     #? <|--------------Protected API Endpoints (Authentication Required)--------------|>
     
     #* Order creation (requires authentication)
-    path('api/orders/create/', OrderCreateView.as_view(), name='order-create'),
+path('api/orders/create-auth/', OrderCreateView.as_view(), name='order-create-auth'),
     
     #* User's personal orders
     path('api/orders/my-orders/', UserOrdersListView.as_view(), name='user-orders-list'),

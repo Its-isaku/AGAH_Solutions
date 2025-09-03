@@ -29,7 +29,7 @@ function Cart() {
     } = useCart();
 
     //* Toast notifications
-    const { success, showError, warning, promise } = useToastContext();
+    const { success, error: showError, warning, promise } = useToastContext();
 
     //? Effects
     //* Load user data on component mount
@@ -73,24 +73,49 @@ function Cart() {
                     ? `${userInfo.first_name} ${userInfo.last_name}` 
                     : userInfo.username,
                 customer_email: userInfo.email,
-                customer_phone: phoneNumber.trim(), // Use phone number from state
-                additional_notes: additionalNotes,
+                customer_phone: phoneNumber.trim(),
+                additional_notes: additionalNotes || "",
                 items: cartItems.map(item => ({
-                    service_id: item.service, // Change service to service_id
-                    description: item.description,
+                    service: parseInt(item.service), // Ensure service ID is a number
+                    description: item.description?.trim() || "",
                     quantity: parseInt(item.quantity) || 1,
-                    length_dimensions: item.length_dimensions || null,
-                    width_dimensions: item.width_dimensions || null,
-                    height_dimensions: item.height_dimensions || null,
+                    length_dimensions: item.length_dimensions ? parseFloat(item.length_dimensions) : null,
+                    width_dimensions: item.width_dimensions ? parseFloat(item.width_dimensions) : null,
+                    height_dimensions: item.height_dimensions ? parseFloat(item.height_dimensions) : null,
                     needs_custom_design: Boolean(item.needs_custom_design),
-                    estimated_unit_price: item.estimated_unit_price || item.base_price || 0
-                    //* Note: design_file will need special handling for file upload
+                    design_file: null // Set to null for now, will need file upload handling
                 }))
             };
 
-            //* Debug: Log the order data being sent
-            console.log('Order data being sent:', orderData);
-            console.log('Cart items:', cartItems);
+            //* Validate order data before sending
+            console.log('Order data being sent:', JSON.stringify(orderData, null, 2));
+            
+            //* Validate required fields
+            if (!orderData.customer_name?.trim()) {
+                throw new Error('El nombre del cliente es requerido');
+            }
+            if (!orderData.customer_email?.trim()) {
+                throw new Error('El email del cliente es requerido');
+            }
+            if (!orderData.customer_phone?.trim()) {
+                throw new Error('El teléfono del cliente es requerido');
+            }
+            if (!orderData.items || orderData.items.length === 0) {
+                throw new Error('No hay artículos en el pedido');
+            }
+
+            //* Validate each item has required fields
+            orderData.items.forEach((item, index) => {
+                if (!item.service) {
+                    throw new Error(`Artículo ${index + 1}: ID de servicio requerido`);
+                }
+                if (!item.description?.trim()) {
+                    throw new Error(`Artículo ${index + 1}: Descripción requerida`);
+                }
+                if (!item.quantity || item.quantity <= 0) {
+                    throw new Error(`Artículo ${index + 1}: Cantidad debe ser mayor a 0`);
+                }
+            });
 
             //* Create order with promise toast
             const result = await promise(
@@ -102,6 +127,13 @@ function Cart() {
                 }
             );
 
+            //* Debug: Log the result
+            console.log('Order creation result:', result);
+            
+            if (result && result.errors) {
+                console.error('Validation errors:', result.errors);
+            }
+
             if (result.success) {
                 //* Clear cart after successful submission
                 clearCart();
@@ -111,11 +143,21 @@ function Cart() {
                     window.location.href = '/services';
                 }, 1500);
             } else {
-                throw new Error(result.error || 'Failed to submit order');
+                // If there are specific validation errors, format them nicely
+                let errorMessage = result.error || 'Failed to submit order';
+                if (result.errors) {
+                    const errorDetails = Object.entries(result.errors)
+                        .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
+                        .join('\n');
+                    errorMessage = `${errorMessage}\n${errorDetails}`;
+                }
+                throw new Error(errorMessage);
             }
         } catch (error) {
             console.error('Error submitting order:', error);
-            showError(`Error: ${error.message}`);
+            if (showError) {
+                showError(`Error: ${error.message || 'Error al enviar el pedido'}`);
+            }
         } finally {
             setIsSubmitting(false);
         }

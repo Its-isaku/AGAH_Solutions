@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.utils import timezone
 from .models import TypeService, Order, OrderItem, CompanyConfiguration
 from .serializers import (
@@ -12,7 +13,8 @@ from .serializers import (
     OrderSerializer,
     OrderItemSerializer,
     CompanyConfigurationSerializer,
-    ContactFormSerializer
+    ContactFormSerializer,
+    OrderCreateSerializer
 )
 
 
@@ -645,3 +647,83 @@ class AdminOrderDetailView(APIView):
             recipient_list=[order.customer_email],
             fail_silently=False,
         )
+        
+        
+#? <|--------------Public Order Creation (No Auth Required)--------------|>
+class PublicOrderCreateView(APIView):
+    """
+    Public endpoint to create a new order without authentication
+    For guest checkout from cart
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        #* Get order data from request
+        order_data = request.data.copy()
+        
+        #* Create serializer with nested items
+        serializer = OrderCreateSerializer(data=order_data)
+        
+        if serializer.is_valid():
+            try:
+                #* Create order with items
+                order = serializer.save()
+                
+                #* Send confirmation email with template
+                try:
+                    self.send_order_confirmation_email(order)
+                except Exception as e:
+                    print(f"Failed to send confirmation email: {e}")
+                
+                #* Return created order data
+                order_serializer = OrderSerializer(order)
+                
+                return Response({
+                    'success': True,
+                    'data': order_serializer.data,
+                    'message': 'Order created successfully. Check your email for confirmation.'
+                }, status=status.HTTP_201_CREATED)
+                
+            except Exception as e:
+                return Response({
+                    'success': False,
+                    'error': f'Error creating order: {str(e)}'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({
+            'success': False,
+            'error': 'Invalid order data',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def send_order_confirmation_email(self, order):
+        """Send order confirmation email using HTML template"""
+        try:
+            #* Prepare context for template
+            context = {
+                'order': order,
+                'customer_name': order.customer_name,
+                'order_items': order.items.all(),
+                'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
+            }
+            
+            #* Render HTML email
+            html_message = render_to_string('emails/order_confirmation.html', context)
+            plain_message = strip_tags(html_message)
+            
+            #* Send email
+            send_mail(
+                subject=f"Order Confirmation - {order.order_number}",
+                message=plain_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[order.customer_email],
+                html_message=html_message,
+                fail_silently=False,
+            )
+            
+            print(f" Confirmation email sent to {order.customer_email}")
+            return True
+            
+        except Exception as e:
+            print(f" Error sending email: {e}")
+            return False

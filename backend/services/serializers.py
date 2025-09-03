@@ -260,36 +260,72 @@ class ContactFormSerializer(serializers.Serializer):
         return value.strip()
 
 
+        #? <|--------------Order Item Create Serializer--------------|>
+
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating order items within an order
+    """
+    class Meta:
+        model = OrderItem
+        fields = [
+            'service',
+            'description', 
+            'quantity',
+            'length_dimensions',
+            'width_dimensions', 
+            'height_dimensions',
+            'needs_custom_design',
+            'design_file'
+        ]
 #? <|--------------Order Creation Serializer--------------|>
 class OrderCreateSerializer(serializers.ModelSerializer):
     """
-    Specialized serializer for creating orders with items
+    Specialized serializer for creating orders with nested items
     """
-    
-    items = OrderItemSerializer(many=True)
+    items = OrderItemCreateSerializer(many=True, write_only=True)
     
     class Meta:
         model = Order
         fields = [
+            'customer_name',
+            'customer_email',
             'customer_phone',
             'additional_notes',
             'items'
         ]
     
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
+        #* Extract items data
+        items_data = validated_data.pop('items', [])
         
-        # Create the order (user info will be set in the view)
+        #* Create the order
         order = Order.objects.create(**validated_data)
         
-        # Create order items
+        #* Create order items
         for item_data in items_data:
             OrderItem.objects.create(order=order, **item_data)
+        
+        #* Calculate estimated price
+        order.estimaded_price = order.calculate_estimated_price()
+        order.save()
         
         return order
     
     def validate_items(self, value):
         """Ensure at least one item is provided"""
-        if not value:
+        if not value or len(value) == 0:
             raise serializers.ValidationError("At least one item is required.")
         return value
+    
+    def validate(self, data):
+        """Validate the entire order data"""
+        #* Check required fields
+        if not data.get('customer_name'):
+            raise serializers.ValidationError({"customer_name": "Customer name is required"})
+        if not data.get('customer_email'):
+            raise serializers.ValidationError({"customer_email": "Customer email is required"})
+        if not data.get('customer_phone'):
+            raise serializers.ValidationError({"customer_phone": "Customer phone is required"})
+        
+        return data
