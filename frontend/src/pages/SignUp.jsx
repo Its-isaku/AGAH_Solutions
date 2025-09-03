@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useToastContext } from '../context/ToastContext';
 import authAPI from '../services/AuthAPI';
 import '../style/AuthStyle.css';
 
@@ -9,6 +10,7 @@ import '../style/AuthStyle.css';
 function SignUp() {
 
     //? Variables 
+    const { success, error: showError, promise } = useToastContext();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -17,9 +19,6 @@ function SignUp() {
         confirmPassword: '',
         phone: ''
     });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
@@ -32,52 +31,39 @@ function SignUp() {
             ...prev,
             [name]: value
         }));
-        
-        //* Clear error when user starts typing
-        if (error) {
-            setError('');
-        }
     };
 
     const validateForm = () => {
         if (!formData.firstName.trim()) {
-            setError('First name is required');
-            // setError('El nombre es requerido');
+            showError('El nombre es requerido');
             return false;
         }
         if (!formData.lastName.trim()) {
-            setError('Last name is required');
-            // setError('El apellido es requerido');
+            showError('El apellido es requerido');
             return false;
         }
         if (!formData.email.trim()) {
-            setError('Email is required');
-            // setError('El email es requerido');
+            showError('El email es requerido');
             return false;
         }
         if (!formData.email.includes('@')) {
-            setError('Please enter a valid email');
-            // setError('Por favor ingresa un email válido');
+            showError('Por favor ingresa un email válido');
             return false;
         }
         if (!formData.password) {
-            setError('Password is required');
-            // setError('La contraseña es requerida');
+            showError('La contraseña es requerida');
             return false;
         }
         if (formData.password.length < 6) {
-            setError('Password must be at least 6 characters');
-            // setError('La contraseña debe tener al menos 6 caracteres');
+            showError('La contraseña debe tener al menos 6 caracteres');
             return false;
         }
         if (!formData.confirmPassword) {
-            setError('You must confirm your password');
-            // setError('Debes confirmar tu contraseña');
+            showError('Debes confirmar tu contraseña');
             return false;
         }
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            // setError('Las contraseñas no coinciden');
+            showError('Las contraseñas no coinciden');
             return false;
         }
         return true;
@@ -88,10 +74,6 @@ function SignUp() {
         
         if (!validateForm()) return;
         
-        setLoading(true);
-        setError('');
-        setSuccess('');
-        
         try {
             //* Prepare data for backend
             const signupData = {
@@ -99,29 +81,26 @@ function SignUp() {
                 last_name: formData.lastName.trim(), 
                 email: formData.email.trim().toLowerCase(),
                 password: formData.password,
-                confirm_password: formData.confirmPassword, //* Add this field for backend validation
+                confirm_password: formData.confirmPassword,
                 phone: formData.phone.trim() || null
             };
 
-            console.log('Sending signup data:', signupData); // Debug log
-            const response = await authAPI.signup(signupData);
+            await promise(
+                authAPI.signup(signupData),
+                {
+                    loading: 'Creando tu cuenta...',
+                    success: '¡Cuenta creada exitosamente! Bienvenido a AGAH Solutions',
+                    error: 'Error al crear la cuenta. Verifica que el email no esté registrado'
+                }
+            );
             
-            if (response.success) {
-                setSuccess('Account created successfully! Logging in...');
-                // setSuccess('¡Cuenta creada exitosamente! Iniciando sesión...');
-                //* Redirect to dashboard or home after successful registration
-                setTimeout(() => {
-                    navigate('/');
-                }, 2000);
-            } else {
-                setError(response.error || 'Error creating account');
-                // setError(response.error || 'Error al crear la cuenta');
-            }
+            //* Redirect after successful registration
+            setTimeout(() => {
+                navigate('/');
+            }, 2000);
+            
         } catch (error) {
-            setError('Connection error. Please try again.');
-            // setError('Error de conexión. Por favor, inténtalo de nuevo.');
-        } finally {
-            setLoading(false);
+            console.error('Signup error:', error);
         }
     };
 
@@ -142,18 +121,6 @@ function SignUp() {
                 <div className="auth-card-container">
                     <h1>Create Account</h1>
                     {/* <h1>Crear Cuenta</h1> */}
-                    
-                    {error && (
-                        <div className="alert-error">
-                            {error}
-                        </div>
-                    )}
-                    
-                    {success && (
-                        <div className="alert-success">
-                            {success}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">

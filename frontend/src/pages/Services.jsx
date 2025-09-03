@@ -3,9 +3,18 @@ import '../style/Services.css';
 
 //? API import
 import api from '../services/api';
+import authAPI from '../services/AuthAPI';
+
+//? Context imports
+import { useCart } from '../context/CartContext';
+import { useToastContext } from '../context/ToastContext';
 
 //? Component 
 function Services() {
+    //? Hooks
+    const { addToCart } = useCart();
+    const { success, error: showError, warning } = useToastContext();
+    
     //? State Variables 
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -114,50 +123,59 @@ function Services() {
         }));
     };
 
-    //* Add item to cart (temporary - will be integrated with cart context later)
+    //* Add item to cart (updated to use context)
     const handleAddToCart = async () => {
+        //* Check if user is authenticated
+        if (!authAPI.isAuthenticated()) {
+            showError('Debes iniciar sesión para agregar productos al carrito');
+            return;
+        }
+
         //* Validate required fields
         if (!orderForm.customer_phone) {
-            alert('Please enter your phone number');
-            // alert('Por favor ingrese su número de teléfono');
+            warning('Por favor ingresa tu número de teléfono');
             return;
         }
 
         if (!itemForm.description) {
-            alert('Please enter a description for your order');
-            // alert('Por favor ingrese una descripción para su pedido');
+            warning('Por favor ingresa una descripción para tu pedido');
             return;
         }
 
-        //* Create order item
-        const newItem = {
+        //* Create cart item
+        const cartItem = {
+            //* Service info
             service: selectedService.id,
             service_name: selectedService.name,
+            service_type: selectedService.type,
+            base_price: selectedService.base_price,
+            
+            //* Item details
             description: itemForm.description,
             quantity: parseInt(itemForm.quantity),
             length_dimensions: itemForm.length_dimensions ? parseFloat(itemForm.length_dimensions) : null,
             width_dimensions: itemForm.width_dimensions ? parseFloat(itemForm.width_dimensions) : null,
             height_dimensions: itemForm.height_dimensions ? parseFloat(itemForm.height_dimensions) : null,
             needs_custom_design: itemForm.needs_custom_design,
-            design_file: itemForm.design_file
+            design_file: itemForm.design_file,
+            
+            //* Customer info (saved for checkout)
+            customer_phone: orderForm.customer_phone,
+            additional_notes: orderForm.additional_notes,
+            
+            //* Estimated price (will be calculated by backend later)
+            estimated_unit_price: selectedService.base_price || 0
         };
 
-        //* Add to cart using API (temporary console log - will be replaced with cart context)
         try {
-            console.log('Adding to cart:', {
-                ...orderForm,
-                items: [newItem]
-            });
+            //* Add to cart context
+            addToCart(cartItem);
             
-            //* TODO: When cart context is ready, use: await api.cart.addItem(newItem);
-            
-            alert('Item added to cart successfully!');
-            // alert('¡Artículo agregado al carrito exitosamente!');
+            success(`${selectedService.name} agregado al carrito exitosamente`);
             
             handleCloseModal();
         } catch (err) {
-            alert('Failed to add item to cart');
-            // alert('Error al agregar el artículo al carrito');
+            showError('Error al agregar el artículo al carrito');
             console.error('Error adding to cart:', err);
         }
     };

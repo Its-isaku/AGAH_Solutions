@@ -1,4 +1,6 @@
 //?  Imports
+//* Custom Toast Component
+import { useToastContext } from '../context/ToastContext';
 
 //* React hooks 
 import React, { useState, useEffect } from 'react';
@@ -15,6 +17,9 @@ import { MdEmail, MdPhone, MdLocationOn, MdAccessTime, MdCheck, MdClose, MdSuppo
 //?  Component
 function Contact() {
     //? Variables 
+    
+    //* Custom toast hook
+    const { success, error, info, warning, promise } = useToastContext();
     
     //* Form data state - stores all contact form information
     const [formData, setFormData] = useState({
@@ -35,7 +40,6 @@ function Contact() {
     
     //* Form submission states
     const [isSubmitting, setIsSubmitting] = useState(false);        //* Loading state during form submission
-    const [submitStatus, setSubmitStatus] = useState(null);         //* Success/error status after submission
     const [errors, setErrors] = useState({});                       //* Form validation errors
 
     //? Functions
@@ -112,36 +116,36 @@ function Contact() {
         
         //* Validate form before submission
         if (!validateForm()) {
+            error('Por favor, completa todos los campos requeridos correctamente');
             return;
         }
         
         //* Update submission states
         setIsSubmitting(true);
-        setSubmitStatus(null);
         
         try {
-            //* Use ContactAPI with included validation
-            const result = await api.contact.sendValidatedContactForm(formData);
+            //* Show loading toast and handle the promise
+            await promise(
+                api.contact.sendValidatedContactForm(formData),
+                {
+                    loading: 'Enviando mensaje...',
+                    success: '¡Mensaje enviado exitosamente! Te contactaremos pronto.',
+                    error: 'Error al enviar el mensaje. Por favor, inténtalo de nuevo.'
+                }
+            );
             
-            if (result.success) {
-                //* Success: reset form and show success message
-                setSubmitStatus('success');
-                setFormData({
-                    name: '',
-                    email: '',
-                    phone: '',
-                    subject: '',
-                    message: ''
-                });
-            } else {
-                //* Error: show error message
-                setSubmitStatus('error');
-                console.error('Contact form error:', result.error);
-            }
-        } catch (error) {
+            //* Success: reset form
+            setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                subject: '',
+                message: ''
+            });
+            
+        } catch (apiError) {
             //* Network/API error handling
-            setSubmitStatus('error');
-            console.error('Contact form submission error:', error);
+            console.error('Contact form submission error:', apiError);
         } finally {
             //* Reset loading state
             setIsSubmitting(false);
@@ -178,6 +182,7 @@ function Contact() {
                             {/* <h2 className="section-title">Información de Contacto</h2> */}
                             
                             <div className="contact-details">
+                                
                                 {/*//* Email Contact Item */}
                                 <div className="contact-item">
                                     <div className="contact-icon email-icon"><MdEmail /></div>
@@ -240,23 +245,6 @@ function Contact() {
                         <div className="contact-form-card">
                             <h2 className="section-title">Send us a Message</h2> 
                             {/* <h2 className="section-title">Envíanos un Mensaje</h2> */}
-
-                            {/*//* Status Messages */}
-                            {submitStatus === 'success' && (
-                                <div className="status-message success">
-                                    <span className="status-icon"><MdCheck /></span>
-                                    <p>Message sent successfully! We'll contact you soon.</p>
-                                    {/* <p>¡Mensaje enviado exitosamente! Te contactaremos pronto.</p> */}
-                                </div>
-                            )}
-
-                            {submitStatus === 'error' && (
-                                <div className="status-message error">
-                                    <span className="status-icon"><MdClose /></span>
-                                    <p>Error sending message. Please try again.</p>
-                                    {/* <p>Error al enviar el mensaje. Por favor, inténtalo de nuevo.</p> */}
-                                </div>
-                            )}
 
                             {/*//* Contact Form */}
                             <form className="contact-form" onSubmit={handleSubmit}>

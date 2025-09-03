@@ -13,6 +13,9 @@ class BaseAPI {
             },
         });
 
+        //* Setup authentication interceptor
+        this.setupAuthInterceptor();
+
         //* Interceptor to handle errors globally
         this.api.interceptors.response.use(
             (response) => response,
@@ -20,6 +23,20 @@ class BaseAPI {
                 console.error('API Error:', error.response?.data || error.message);
                 return Promise.reject(error);
             }
+        );
+    }
+
+    //* Setup authentication interceptor
+    setupAuthInterceptor() {
+        this.api.interceptors.request.use(
+            (config) => {
+                const token = localStorage.getItem('authToken');
+                if (token) {
+                    config.headers.Authorization = `Token ${token}`;
+                }
+                return config;
+            },
+            (error) => Promise.reject(error)
         );
     }
 

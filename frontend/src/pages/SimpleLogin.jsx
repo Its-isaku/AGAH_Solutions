@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import authAPI from '../services/AuthAPI';
+import { useToastContext } from '../context/ToastContext';
 
 function SimpleLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    //* Toast notifications
+    const { success, showError } = useToastContext();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -23,7 +27,7 @@ function SimpleLogin() {
             
             if (response.success) {
                 console.log('Login successful!');
-                alert('Login exitoso!');
+                success('Login exitoso');
             } else {
                 console.log('Login failed:', response.error);
                 setError(response.error || 'Error de login');

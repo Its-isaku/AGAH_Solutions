@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useToastContext } from '../context/ToastContext';
 import authAPI from '../services/AuthAPI';
 import '../style/AuthStyle.css';
 
@@ -9,13 +10,12 @@ import '../style/AuthStyle.css';
 function Login() {
 
     //? Variables 
+    const { success, error: showError, promise } = useToastContext();
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
@@ -27,24 +27,19 @@ function Login() {
             ...prev,
             [name]: value
         }));
-        //* Clear errors when user starts typing
-        if (error) setError('');
     };
 
     const validateForm = () => {
         if (!formData.email.trim()) {
-            setError('Email is required');
-            // setError('El email es requerido');
+            showError('El email es requerido');
             return false;
         }
         if (!formData.password) {
-            setError('Password is required');
-            // setError('La contraseña es requerida');
+            showError('La contraseña es requerida');
             return false;
         }
         if (formData.password.length < 6) {
-            setError('Password must be at least 6 characters');
-            // setError('La contraseña debe tener al menos 6 caracteres');
+            showError('La contraseña debe tener al menos 6 caracteres');
             return false;
         }
         return true;
@@ -52,66 +47,44 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        e.stopPropagation(); // Prevenir cualquier propagación del evento
+        e.stopPropagation();
         
         if (!validateForm()) return;
         
-        setLoading(true);
-        setError('');
-        setSuccess('');
-        
         try {
-            const response = await authAPI.login(formData);
+            await promise(
+                authAPI.login(formData),
+                {
+                    loading: 'Iniciando sesión...',
+                    success: '¡Inicio de sesión exitoso! Bienvenido de vuelta',
+                    error: 'Credenciales incorrectas. Por favor, verifica tu email y contraseña'
+                }
+            );
             
-            if (response.success) {
-                setSuccess('Login successful!');
-                // setSuccess('¡Inicio de sesión exitoso!');
-                
-                //* Force navbar update
-                window.dispatchEvent(new Event('auth-change'));
-                
-                //* Check if there's a saved route to redirect to
-                const redirectPath = sessionStorage.getItem('redirectAfterLogin');
-                
-                setTimeout(() => {
-                    if (redirectPath) {
-                        //* Clear saved route
-                        sessionStorage.removeItem('redirectAfterLogin');
-                        navigate(redirectPath);
-                    } else if (location.state?.from) {
-                        //* If came from a specific route
-                        navigate(location.state.from);
-                    } else {
-                        //* If no saved route, go to home
-                        navigate('/');
-                    }
-                }, 1000);
-                
-            } else {
-                //* Show specific server error and clear inputs
-                setError(response.error || 'Incorrect credentials');
-                // setError(response.error || 'Credenciales incorrectas');
-                //* Clear inputs to allow user to try again
-                setFormData({
-                    email: '',
-                    password: ''
-                });
-                //* Don't navigate or reload on error
-                return;
-            }
+            //* Force navbar update
+            window.dispatchEvent(new Event('auth-change'));
+            
+            //* Check redirect paths
+            const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+            
+            setTimeout(() => {
+                if (redirectPath) {
+                    sessionStorage.removeItem('redirectAfterLogin');
+                    navigate(redirectPath);
+                } else if (location.state?.from) {
+                    navigate(location.state.from);
+                } else {
+                    navigate('/');
+                }
+            }, 1500);
+            
         } catch (error) {
             console.error('Login error:', error);
-            setError('Connection error. Please try again.');
-            // setError('Error de conexión. Por favor, inténtalo de nuevo.');
-            //* Clear inputs on connection error too
+            //* Clear inputs on error
             setFormData({
                 email: '',
                 password: ''
             });
-            //* Don't navigate or reload on error
-            return;
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -123,7 +96,7 @@ function Login() {
     useEffect(() => {
         const checkAuth = async () => {
             //* Only verify on initial load, not during login process
-            if (!loading && !error && !success) {
+            if (!loading) {
                 const isAuth = await authAPI.isAuthenticated();
                 if (isAuth) {
                     navigate('/');
@@ -131,7 +104,7 @@ function Login() {
             }
         };
         checkAuth();
-    }, [navigate]); //* Removed loading, error, success from dependencies
+    }, [navigate, loading]); //* Only depend on navigate and loading
 
     //? What is gonna be rendered
     return (
@@ -142,18 +115,6 @@ function Login() {
                 <div className="auth-card-container">
                     <h1>Log In</h1>
                     {/* <h1>Iniciar Sesión</h1> */}
-                    
-                    {error && (
-                        <div className="alert-error">
-                            {error}
-                        </div>
-                    )}
-                    
-                    {success && (
-                        <div className="alert-success">
-                            {success}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="auth-form">
                         <div className="form-group">
@@ -200,10 +161,9 @@ function Login() {
                         <button 
                             type="submit" 
                             className="submit-btn"
-                            disabled={loading}
                         >
-                            {loading ? 'Logging in...' : 'Log In'}
-                            {/* {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'} */}
+                            Log In
+                            {/* Iniciar Sesión */}
                         </button>
                     </form>
 

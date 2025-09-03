@@ -477,6 +477,27 @@
     transform: translateY(-2px);
 }
 
+/* Confirmation Modal Styles */
+.confirmation-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 4rem;
+    color: #e74c3c;
+}
+
+.confirmation-message {
+    text-align: center;
+    color: #D0E7FF;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
     /* Header adjustments */

@@ -14,51 +14,57 @@ import Orders from './pages/Orders.jsx'
 import Navbar from './components/common/Navbar.jsx'
 import Footer from './components/common/Footer.jsx'
 import ProtectedRoute from './components/common/ProtectedRoute.jsx'
+import { CartProvider } from './context/CartContext.jsx'
+import { ToastProvider } from './context/ToastContext.jsx'
 
 createRoot(document.getElementById('root')).render(
 <StrictMode>
-  <Router>
-    <Navbar />
-    <main>
-      <Routes>
-        {/*//? Public routes */}
-        {/* //? Rutas públicas */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        
-        {/*//? Protected routes - require authentication */}
-        {/* //? Rutas protegidas - requieren autenticación */}
-        <Route 
-          path="/reset-password" 
-          element={
-            <ProtectedRoute>
-              <ResetPassword />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/cart" 
-          element={
-            <ProtectedRoute>
-              <Cart />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/orders" 
-          element={
-            <ProtectedRoute>
-              <Orders />
-            </ProtectedRoute>
-          } 
-        />
-      </Routes>
-    </main>
-    <Footer />
-  </Router>
+  <ToastProvider>
+    <CartProvider>
+      <Router>
+        <Navbar />
+        <main>
+          <Routes>
+            {/*//? Public routes */}
+            {/* //? Rutas públicas */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            
+            {/*//? Protected routes - require authentication */}
+            {/* //? Rutas protegidas - requieren autenticación */}
+            <Route 
+              path="/reset-password" 
+              element={
+                <ProtectedRoute>
+                  <ResetPassword />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/cart" 
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/orders" 
+              element={
+                <ProtectedRoute>
+                  <Orders />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
+    </CartProvider>
+  </ToastProvider>
 </StrictMode>
 )

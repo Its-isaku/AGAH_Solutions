@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mosespace/toast": "^3.1.2",
     "@react-three/drei": "^10.7.3",
     "@react-three/fiber": "^9.3.0",
     "@react-three/rapier": "^2.1.0",
     "axios": "^1.11.0",
+    "clsx": "^2.1.1",
     "gsap": "^3.13.0",
     "lucide-react": "^0.536.0",
     "meshline": "^3.3.1",

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaLock } from 'react-icons/fa';
+import { useToastContext } from '../context/ToastContext';
 import authAPI from '../services/AuthAPI';
 import '../style/AuthStyle.css';
 
@@ -15,12 +16,13 @@ function ResetPassword() {
         confirmNewPassword: ''
     });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const navigate = useNavigate();
+
+    //* Toast notifications
+    const { success, showError, warning, promise } = useToastContext();
 
     //? Functions
     const handleInputChange = (e) => {
@@ -29,49 +31,40 @@ function ResetPassword() {
             ...prev,
             [name]: value
         }));
-        
-        //* Clear errors when user starts typing
-        if (error) setError('');
     };
 
     const validateForm = () => {
         //* Validate current password
         if (!formData.currentPassword) {
-            setError('Current password is required');
-            // setError('La contraseña actual es requerida');
+            warning('La contraseña actual es requerida');
             return false;
         }
         
         //* Validate new password
         if (!formData.newPassword) {
-            setError('New password is required');
-            // setError('La nueva contraseña es requerida');
+            warning('La nueva contraseña es requerida');
             return false;
         }
         
         if (formData.newPassword.length < 8) {
-            setError('New password must be at least 8 characters');
-            // setError('La nueva contraseña debe tener al menos 8 caracteres');
+            warning('La nueva contraseña debe tener al menos 8 caracteres');
             return false;
         }
         
         //* Validate that new password is different from current
         if (formData.currentPassword === formData.newPassword) {
-            setError('New password must be different from current password');
-            // setError('La nueva contraseña debe ser diferente a la actual');
+            warning('La nueva contraseña debe ser diferente a la actual');
             return false;
         }
         
         //* Validate password confirmation
         if (!formData.confirmNewPassword) {
-            setError('You must confirm your new password');
-            // setError('Debes confirmar tu nueva contraseña');
+            warning('Debes confirmar tu nueva contraseña');
             return false;
         }
         
         if (formData.newPassword !== formData.confirmNewPassword) {
-            setError('New passwords do not match');
-            // setError('Las nuevas contraseñas no coinciden');
+            showError('Las nuevas contraseñas no coinciden');
             return false;
         }
         
@@ -82,8 +75,7 @@ function ResetPassword() {
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(formData.newPassword);
         
         if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
-            setError('Password must contain uppercase, lowercase and numbers');
-            // setError('La contraseña debe contener mayúsculas, minúsculas y números');
+            warning('La contraseña debe contener mayúsculas, minúsculas y números');
             return false;
         }
         
@@ -97,30 +89,31 @@ function ResetPassword() {
         
         //* Verify authentication before proceeding
         if (!authAPI.isAuthenticated()) {
-            setError('You must be authenticated to change your password. Please log in again.');
-            // setError('Debes estar autenticado para cambiar tu contraseña. Por favor, inicia sesión nuevamente.');
+            showError('Debes estar autenticado para cambiar tu contraseña. Por favor, inicia sesión nuevamente.');
             setTimeout(() => navigate('/login'), 2000);
             return;
         }
         
         setLoading(true);
-        setError('');
-        setSuccess('');
         
         try {
             //* Prepare data for backend
             const passwordData = {
                 old_password: formData.currentPassword,
                 new_password: formData.newPassword,
-                confirm_password: formData.confirmNewPassword  //* Changed from confirm_new_password
+                confirm_password: formData.confirmNewPassword
             };
             
-            const response = await authAPI.changePassword(passwordData);
+            const response = await promise(
+                authAPI.changePassword(passwordData),
+                {
+                    loading: 'Cambiando contraseña...',
+                    success: 'Contraseña actualizada exitosamente',
+                    error: 'Error al cambiar la contraseña'
+                }
+            );
             
             if (response.success) {
-                setSuccess('Password updated successfully!');
-                // setSuccess('¡Contraseña actualizada exitosamente!');
-                
                 //* Clear the form
                 setFormData({
                     currentPassword: '',
@@ -133,13 +126,11 @@ function ResetPassword() {
                     navigate('/');
                 }, 2000);
             } else {
-                setError(response.error || 'Error changing password');
-                // setError(response.error || 'Error al cambiar la contraseña');
+                showError(response.error || 'Error al cambiar la contraseña');
             }
         } catch (error) {
             console.error('Password change error:', error);
-            setError('Connection error. Please try again.');
-            // setError('Error de conexión. Por favor, inténtalo de nuevo.');
+            showError('Error de conexión. Por favor, inténtalo de nuevo.');
         } finally {
             setLoading(false);
         }
@@ -171,18 +162,6 @@ function ResetPassword() {
                             {/* Por seguridad, ingresa tu contraseña actual para crear una nueva */}
                         </p>
                     </div>
-                    
-                    {error && (
-                        <div className="alert-error">
-                            {error}
-                        </div>
-                    )}
-                    
-                    {success && (
-                        <div className="alert-success">
-                            {success}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className="auth-form">
                         {/* Current Password */}
