@@ -16,11 +16,13 @@ import Footer from './components/common/Footer.jsx'
 import ProtectedRoute from './components/common/ProtectedRoute.jsx'
 import { CartProvider } from './context/CartContext.jsx'
 import { ToastProvider } from './context/ToastContext.jsx'
+import { AuthProvider } from './context/AuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
 <StrictMode>
   <ToastProvider>
     <CartProvider>
+      <AuthProvider>
       <Router>
         <Navbar />
         <main>
@@ -64,7 +66,8 @@ createRoot(document.getElementById('root')).render(
         </main>
         <Footer />
       </Router>
-    </CartProvider>
+    </AuthProvider>
+  </CartProvider>
   </ToastProvider>
 </StrictMode>
 )

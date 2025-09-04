@@ -5,21 +5,19 @@ import axios from 'axios';
 class BaseAPI {
     //* Constructor for BaseAPI
     constructor() {
-        this.baseURL = 'http://127.0.0.1:8000';
+        this.baseURL = 'http://localhost:8000'; // AGREGAR ESTA LÍNEA
         this.api = axios.create({
-            baseURL: this.baseURL,
+            baseURL: this.baseURL, // AGREGAR ESTA LÍNEA
+            timeout: 30000,
             headers: {
                 'Content-Type': 'application/json',
-            },
+            }
         });
-
-        //* Setup authentication interceptor
-        this.setupAuthInterceptor();
-
-        //* Interceptor to handle errors globally
+        
+        // Response interceptor for error handling
         this.api.interceptors.response.use(
-            (response) => response,
-            (error) => {
+            response => response,
+            error => {
                 console.error('API Error:', error.response?.data || error.message);
                 return Promise.reject(error);
             }
@@ -379,12 +377,17 @@ class OrdersAPI extends BaseAPI {
     //* Function to create a new order
     async createOrder(orderData) {
         try {
-            const response = await this.api.post('/api/orders/create/', orderData);
+            const response = await this.api.post('/api/orders/create/', orderData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                timeout: 30000 // 30 seconds for file uploads
+            });
             
             if (response.data.success) {
                 return {
                     success: true,
-                    data: response.data.data,
+                    order: response.data.data,
                     message: response.data.message || 'Order created successfully'
                 };
             } else {
@@ -411,6 +414,26 @@ class OrdersAPI extends BaseAPI {
         }
     }
 
+    //* Function to get orders by customer email
+    async getOrdersByCustomer(email) {
+        try {
+            const response = await this.api.get(`/api/orders/customer/?email=${encodeURIComponent(email)}`);
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    orders: response.data.data || [],
+                    count: response.data.count || 0
+                };
+            } else {
+                throw new Error(response.data.error || 'Failed to load orders');
+            }
+        } catch (error) {
+            console.error('Error fetching customer orders:', error);
+            throw new Error(error.response?.data?.error || 'Failed to load orders');
+        }
+    }
+
     //* Function to get user's orders (requires authentication)
     async getUserOrders() {
         try {
@@ -419,8 +442,8 @@ class OrdersAPI extends BaseAPI {
             if (response.data.success) {
                 return {
                     success: true,
-                    data: response.data.data, // Array of orders
-                    count: response.data.count
+                    orders: response.data.data || [],
+                    count: response.data.count || 0
                 };
             } else {
                 return {
@@ -429,10 +452,8 @@ class OrdersAPI extends BaseAPI {
                 };
             }
         } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.error || error.message || 'Failed to load orders'
-            };
+            console.error('Error fetching user orders:', error);
+            throw new Error(error.response?.data?.error || 'Failed to load orders');
         }
     }
 
@@ -444,7 +465,7 @@ class OrdersAPI extends BaseAPI {
             if (response.data.success) {
                 return {
                     success: true,
-                    data: response.data.data
+                    order: response.data.data
                 };
             } else {
                 return {
@@ -453,10 +474,8 @@ class OrdersAPI extends BaseAPI {
                 };
             }
         } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.error || error.message || 'Failed to load order details'
-            };
+            console.error('Error fetching order details:', error);
+            throw new Error(error.response?.data?.error || 'Failed to load order details');
         }
     }
 
@@ -471,19 +490,58 @@ class OrdersAPI extends BaseAPI {
             if (response.data.success) {
                 return {
                     success: true,
-                    data: response.data.data
+                    order: response.data.data
                 };
             } else {
-                return {
-                    success: false,
-                    error: response.data.error || 'Order not found'
-                };
+                throw new Error(response.data.error || 'Order not found');
             }
         } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.error || error.message || 'Failed to track order'
-            };
+            console.error('Error tracking order:', error);
+            throw new Error(error.response?.data?.error || 'Failed to track order');
+        }
+    }
+
+    //* Function to confirm order (accept final price)
+    async confirmOrder(orderNumber, customerEmail) {
+        try {
+            const response = await this.api.post('/api/orders/confirm/', {
+                order_number: orderNumber,
+                customer_email: customerEmail
+            });
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message
+                };
+            } else {
+                throw new Error(response.data.error || 'Failed to confirm order');
+            }
+        } catch (error) {
+            console.error('Error confirming order:', error);
+            throw new Error(error.response?.data?.error || 'Failed to confirm order');
+        }
+    }
+
+    //* Function to cancel order
+    async cancelOrder(orderNumber, customerEmail) {
+        try {
+            const response = await this.api.post('/api/orders/cancel/', {
+                order_number: orderNumber,
+                customer_email: customerEmail
+            });
+            
+            if (response.data.success) {
+                return {
+                    success: true,
+                    message: response.data.message
+                };
+            } else {
+                throw new Error(response.data.error || 'Failed to cancel order');
+            }
+        } catch (error) {
+            console.error('Error canceling order:', error);
+            throw new Error(error.response?.data?.error || 'Failed to cancel order');
         }
     }
 
@@ -528,16 +586,16 @@ class OrdersAPI extends BaseAPI {
                 };
             }
             
-            const orders = result.data;
+            const orders = result.orders;
             
             const stats = {
                 total: orders.length,
-                pending: orders.filter(o => o.state === 'pending').length,
-                estimated: orders.filter(o => o.state === 'estimated').length,
-                confirmed: orders.filter(o => o.state === 'confirmed').length,
-                inProgress: orders.filter(o => o.state === 'in_progress').length,
-                completed: orders.filter(o => o.state === 'completed').length,
-                canceled: orders.filter(o => o.state === 'canceled').length,
+                pending: orders.filter(o => o.status === 'pendiente').length,
+                estimated: orders.filter(o => o.status === 'cotizado').length,
+                confirmed: orders.filter(o => o.status === 'confirmado').length,
+                inProgress: orders.filter(o => o.status === 'en_proceso').length,
+                completed: orders.filter(o => o.status === 'completado').length,
+                canceled: orders.filter(o => o.status === 'cancelado').length,
             };
             
             return {

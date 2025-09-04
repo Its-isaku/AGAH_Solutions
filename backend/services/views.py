@@ -10,6 +10,7 @@ from django.utils.html import strip_tags
 from django.utils import timezone
 from .models import TypeService, Order, OrderItem, CompanyConfiguration
 import json
+import re
 from django.core.files.storage import default_storage
 from .serializers import (
     TypeServiceSerializer,
@@ -832,3 +833,164 @@ class PublicOrderCreateView(APIView):
         except Exception as e:
             print(f"Error sending email: {e}")
             return False
+        
+        
+class CustomerOrdersView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def get(self, request):
+        try:
+            # Get email from query parameters
+            customer_email = request.GET.get('email', '').strip().lower()
+            
+            if not customer_email:
+                return Response({
+                    'success': False,
+                    'error': 'Email parameter is required',
+                    'data': []
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Validate email format
+            if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', customer_email):
+                return Response({
+                    'success': False,
+                    'error': 'Invalid email format',
+                    'data': []
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get orders for this customer email
+            orders = Order.objects.filter(
+                customer_email__iexact=customer_email
+            ).order_by('-created_at')
+            
+            # Serialize orders with all details
+            serializer = OrderDetailSerializer(orders, many=True)
+            
+            return Response({
+                'success': True,
+                'data': serializer.data,
+                'count': orders.count(),
+                'message': f'Found {orders.count()} orders for {customer_email}'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Error fetching customer orders: {e}")
+            return Response({
+                'success': False,
+                'error': 'Internal server error',
+                'data': []
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    
+class ConfirmOrderView(APIView):
+    """
+    Public endpoint to confirm an order (accept final price)
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        try:
+            order_number = request.data.get('order_number', '').strip()
+            customer_email = request.data.get('customer_email', '').strip().lower()
+            
+            if not order_number or not customer_email:
+                return Response({
+                    'success': False,
+                    'error': 'Order number and customer email are required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Find the order
+            try:
+                order = Order.objects.get(
+                    order_number=order_number,
+                    customer_email__iexact=customer_email
+                )
+            except Order.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Order not found or email does not match'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Check if order can be confirmed
+            if order.status not in ['cotizado', 'final_price_sent']:
+                return Response({
+                    'success': False,
+                    'error': 'Order cannot be confirmed in current status'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update order status
+            order.status = 'confirmado'
+            order.final_price_accepted_at = timezone.now()
+            order.save()
+            
+            # Send confirmation email (optional)
+            try:
+                from .signals import send_order_confirmed_email
+                send_order_confirmed_email(order)
+            except Exception as email_error:
+                print(f"Warning: Could not send confirmation email: {email_error}")
+            
+            return Response({
+                'success': True,
+                'message': 'Order confirmed successfully'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Error confirming order: {e}")
+            return Response({
+                'success': False,
+                'error': 'Internal server error'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CancelOrderView(APIView):
+    """
+    Public endpoint to cancel an order
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        try:
+            order_number = request.data.get('order_number', '').strip()
+            customer_email = request.data.get('customer_email', '').strip().lower()
+            
+            if not order_number or not customer_email:
+                return Response({
+                    'success': False,
+                    'error': 'Order number and customer email are required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Find the order
+            try:
+                order = Order.objects.get(
+                    order_number=order_number,
+                    customer_email__iexact=customer_email
+                )
+            except Order.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'error': 'Order not found or email does not match'
+                }, status=status.HTTP_404_NOT_FOUND)
+            
+            # Check if order can be cancelled
+            if order.status in ['completado', 'cancelado']:
+                return Response({
+                    'success': False,
+                    'error': 'Order cannot be cancelled in current status'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update order status
+            order.status = 'cancelado'
+            order.cancelled_at = timezone.now()
+            order.save()
+            
+            return Response({
+                'success': True,
+                'message': 'Order cancelled successfully'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            print(f"Error cancelling order: {e}")
+            return Response({
+                'success': False,
+                'error': 'Internal server error'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

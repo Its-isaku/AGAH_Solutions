@@ -8,7 +8,6 @@ import { useToastContext } from '../context/ToastContext';
 import ConfirmationModal from '../components/common/ConfirmationModal';
 import api from '../services/api';
 import authAPI from '../services/AuthAPI';
-import axios from 'axios';
 
 //? Component
 function Cart() {
@@ -108,13 +107,12 @@ function Cart() {
             console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
         }
 
-        // CORRECCIÓN: Usar axios directo con multipart/form-data
         const result = await promise(
-            axios.post('/api/orders/create/', formData, {
+            api.orders.api.post('/api/orders/create/', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
-                timeout: 30000 // 30 segundos para subida de archivos
+                timeout: 30000
             }),
             {
                 loading: 'Enviando tu pedido...',

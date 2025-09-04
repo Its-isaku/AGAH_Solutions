@@ -12,6 +12,9 @@ from .views import (
     ContactFormView,
     OrderTrackingView,
     PublicOrderCreateView,
+    CustomerOrdersView,
+    ConfirmOrderView, 
+    CancelOrderView,
     
     #* Protected Views (User Authentication Required)
     OrderCreateView,
@@ -24,6 +27,13 @@ from .views import (
 )
 
 urlpatterns = [
+
+    #* Customer orders endpoint (public - requires email)
+    path('api/orders/customer/', CustomerOrdersView.as_view(), name='customer-orders'),
+    
+    #* Order confirmation endpoints (public)
+    path('api/orders/confirm/', ConfirmOrderView.as_view(), name='confirm-order'),
+    path('api/orders/cancel/', CancelOrderView.as_view(), name='cancel-order'),
     
     #? <|--------------Public API Endpoints (No Authentication Required)--------------|>
     
