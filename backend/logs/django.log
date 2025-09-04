@@ -5312,3 +5312,775 @@ INFO 2025-09-03 17:21:08,537 autoreload 27420 25644 C:\Users\RogSt\Desktop\AGAH_
 INFO 2025-09-03 17:21:09,442 autoreload 13152 7356 Watching for file changes with StatReloader
 INFO 2025-09-03 17:21:10,943 autoreload 13152 7356 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
 INFO 2025-09-03 17:21:11,930 autoreload 24200 23508 Watching for file changes with StatReloader
+INFO 2025-09-03 20:55:16,721 basehttp 24200 23744 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-03 20:55:16,723 basehttp 24200 41828 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-03 20:55:16,777 basehttp 24200 41828 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 20:55:16,790 basehttp 24200 23744 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 20:55:16,898 basehttp 24200 35760 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:16,901 basehttp 24200 9816 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:16,906 basehttp 24200 7492 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:16,907 basehttp 24200 2852 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:16,908 basehttp 24200 12004 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:22,100 basehttp 24200 15252 "GET /admin/services/typeservice/ HTTP/1.1" 200 19958
+INFO 2025-09-03 20:55:22,497 basehttp 24200 15252 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 20:55:22,499 basehttp 24200 23936 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 20:55:22,502 basehttp 24200 42740 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 20:55:22,504 basehttp 24200 22324 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-03 20:55:22,507 basehttp 24200 23936 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 20:55:22,508 basehttp 24200 21908 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 20:55:22,509 basehttp 24200 42740 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 20:55:22,509 basehttp 24200 24640 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 20:55:22,514 basehttp 24200 22324 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 20:55:22,517 basehttp 24200 23936 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 20:55:22,518 basehttp 24200 42740 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 20:55:22,519 basehttp 24200 21908 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 20:55:22,528 basehttp 24200 42740 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-03 20:55:22,531 basehttp 24200 15252 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 20:55:22,534 basehttp 24200 24640 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 20:55:22,541 basehttp 24200 24640 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 20:55:22,548 basehttp 24200 24640 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-03 20:55:22,555 basehttp 24200 24640 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:22,557 basehttp 24200 22324 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 20:55:22,564 basehttp 24200 22324 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:22,564 basehttp 24200 24640 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:22,591 basehttp 24200 24640 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:22,591 basehttp 24200 22324 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 304 0
+INFO 2025-09-03 20:55:22,600 basehttp 24200 22324 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 20:55:22,604 basehttp 24200 24640 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-03 20:55:22,605 basehttp 24200 15252 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-03 20:55:22,607 basehttp 24200 22324 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-03 20:55:23,192 basehttp 24200 22324 "GET /admin/services/order/ HTTP/1.1" 200 16422
+INFO 2025-09-03 20:55:23,365 basehttp 24200 22324 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 20:55:29,549 basehttp 24200 22324 "POST /admin/services/order/ HTTP/1.1" 200 11751
+INFO 2025-09-03 20:55:31,021 basehttp 24200 22324 "POST /admin/services/order/ HTTP/1.1" 302 0
+INFO 2025-09-03 20:55:31,061 basehttp 24200 22324 "GET /admin/services/order/ HTTP/1.1" 200 13720
+INFO 2025-09-03 20:55:31,184 basehttp 24200 22324 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 20:55:33,434 basehttp 24200 22324 "GET /admin/services/orderitem/ HTTP/1.1" 200 13118
+INFO 2025-09-03 20:55:33,540 basehttp 24200 22324 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 20:55:34,157 basehttp 24200 22324 "GET /admin/services/order/ HTTP/1.1" 200 13585
+INFO 2025-09-03 20:55:34,276 basehttp 24200 22324 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 20:56:52,731 autoreload 24200 23508 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\signals.py changed, reloading.
+INFO 2025-09-03 20:56:54,389 autoreload 31960 1504 Watching for file changes with StatReloader
+INFO 2025-09-03 20:58:36,811 autoreload 31960 1504 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 20:58:38,898 autoreload 19172 21552 Watching for file changes with StatReloader
+INFO 2025-09-03 20:59:34,559 autoreload 19172 21552 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 20:59:36,158 autoreload 30732 26364 Watching for file changes with StatReloader
+INFO 2025-09-03 21:00:17,080 autoreload 30732 26364 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:00:18,568 autoreload 38892 28824 Watching for file changes with StatReloader
+INFO 2025-09-03 21:00:21,414 autoreload 38892 28824 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:00:22,971 autoreload 23352 41792 Watching for file changes with StatReloader
+INFO 2025-09-03 21:01:38,913 autoreload 23352 41792 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:01:40,886 autoreload 21784 13552 Watching for file changes with StatReloader
+INFO 2025-09-03 21:01:42,921 autoreload 21784 13552 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:01:44,364 autoreload 43972 21184 Watching for file changes with StatReloader
+INFO 2025-09-03 21:04:33,213 autoreload 43972 21184 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:04:35,047 autoreload 39948 22392 Watching for file changes with StatReloader
+INFO 2025-09-03 21:04:48,003 basehttp 39948 29224 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-03 21:04:48,004 basehttp 39948 30328 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-03 21:04:48,028 basehttp 39948 29224 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 21:04:48,029 basehttp 39948 30328 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 21:04:48,238 basehttp 39948 31584 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 200 86352
+INFO 2025-09-03 21:04:48,243 basehttp 39948 40656 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 200 45639
+INFO 2025-09-03 21:04:48,274 basehttp 39948 30152 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 200 80127
+INFO 2025-09-03 21:04:48,275 basehttp 39948 30784 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 200 91099
+INFO 2025-09-03 21:04:48,282 basehttp 39948 16764 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 200 589802
+INFO 2025-09-03 21:05:18,254 basehttp 39948 30328 "OPTIONS /api/orders/create/ HTTP/1.1" 200 0
+INFO 2025-09-03 21:05:21,853 basehttp 39948 30328 "POST /api/orders/create/ HTTP/1.1" 201 1416
+INFO 2025-09-03 21:05:23,907 basehttp 39948 30328 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 21:05:23,920 basehttp 39948 29224 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 21:05:54,010 basehttp 39948 22752 "GET /admin/services/order/ HTTP/1.1" 200 16421
+INFO 2025-09-03 21:05:54,142 basehttp 39948 22752 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:05:54,143 basehttp 39948 24020 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:05:54,145 basehttp 39948 15944 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:05:54,146 basehttp 39948 31476 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:05:54,148 basehttp 39948 27060 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:05:54,148 basehttp 39948 34968 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-03 21:05:54,152 basehttp 39948 15944 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:05:54,153 basehttp 39948 31476 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:05:54,159 basehttp 39948 27060 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:05:54,160 basehttp 39948 15944 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:05:54,161 basehttp 39948 31476 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:05:54,163 basehttp 39948 34968 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:05:54,165 basehttp 39948 24020 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:05:54,166 basehttp 39948 15944 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-03 21:05:54,169 basehttp 39948 22752 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:05:54,171 basehttp 39948 27060 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:05:54,219 basehttp 39948 27060 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:05:54,228 basehttp 39948 27060 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-03 21:05:54,255 basehttp 39948 15944 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-03 21:05:54,255 basehttp 39948 22752 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:05:54,256 basehttp 39948 27060 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:05:54,256 basehttp 39948 24020 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-09-03 21:05:54,519 log 39948 24020 Not Found: /favicon.ico
+WARNING 2025-09-03 21:05:54,520 basehttp 39948 24020 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:05:57,405 basehttp 39948 24020 "GET /admin/services/order/8/change/ HTTP/1.1" 200 36333
+INFO 2025-09-03 21:05:57,540 basehttp 39948 24020 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:06:13,650 basehttp 39948 24020 "GET /admin/services/orderitem/ HTTP/1.1" 200 15870
+INFO 2025-09-03 21:06:13,761 basehttp 39948 24020 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:06:15,587 basehttp 39948 24020 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 26548
+INFO 2025-09-03 21:06:15,688 basehttp 39948 24020 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:11:18,165 autoreload 39948 22392 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:11:19,735 autoreload 12252 31048 Watching for file changes with StatReloader
+INFO 2025-09-03 21:11:43,205 basehttp 12252 6600 "GET /admin/services/order/ HTTP/1.1" 200 16421
+INFO 2025-09-03 21:11:43,344 basehttp 12252 6600 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:11:44,824 basehttp 12252 6600 "GET /admin/services/orderitem/ HTTP/1.1" 200 15870
+INFO 2025-09-03 21:11:44,970 basehttp 12252 6600 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:11:46,218 basehttp 12252 6600 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32632
+INFO 2025-09-03 21:11:46,344 basehttp 12252 6600 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:12:28,084 basehttp 12252 6600 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:12:28,137 basehttp 12252 6600 "GET /admin/services/orderitem/ HTTP/1.1" 200 16092
+INFO 2025-09-03 21:12:28,298 basehttp 12252 6600 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:12:31,617 basehttp 12252 6600 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32649
+INFO 2025-09-03 21:12:31,757 basehttp 12252 6600 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:16:45,424 autoreload 12252 31048 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:16:47,182 autoreload 39144 17728 Watching for file changes with StatReloader
+INFO 2025-09-03 21:17:57,621 autoreload 39144 17728 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:17:59,029 autoreload 20980 30528 Watching for file changes with StatReloader
+INFO 2025-09-03 21:18:03,602 autoreload 20980 30528 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:18:05,198 autoreload 33412 7792 Watching for file changes with StatReloader
+INFO 2025-09-03 21:18:37,612 autoreload 33412 7792 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:18:39,064 autoreload 34856 13552 Watching for file changes with StatReloader
+INFO 2025-09-03 21:19:04,432 autoreload 34856 13552 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:19:05,896 autoreload 34164 3452 Watching for file changes with StatReloader
+INFO 2025-09-03 21:19:20,393 autoreload 22440 42656 Watching for file changes with StatReloader
+INFO 2025-09-03 21:19:26,426 basehttp 22440 20852 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32757
+INFO 2025-09-03 21:19:26,756 basehttp 22440 33360 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:19:26,762 basehttp 22440 34144 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:19:26,762 basehttp 22440 20852 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:19:26,768 basehttp 22440 33360 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:19:26,768 basehttp 22440 18016 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-03 21:19:26,769 basehttp 22440 12164 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:19:26,770 basehttp 22440 20852 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:19:26,773 basehttp 22440 8640 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:19:26,776 basehttp 22440 12164 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:19:26,777 basehttp 22440 33360 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:19:26,777 basehttp 22440 18016 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:19:26,778 basehttp 22440 20852 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:19:26,779 basehttp 22440 8640 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:19:26,782 basehttp 22440 20852 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-03 21:19:26,784 basehttp 22440 34144 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:19:26,786 basehttp 22440 33360 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:19:26,796 basehttp 22440 33360 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-03 21:19:26,801 basehttp 22440 33360 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:19:26,804 basehttp 22440 33360 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-03 21:19:26,828 basehttp 22440 33360 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:19:26,829 basehttp 22440 20852 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-03 21:19:26,829 basehttp 22440 34144 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-09-03 21:19:27,119 log 22440 20852 Not Found: /favicon.ico
+WARNING 2025-09-03 21:19:27,120 basehttp 22440 20852 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:19:32,495 basehttp 22440 20852 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:19:32,578 basehttp 22440 20852 "GET /admin/services/orderitem/ HTTP/1.1" 200 16097
+INFO 2025-09-03 21:19:32,700 basehttp 22440 20852 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:19:34,781 basehttp 22440 20852 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32764
+INFO 2025-09-03 21:19:34,921 basehttp 22440 20852 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:19:51,091 basehttp 22440 20852 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:19:51,130 basehttp 22440 20852 "GET /admin/services/orderitem/ HTTP/1.1" 200 16097
+INFO 2025-09-03 21:19:51,244 basehttp 22440 20852 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:19:55,886 basehttp 22440 20852 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:19:56,002 basehttp 22440 20852 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:23:17,311 autoreload 22440 42656 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-03 21:23:18,746 autoreload 39988 43248 Watching for file changes with StatReloader
+INFO 2025-09-03 21:24:59,575 autoreload 39988 43248 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:25:01,133 autoreload 15204 12244 Watching for file changes with StatReloader
+INFO 2025-09-03 21:25:03,635 autoreload 15204 12244 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:25:05,175 autoreload 27444 28432 Watching for file changes with StatReloader
+INFO 2025-09-03 21:25:09,062 basehttp 27444 31608 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:25:09,406 basehttp 27444 31608 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:25:09,413 basehttp 27444 28084 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-03 21:25:09,415 basehttp 27444 31608 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:25:09,417 basehttp 27444 20492 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:25:09,418 basehttp 27444 31608 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:25:09,422 basehttp 27444 20492 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:25:09,422 basehttp 27444 19788 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:25:09,425 basehttp 27444 31608 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:25:09,425 basehttp 27444 20340 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:25:09,427 basehttp 27444 20492 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:25:09,428 basehttp 27444 19788 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:25:09,429 basehttp 27444 15568 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:25:09,430 basehttp 27444 31608 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:25:09,432 basehttp 27444 28084 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:25:09,435 basehttp 27444 20340 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:25:09,437 basehttp 27444 19788 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-03 21:25:09,475 basehttp 27444 19788 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-03 21:25:09,483 basehttp 27444 19788 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:25:09,489 basehttp 27444 19788 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-03 21:25:09,542 basehttp 27444 31608 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-03 21:25:09,543 basehttp 27444 19788 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:25:09,543 basehttp 27444 20340 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-03 21:25:09,555 basehttp 27444 20340 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+WARNING 2025-09-03 21:25:09,835 log 27444 20340 Not Found: /favicon.ico
+WARNING 2025-09-03 21:25:09,835 basehttp 27444 20340 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:25:21,312 basehttp 27444 20340 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:25:21,354 basehttp 27444 20340 "GET /admin/services/orderitem/ HTTP/1.1" 200 16097
+INFO 2025-09-03 21:25:21,462 basehttp 27444 20340 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:25:23,219 basehttp 27444 20340 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:25:23,312 basehttp 27444 20340 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:25:37,404 autoreload 22952 21104 Watching for file changes with StatReloader
+INFO 2025-09-03 21:25:54,552 basehttp 22952 15596 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:25:54,898 basehttp 22952 40468 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:25:54,916 basehttp 22952 40468 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:25:54,933 basehttp 22952 40468 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:25:54,938 basehttp 22952 40468 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:25:54,944 basehttp 22952 40468 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:25:54,950 basehttp 22952 40468 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:25:54,956 basehttp 22952 40848 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-03 21:25:54,957 basehttp 22952 40468 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:25:54,965 basehttp 22952 40848 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:25:54,966 basehttp 22952 40468 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:25:54,975 basehttp 22952 40468 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-03 21:25:54,988 basehttp 22952 40848 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:25:54,993 basehttp 22952 26772 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:25:55,003 basehttp 22952 15596 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:25:55,016 basehttp 22952 2252 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:25:55,016 basehttp 22952 41268 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:25:55,028 basehttp 22952 2252 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:25:55,034 basehttp 22952 41268 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-03 21:25:55,036 basehttp 22952 2252 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-03 21:25:55,048 basehttp 22952 2252 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:25:55,049 basehttp 22952 41268 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-03 21:25:55,069 basehttp 22952 41268 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-03 21:25:55,086 basehttp 22952 41268 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+WARNING 2025-09-03 21:25:55,350 log 22952 41268 Not Found: /favicon.ico
+WARNING 2025-09-03 21:25:55,352 basehttp 22952 41268 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:26:08,630 basehttp 22952 41268 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:26:08,686 basehttp 22952 41268 "GET /admin/services/orderitem/ HTTP/1.1" 200 16097
+INFO 2025-09-03 21:26:08,806 basehttp 22952 41268 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:26:13,302 basehttp 22952 41268 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:26:13,412 basehttp 22952 41268 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:27:38,422 autoreload 22952 21104 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:27:39,840 autoreload 19188 40732 Watching for file changes with StatReloader
+INFO 2025-09-03 21:27:43,495 autoreload 19188 40732 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:27:44,891 autoreload 15868 10232 Watching for file changes with StatReloader
+INFO 2025-09-03 21:27:50,562 autoreload 15868 10232 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:27:52,284 autoreload 10776 8780 Watching for file changes with StatReloader
+INFO 2025-09-03 21:28:11,786 basehttp 10776 20296 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:28:11,891 basehttp 10776 20296 "GET /admin/services/orderitem/ HTTP/1.1" 200 16097
+INFO 2025-09-03 21:28:12,023 basehttp 10776 20296 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:28:13,823 basehttp 10776 20296 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:28:13,936 basehttp 10776 20296 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:28:29,331 autoreload 32800 31668 Watching for file changes with StatReloader
+INFO 2025-09-03 21:28:34,812 basehttp 32800 7204 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:28:34,909 basehttp 32800 7204 "GET /admin/services/orderitem/ HTTP/1.1" 200 16097
+INFO 2025-09-03 21:28:35,008 basehttp 32800 7204 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:28:36,753 basehttp 32800 7204 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:28:36,875 basehttp 32800 7204 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:30:26,552 autoreload 32800 31668 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:30:28,043 autoreload 23668 29964 Watching for file changes with StatReloader
+INFO 2025-09-03 21:30:32,675 autoreload 23668 29964 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:30:34,342 autoreload 20496 14008 Watching for file changes with StatReloader
+INFO 2025-09-03 21:31:44,273 autoreload 20496 14008 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:31:45,889 autoreload 30592 33540 Watching for file changes with StatReloader
+INFO 2025-09-03 21:31:49,492 autoreload 30592 33540 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:31:50,974 autoreload 8080 25644 Watching for file changes with StatReloader
+INFO 2025-09-03 21:31:55,239 basehttp 8080 40512 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32765
+INFO 2025-09-03 21:31:55,564 basehttp 8080 16796 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-09-03 21:31:55,568 basehttp 8080 42564 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:31:55,571 basehttp 8080 1340 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:31:55,572 basehttp 8080 22332 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:31:55,576 basehttp 8080 3816 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:31:55,580 basehttp 8080 1340 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:31:55,581 basehttp 8080 16796 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:31:55,581 basehttp 8080 40512 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:31:55,582 basehttp 8080 22332 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:31:55,586 basehttp 8080 3816 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:31:55,588 basehttp 8080 1340 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:31:55,588 basehttp 8080 22332 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:31:55,589 basehttp 8080 40512 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:31:55,591 basehttp 8080 3816 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-03 21:31:55,592 basehttp 8080 1340 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-03 21:31:55,595 basehttp 8080 42564 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:31:55,597 basehttp 8080 16796 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:31:55,602 basehttp 8080 16796 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:31:55,609 basehttp 8080 16796 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-03 21:31:55,627 basehttp 8080 1340 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-03 21:31:55,627 basehttp 8080 42564 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-03 21:31:55,627 basehttp 8080 16796 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:31:55,633 basehttp 8080 16796 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:31:55,633 basehttp 8080 42564 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-03 21:31:55,634 basehttp 8080 1340 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-09-03 21:31:56,058 log 8080 1340 Not Found: /favicon.ico
+WARNING 2025-09-03 21:31:56,059 basehttp 8080 1340 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:32:02,570 basehttp 8080 1340 "POST /admin/services/orderitem/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:32:02,622 basehttp 8080 1340 "GET /admin/services/orderitem/ HTTP/1.1" 200 16099
+INFO 2025-09-03 21:32:02,746 basehttp 8080 1340 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:32:04,543 basehttp 8080 1340 "GET /admin/services/orderitem/4/change/ HTTP/1.1" 200 32770
+INFO 2025-09-03 21:32:04,649 basehttp 8080 1340 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:35:18,900 autoreload 13992 20576 Watching for file changes with StatReloader
+INFO 2025-09-03 21:35:55,634 autoreload 13992 20576 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:35:57,267 autoreload 26596 388 Watching for file changes with StatReloader
+INFO 2025-09-03 21:36:27,340 autoreload 26596 388 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:36:28,711 autoreload 34592 43728 Watching for file changes with StatReloader
+INFO 2025-09-03 21:36:31,239 autoreload 34592 43728 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:36:32,763 autoreload 7184 8584 Watching for file changes with StatReloader
+INFO 2025-09-03 21:36:34,526 autoreload 7184 8584 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:36:36,256 autoreload 25976 43640 Watching for file changes with StatReloader
+INFO 2025-09-03 21:37:10,671 autoreload 25976 43640 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:37:12,236 autoreload 41976 17788 Watching for file changes with StatReloader
+INFO 2025-09-03 21:37:17,846 autoreload 41976 17788 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:37:19,444 autoreload 42984 1048 Watching for file changes with StatReloader
+INFO 2025-09-03 21:37:23,624 autoreload 42984 1048 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:37:25,140 autoreload 31244 37360 Watching for file changes with StatReloader
+INFO 2025-09-03 21:37:30,508 autoreload 31244 37360 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-03 21:37:32,168 autoreload 16572 8944 Watching for file changes with StatReloader
+INFO 2025-09-03 21:37:38,189 basehttp 16572 2552 "GET /admin/services/orderitem/4/delete/ HTTP/1.1" 200 11514
+INFO 2025-09-03 21:37:39,799 basehttp 16572 2552 "POST /admin/services/orderitem/4/delete/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:37:39,875 basehttp 16572 2552 "GET /admin/services/orderitem/ HTTP/1.1" 200 13290
+INFO 2025-09-03 21:37:39,985 basehttp 16572 2552 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:38:17,796 basehttp 16572 20704 "POST /api/orders/create/ HTTP/1.1" 201 1395
+INFO 2025-09-03 21:38:19,943 basehttp 16572 20704 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 21:38:19,957 basehttp 16572 37980 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 21:38:19,998 basehttp 16572 19068 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 304 0
+INFO 2025-09-03 21:38:20,003 basehttp 16572 19068 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 304 0
+INFO 2025-09-03 21:38:20,010 basehttp 16572 19068 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 304 0
+INFO 2025-09-03 21:38:20,012 basehttp 16572 28136 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 304 0
+INFO 2025-09-03 21:38:20,013 basehttp 16572 11100 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 304 0
+INFO 2025-09-03 21:38:22,638 basehttp 16572 2552 "GET /admin/services/orderitem/ HTTP/1.1" 200 15872
+INFO 2025-09-03 21:38:22,757 basehttp 16572 37668 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:38:23,090 basehttp 16572 43892 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:38:23,094 basehttp 16572 37668 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:38:23,099 basehttp 16572 10688 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:38:23,105 basehttp 16572 37668 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:38:23,109 basehttp 16572 10688 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:38:23,113 basehttp 16572 2552 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:38:23,118 basehttp 16572 29100 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-03 21:38:23,118 basehttp 16572 39816 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:38:23,119 basehttp 16572 37668 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:38:23,123 basehttp 16572 2552 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:38:23,125 basehttp 16572 10688 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:38:23,129 basehttp 16572 37668 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:38:23,137 basehttp 16572 39816 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-03 21:38:23,140 basehttp 16572 43892 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:38:23,146 basehttp 16572 29100 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:38:23,159 basehttp 16572 29100 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:38:23,162 basehttp 16572 37668 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-09-03 21:38:23,165 basehttp 16572 37668 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-03 21:38:23,173 basehttp 16572 37668 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:38:23,175 basehttp 16572 29100 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:38:23,176 basehttp 16572 43892 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-09-03 21:38:23,315 log 16572 29100 Not Found: /favicon.ico
+WARNING 2025-09-03 21:38:23,315 basehttp 16572 29100 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:38:25,011 basehttp 16572 29100 "GET /admin/services/orderitem/5/change/ HTTP/1.1" 200 32530
+INFO 2025-09-03 21:38:25,135 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:39:12,872 basehttp 16572 29100 "GET /admin/services/orderitem/ HTTP/1.1" 200 15872
+INFO 2025-09-03 21:39:14,487 basehttp 16572 29100 "GET /admin/services/orderitem/5/change/ HTTP/1.1" 200 32530
+INFO 2025-09-03 21:39:14,610 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:40:08,596 basehttp 16572 29100 "POST /admin/services/orderitem/5/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:40:08,640 basehttp 16572 29100 "GET /admin/services/orderitem/ HTTP/1.1" 200 16093
+INFO 2025-09-03 21:40:08,771 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:40:10,915 basehttp 16572 29100 "GET /admin/services/orderitem/5/change/ HTTP/1.1" 200 32547
+INFO 2025-09-03 21:40:11,040 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:42:45,836 basehttp 16572 29100 "POST /admin/services/orderitem/5/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:42:45,868 basehttp 16572 29100 "GET /admin/services/orderitem/ HTTP/1.1" 200 16093
+INFO 2025-09-03 21:42:46,007 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:42:48,515 basehttp 16572 29100 "GET /admin/services/order/ HTTP/1.1" 200 17104
+INFO 2025-09-03 21:42:48,639 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:42:59,897 basehttp 16572 29100 "POST /admin/services/order/ HTTP/1.1" 200 11609
+INFO 2025-09-03 21:43:01,125 basehttp 16572 29100 "POST /admin/services/order/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:43:01,170 basehttp 16572 29100 "GET /admin/services/order/ HTTP/1.1" 200 16568
+INFO 2025-09-03 21:43:01,302 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:43:02,787 basehttp 16572 29100 "GET /admin/services/orderitem/ HTTP/1.1" 200 15872
+INFO 2025-09-03 21:43:02,893 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:43:04,523 basehttp 16572 29100 "GET /admin/services/order/ HTTP/1.1" 200 16433
+INFO 2025-09-03 21:43:04,657 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:43:06,625 basehttp 16572 29100 "GET /admin/services/order/9/change/ HTTP/1.1" 200 36315
+INFO 2025-09-03 21:43:06,740 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:43:21,548 basehttp 16572 29100 "POST /admin/services/order/9/change/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:43:21,594 basehttp 16572 29100 "GET /admin/services/order/ HTTP/1.1" 200 16655
+INFO 2025-09-03 21:43:21,756 basehttp 16572 29100 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:44:22,129 basehttp 16572 29100 "GET /admin/services/order/ HTTP/1.1" 200 16432
+INFO 2025-09-03 21:44:22,228 basehttp 16572 43668 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-03 21:44:22,229 basehttp 16572 16424 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:44:22,232 basehttp 16572 3976 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:44:22,233 basehttp 16572 37588 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:44:22,233 basehttp 16572 30012 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:44:22,236 basehttp 16572 29100 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:44:22,238 basehttp 16572 3976 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:44:22,241 basehttp 16572 16424 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:44:22,243 basehttp 16572 30012 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:44:22,247 basehttp 16572 29100 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:44:22,249 basehttp 16572 3976 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:44:22,249 basehttp 16572 16424 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:44:22,252 basehttp 16572 43668 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:44:22,252 basehttp 16572 29100 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-03 21:44:22,258 basehttp 16572 37588 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:44:22,259 basehttp 16572 30012 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:44:22,266 basehttp 16572 30012 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:44:22,270 basehttp 16572 30012 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-03 21:44:22,284 basehttp 16572 29100 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-03 21:44:22,285 basehttp 16572 43668 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-03 21:44:22,285 basehttp 16572 37588 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:44:22,287 basehttp 16572 30012 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+WARNING 2025-09-03 21:44:22,414 log 16572 30012 Not Found: /favicon.ico
+WARNING 2025-09-03 21:44:22,414 basehttp 16572 30012 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:44:24,505 basehttp 16572 30012 "GET /admin/services/order/ HTTP/1.1" 200 16432
+INFO 2025-09-03 21:44:24,625 basehttp 16572 30012 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:44:24,629 basehttp 16572 37588 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:44:24,630 basehttp 16572 16424 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-03 21:44:24,631 basehttp 16572 43668 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:44:24,633 basehttp 16572 29100 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:44:24,638 basehttp 16572 43668 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:44:24,639 basehttp 16572 30012 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:44:24,639 basehttp 16572 16424 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:44:24,640 basehttp 16572 29100 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:44:24,646 basehttp 16572 3976 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 21:44:24,646 basehttp 16572 43668 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:44:24,649 basehttp 16572 16424 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:44:24,651 basehttp 16572 30012 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:44:24,653 basehttp 16572 43668 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-03 21:44:24,659 basehttp 16572 37588 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:44:24,660 basehttp 16572 29100 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:44:24,666 basehttp 16572 29100 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:44:24,670 basehttp 16572 29100 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-03 21:44:24,683 basehttp 16572 37588 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-03 21:44:24,684 basehttp 16572 43668 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-03 21:44:24,684 basehttp 16572 30012 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-03 21:44:24,685 basehttp 16572 29100 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+WARNING 2025-09-03 21:44:24,812 log 16572 29100 Not Found: /favicon.ico
+WARNING 2025-09-03 21:44:24,812 basehttp 16572 29100 "GET /favicon.ico HTTP/1.1" 404 7335
+INFO 2025-09-03 21:46:40,575 autoreload 16572 8944 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:46:42,084 autoreload 30376 20168 Watching for file changes with StatReloader
+INFO 2025-09-03 21:47:14,321 autoreload 30376 20168 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:47:16,005 autoreload 22500 13752 Watching for file changes with StatReloader
+INFO 2025-09-03 21:47:18,672 autoreload 22500 13752 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:47:20,358 autoreload 33004 13388 Watching for file changes with StatReloader
+INFO 2025-09-03 21:47:26,593 autoreload 33004 13388 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:47:28,173 autoreload 33720 29128 Watching for file changes with StatReloader
+INFO 2025-09-03 21:47:52,901 autoreload 33720 29128 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:47:54,351 autoreload 21748 23884 Watching for file changes with StatReloader
+INFO 2025-09-03 21:48:12,219 autoreload 21748 23884 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:48:13,789 autoreload 19104 7856 Watching for file changes with StatReloader
+INFO 2025-09-03 21:48:17,565 autoreload 19104 7856 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:48:19,331 autoreload 18460 35212 Watching for file changes with StatReloader
+INFO 2025-09-03 21:48:20,848 autoreload 18460 35212 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-03 21:48:22,704 autoreload 39372 26048 Watching for file changes with StatReloader
+INFO 2025-09-03 21:50:16,570 autoreload 39372 26048 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:50:18,129 autoreload 6560 23972 Watching for file changes with StatReloader
+INFO 2025-09-03 21:50:20,695 autoreload 6560 23972 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:50:22,054 autoreload 8976 42336 Watching for file changes with StatReloader
+INFO 2025-09-03 21:50:24,566 autoreload 8976 42336 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:50:25,916 autoreload 15448 9784 Watching for file changes with StatReloader
+INFO 2025-09-03 21:50:27,498 autoreload 15448 9784 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:50:29,108 autoreload 19080 35724 Watching for file changes with StatReloader
+INFO 2025-09-03 21:50:34,107 autoreload 19080 35724 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:50:35,553 autoreload 29428 8652 Watching for file changes with StatReloader
+INFO 2025-09-03 21:50:59,168 autoreload 38916 20168 Watching for file changes with StatReloader
+INFO 2025-09-03 21:51:19,738 autoreload 18964 33004 Watching for file changes with StatReloader
+INFO 2025-09-03 21:51:24,454 basehttp 18964 3312 "POST /admin/services/order/ HTTP/1.1" 200 11749
+INFO 2025-09-03 21:51:24,800 basehttp 18964 22188 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 21:51:24,801 basehttp 18964 26656 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 21:51:24,804 basehttp 18964 22188 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 21:51:24,805 basehttp 18964 26656 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 21:51:24,808 basehttp 18964 21992 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 21:51:24,809 basehttp 18964 3312 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 21:51:24,812 basehttp 18964 26656 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 21:51:24,814 basehttp 18964 22188 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 21:51:24,815 basehttp 18964 21992 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 21:51:24,816 basehttp 18964 43628 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 21:51:24,817 basehttp 18964 3312 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 21:51:24,821 basehttp 18964 30192 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 21:51:24,822 basehttp 18964 26656 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 21:51:24,829 basehttp 18964 26656 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 21:51:24,860 basehttp 18964 26656 "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-09-03 21:51:24,869 basehttp 18964 26656 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+WARNING 2025-09-03 21:51:25,155 log 18964 26656 Not Found: /favicon.ico
+WARNING 2025-09-03 21:51:25,156 basehttp 18964 26656 "GET /favicon.ico HTTP/1.1" 404 7594
+INFO 2025-09-03 21:51:26,960 basehttp 18964 26656 "POST /admin/services/order/ HTTP/1.1" 302 0
+INFO 2025-09-03 21:51:27,006 basehttp 18964 26656 "GET /admin/services/order/ HTTP/1.1" 200 13720
+INFO 2025-09-03 21:51:27,108 basehttp 18964 26656 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-09-03 21:51:58,500 log 18964 6448 Unsupported Media Type: /api/orders/create/
+WARNING 2025-09-03 21:51:58,501 basehttp 18964 6448 "POST /api/orders/create/ HTTP/1.1" 415 68
+WARNING 2025-09-03 21:52:07,765 log 18964 6448 Unsupported Media Type: /api/orders/create/
+WARNING 2025-09-03 21:52:07,766 basehttp 18964 6448 "POST /api/orders/create/ HTTP/1.1" 415 68
+WARNING 2025-09-03 21:52:26,455 log 18964 6448 Unsupported Media Type: /api/orders/create/
+WARNING 2025-09-03 21:52:26,456 basehttp 18964 6448 "POST /api/orders/create/ HTTP/1.1" 415 68
+INFO 2025-09-03 21:53:52,138 autoreload 18964 33004 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:53:53,544 autoreload 39952 6844 Watching for file changes with StatReloader
+INFO 2025-09-03 21:57:54,974 autoreload 39952 6844 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-03 21:57:56,680 autoreload 17148 14488 Watching for file changes with StatReloader
+INFO 2025-09-03 22:00:26,449 autoreload 37528 8236 Watching for file changes with StatReloader
+INFO 2025-09-03 22:00:44,388 basehttp 37528 22580 "POST /api/orders/create/ HTTP/1.1" 201 1400
+INFO 2025-09-03 22:00:46,825 basehttp 37528 22580 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 22:00:46,836 basehttp 37528 13020 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 22:00:49,608 basehttp 37528 27876 "GET /admin/services/order/ HTTP/1.1" 200 16430
+INFO 2025-09-03 22:00:50,094 basehttp 37528 39288 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-03 22:00:50,104 basehttp 37528 30696 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-09-03 22:00:50,109 basehttp 37528 16628 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-03 22:00:50,117 basehttp 37528 16628 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-03 22:00:50,122 basehttp 37528 29272 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-03 22:00:50,123 basehttp 37528 23488 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-03 22:00:50,130 basehttp 37528 27876 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-03 22:00:50,133 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:00:50,137 basehttp 37528 16628 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-03 22:00:50,139 basehttp 37528 29272 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-03 22:00:50,143 basehttp 37528 23488 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-03 22:00:50,146 basehttp 37528 27876 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-03 22:00:50,152 basehttp 37528 23488 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-09-03 22:00:50,152 basehttp 37528 39288 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-03 22:00:50,161 basehttp 37528 30696 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-03 22:00:50,164 basehttp 37528 16628 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-09-03 22:00:50,168 basehttp 37528 16628 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-03 22:00:50,176 basehttp 37528 16628 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-09-03 22:00:50,203 basehttp 37528 16628 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-03 22:00:50,204 basehttp 37528 30696 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-09-03 22:00:50,205 basehttp 37528 39288 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-09-03 22:00:50,205 basehttp 37528 23488 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+WARNING 2025-09-03 22:00:50,435 log 37528 39288 Not Found: /favicon.ico
+WARNING 2025-09-03 22:00:50,436 basehttp 37528 39288 "GET /favicon.ico HTTP/1.1" 404 7594
+INFO 2025-09-03 22:00:52,116 basehttp 37528 39288 "GET /admin/services/order/10/change/ HTTP/1.1" 200 36317
+INFO 2025-09-03 22:00:52,234 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:01:16,133 basehttp 37528 39288 "GET /admin/services/orderitem/ HTTP/1.1" 200 15876
+INFO 2025-09-03 22:01:16,242 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:01:19,117 basehttp 37528 39288 "GET /admin/services/orderitem/6/change/ HTTP/1.1" 200 32477
+INFO 2025-09-03 22:01:19,244 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:02:11,220 basehttp 37528 39288 "GET /admin/services/order/ HTTP/1.1" 200 16430
+INFO 2025-09-03 22:02:11,347 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:02:16,105 basehttp 37528 39288 "POST /admin/services/order/ HTTP/1.1" 200 11753
+INFO 2025-09-03 22:02:17,419 basehttp 37528 39288 "POST /admin/services/order/ HTTP/1.1" 302 0
+INFO 2025-09-03 22:02:17,470 basehttp 37528 39288 "GET /admin/services/order/ HTTP/1.1" 200 13720
+INFO 2025-09-03 22:02:17,595 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:02:54,111 basehttp 37528 13020 "POST /api/orders/create/ HTTP/1.1" 201 1401
+INFO 2025-09-03 22:02:56,252 basehttp 37528 13020 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 22:02:56,260 basehttp 37528 22580 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-03 22:02:59,790 basehttp 37528 39288 "GET /admin/services/order/ HTTP/1.1" 200 16433
+INFO 2025-09-03 22:02:59,881 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:03:01,558 basehttp 37528 39288 "GET /admin/services/order/11/change/ HTTP/1.1" 200 36321
+INFO 2025-09-03 22:03:01,673 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:03:04,232 basehttp 37528 39288 "GET /admin/services/orderitem/ HTTP/1.1" 200 15877
+INFO 2025-09-03 22:03:04,346 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-03 22:03:05,488 basehttp 37528 39288 "GET /admin/services/orderitem/7/change/ HTTP/1.1" 200 32478
+INFO 2025-09-03 22:03:05,616 basehttp 37528 39288 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:18:32,407 autoreload 2116 20680 Watching for file changes with StatReloader
+INFO 2025-09-04 14:18:47,505 basehttp 2116 35088 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:47,506 basehttp 2116 31872 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:47,530 basehttp 2116 31872 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-04 14:18:47,539 basehttp 2116 35088 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-04 14:18:47,561 basehttp 2116 28300 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 304 0
+INFO 2025-09-04 14:18:47,564 basehttp 2116 28780 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 304 0
+INFO 2025-09-04 14:18:47,566 basehttp 2116 41712 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 304 0
+INFO 2025-09-04 14:18:47,567 basehttp 2116 32416 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 304 0
+INFO 2025-09-04 14:18:47,568 basehttp 2116 8952 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 304 0
+INFO 2025-09-04 14:18:49,537 basehttp 2116 35088 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:49,538 basehttp 2116 31872 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:49,558 basehttp 2116 31872 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-04 14:18:49,558 basehttp 2116 35088 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-04 14:18:49,827 basehttp 2116 28780 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 200 589802
+INFO 2025-09-04 14:18:49,832 basehttp 2116 8952 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 200 86352
+INFO 2025-09-04 14:18:49,834 basehttp 2116 28300 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 200 80127
+INFO 2025-09-04 14:18:49,835 basehttp 2116 32416 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 200 45639
+INFO 2025-09-04 14:18:49,836 basehttp 2116 41712 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 200 91099
+INFO 2025-09-04 14:18:50,222 basehttp 2116 35088 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:50,222 basehttp 2116 31872 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:50,243 basehttp 2116 31872 "GET /api/homepage/ HTTP/1.1" 200 1687
+INFO 2025-09-04 14:18:50,254 basehttp 2116 35088 "GET /api/homepage/ HTTP/1.1" 200 1687
+INFO 2025-09-04 14:18:51,098 basehttp 2116 35088 "OPTIONS /api/company/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:51,098 basehttp 2116 31872 "OPTIONS /api/company/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:18:51,108 basehttp 2116 31872 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:18:51,115 basehttp 2116 35088 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:18:52,217 basehttp 2116 35088 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-04 14:18:52,226 basehttp 2116 31872 "GET /api/services/ HTTP/1.1" 200 2420
+INFO 2025-09-04 14:18:52,741 basehttp 2116 31872 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:18:52,750 basehttp 2116 35088 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:19:27,331 basehttp 2116 32096 "POST /admin/services/orderitem/7/change/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:19:27,869 basehttp 2116 32096 "GET /admin/services/orderitem/ HTTP/1.1" 200 16100
+INFO 2025-09-04 14:19:28,073 basehttp 2116 32096 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-09-04 14:19:28,447 log 2116 32096 Not Found: /favicon.ico
+WARNING 2025-09-04 14:19:28,449 basehttp 2116 32096 "GET /favicon.ico HTTP/1.1" 404 7594
+INFO 2025-09-04 14:19:35,804 basehttp 2116 32096 "GET /admin/services/orderitem/7/change/ HTTP/1.1" 200 32495
+INFO 2025-09-04 14:19:35,945 basehttp 2116 32096 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:25:43,609 autoreload 2116 20680 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:25:45,183 autoreload 28568 22016 Watching for file changes with StatReloader
+INFO 2025-09-04 14:27:30,022 autoreload 28568 22016 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-04 14:27:31,681 autoreload 20392 17800 Watching for file changes with StatReloader
+INFO 2025-09-04 14:29:11,552 autoreload 19368 8540 Watching for file changes with StatReloader
+INFO 2025-09-04 14:29:22,919 basehttp 19368 36148 "GET /admin/services/orderitem/7/change/ HTTP/1.1" 200 27722
+WARNING 2025-09-04 14:29:23,097 basehttp 19368 41784 "GET /static/admin/css/custom_orderitem.css HTTP/1.1" 404 1904
+INFO 2025-09-04 14:29:23,422 basehttp 19368 36148 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-04 14:29:23,437 basehttp 19368 36148 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:29:23,439 basehttp 19368 8584 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+WARNING 2025-09-04 14:29:23,454 basehttp 19368 8584 "GET /static/admin/js/orderitem_calculator.js HTTP/1.1" 404 1910
+INFO 2025-09-04 14:29:23,456 basehttp 19368 43264 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-04 14:29:23,456 basehttp 19368 43572 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-04 14:29:23,460 basehttp 19368 24320 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-04 14:29:23,479 basehttp 19368 23564 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-04 14:29:23,499 basehttp 19368 3708 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-09-04 14:29:23,524 basehttp 19368 43572 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-09-04 14:29:23,532 basehttp 19368 43264 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-09-04 14:29:23,533 basehttp 19368 3708 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-09-04 14:29:23,535 basehttp 19368 24320 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-09-04 14:29:23,536 basehttp 19368 23564 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-09-04 14:29:23,565 basehttp 19368 43572 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-09-04 14:29:23,566 basehttp 19368 23564 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-09-04 14:29:23,617 basehttp 19368 36148 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-09-04 14:29:23,669 basehttp 19368 36148 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-04 14:29:23,702 basehttp 19368 36148 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-04 14:29:23,733 basehttp 19368 36148 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-04 14:29:23,762 basehttp 19368 36148 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-09-04 14:29:23,799 basehttp 19368 36148 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-09-04 14:29:23,815 basehttp 19368 43264 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+WARNING 2025-09-04 14:29:24,228 log 19368 43264 Not Found: /favicon.ico
+WARNING 2025-09-04 14:29:24,228 basehttp 19368 43264 "GET /favicon.ico HTTP/1.1" 404 7594
+INFO 2025-09-04 14:29:38,754 basehttp 19368 43264 "GET /admin/services/order/ HTTP/1.1" 200 16479
+INFO 2025-09-04 14:29:38,892 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:29:40,523 basehttp 19368 43264 "GET /admin/services/order/ HTTP/1.1" 200 16479
+INFO 2025-09-04 14:29:40,656 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:29:41,935 basehttp 19368 43264 "GET /admin/services/order/11/change/ HTTP/1.1" 200 35588
+INFO 2025-09-04 14:29:42,067 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:29:54,276 basehttp 19368 43264 "GET /admin/services/orderitem/ HTTP/1.1" 200 15803
+WARNING 2025-09-04 14:29:54,387 basehttp 19368 36148 "GET /static/admin/css/custom_orderitem.css HTTP/1.1" 404 1904
+WARNING 2025-09-04 14:29:54,394 basehttp 19368 23564 "GET /static/admin/js/orderitem_calculator.js HTTP/1.1" 404 1910
+INFO 2025-09-04 14:29:54,396 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:29:55,370 basehttp 19368 43264 "GET /admin/services/orderitem/7/change/ HTTP/1.1" 200 27722
+WARNING 2025-09-04 14:29:55,522 basehttp 19368 43572 "GET /static/admin/css/custom_orderitem.css HTTP/1.1" 404 1904
+WARNING 2025-09-04 14:29:55,524 basehttp 19368 24320 "GET /static/admin/js/orderitem_calculator.js HTTP/1.1" 404 1910
+INFO 2025-09-04 14:29:55,527 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:30:18,651 basehttp 19368 43264 "GET /admin/services/order/ HTTP/1.1" 200 16479
+INFO 2025-09-04 14:30:18,750 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:30:21,900 basehttp 19368 43264 "POST /admin/services/order/ HTTP/1.1" 200 11880
+INFO 2025-09-04 14:30:22,976 basehttp 19368 43264 "POST /admin/services/order/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:30:23,005 basehttp 19368 43264 "GET /admin/services/order/ HTTP/1.1" 200 13841
+INFO 2025-09-04 14:30:23,136 basehttp 19368 43264 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:30:28,259 basehttp 19368 21488 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:30:28,266 basehttp 19368 28396 "GET /api/company/ HTTP/1.1" 200 2515
+ERROR 2025-09-04 14:30:29,445 log 19368 28396 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:30:29,446 basehttp 19368 28396 "GET /api/services/ HTTP/1.1" 500 211
+ERROR 2025-09-04 14:30:29,451 log 19368 21488 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:30:29,452 basehttp 19368 21488 "GET /api/services/ HTTP/1.1" 500 211
+INFO 2025-09-04 14:30:31,794 basehttp 19368 21488 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:30:31,794 basehttp 19368 28396 "OPTIONS /api/services/ HTTP/1.1" 200 0
+ERROR 2025-09-04 14:30:31,803 log 19368 28396 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:30:31,804 log 19368 21488 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:30:31,804 basehttp 19368 28396 "GET /api/services/ HTTP/1.1" 500 211
+ERROR 2025-09-04 14:30:31,805 basehttp 19368 21488 "GET /api/services/ HTTP/1.1" 500 211
+INFO 2025-09-04 14:30:44,130 basehttp 19368 21488 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:30:44,130 basehttp 19368 28396 "OPTIONS /api/services/ HTTP/1.1" 200 0
+ERROR 2025-09-04 14:30:44,138 log 19368 28396 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:30:44,139 basehttp 19368 28396 "GET /api/services/ HTTP/1.1" 500 211
+ERROR 2025-09-04 14:30:44,140 log 19368 21488 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:30:44,141 basehttp 19368 21488 "GET /api/services/ HTTP/1.1" 500 211
+INFO 2025-09-04 14:33:18,678 autoreload 19368 8540 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\admin.py changed, reloading.
+INFO 2025-09-04 14:33:20,363 autoreload 41240 13664 Watching for file changes with StatReloader
+INFO 2025-09-04 14:33:22,093 autoreload 41240 13664 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:33:23,577 autoreload 30620 10588 Watching for file changes with StatReloader
+INFO 2025-09-04 14:36:13,965 autoreload 30620 10588 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\config\settings.py changed, reloading.
+INFO 2025-09-04 14:36:15,751 autoreload 19436 7812 Watching for file changes with StatReloader
+INFO 2025-09-04 14:38:25,493 autoreload 19436 7812 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:38:27,307 autoreload 30156 32228 Watching for file changes with StatReloader
+INFO 2025-09-04 14:38:39,691 autoreload 30156 32228 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:38:41,331 autoreload 40900 24300 Watching for file changes with StatReloader
+INFO 2025-09-04 14:39:03,942 autoreload 40900 24300 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:39:05,298 autoreload 1536 3372 Watching for file changes with StatReloader
+INFO 2025-09-04 14:39:07,793 autoreload 1536 3372 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:39:09,452 autoreload 16300 12176 Watching for file changes with StatReloader
+INFO 2025-09-04 14:39:11,246 autoreload 16300 12176 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:39:13,118 autoreload 35152 15332 Watching for file changes with StatReloader
+INFO 2025-09-04 14:39:34,916 autoreload 35152 15332 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:39:36,273 autoreload 23708 26984 Watching for file changes with StatReloader
+INFO 2025-09-04 14:39:39,119 autoreload 23708 26984 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:39:41,102 autoreload 22820 25648 Watching for file changes with StatReloader
+ERROR 2025-09-04 14:41:28,692 log 22820 29036 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:41:28,693 basehttp 22820 29036 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:41:28,705 log 22820 7820 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:41:28,707 basehttp 22820 7820 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:44:56,714 log 22820 7820 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:44:56,714 basehttp 22820 7820 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:44:56,722 log 22820 29036 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:44:56,722 basehttp 22820 29036 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:02,977 log 22820 29036 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:02,977 basehttp 22820 29036 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:02,984 log 22820 7820 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:02,984 basehttp 22820 7820 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:06,096 log 22820 7820 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:06,096 basehttp 22820 7820 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:06,104 log 22820 29036 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:06,105 basehttp 22820 29036 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:08,880 log 22820 29036 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:08,881 basehttp 22820 29036 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:08,887 log 22820 7820 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:08,889 basehttp 22820 7820 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:23,686 log 22820 7820 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:23,687 basehttp 22820 7820 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:45:23,698 log 22820 29036 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:45:23,700 basehttp 22820 29036 "GET /api/services/ HTTP/1.1" 500 85
+INFO 2025-09-04 14:46:38,702 autoreload 22820 25648 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-04 14:46:40,743 autoreload 39888 18912 Watching for file changes with StatReloader
+INFO 2025-09-04 14:47:03,683 autoreload 39888 18912 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\views.py changed, reloading.
+INFO 2025-09-04 14:47:05,256 autoreload 6108 5944 Watching for file changes with StatReloader
+INFO 2025-09-04 14:47:16,047 basehttp 6108 27128 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:47:16,048 basehttp 6108 16180 "OPTIONS /api/services/ HTTP/1.1" 200 0
+ERROR 2025-09-04 14:47:16,067 log 6108 16180 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:47:16,068 basehttp 6108 16180 "GET /api/services/ HTTP/1.1" 500 85
+ERROR 2025-09-04 14:47:16,071 log 6108 27128 Internal Server Error: /api/services/
+ERROR 2025-09-04 14:47:16,072 basehttp 6108 27128 "GET /api/services/ HTTP/1.1" 500 85
+INFO 2025-09-04 14:47:43,554 autoreload 6108 5944 C:\Users\RogSt\Desktop\AGAH_Solutions\backend\services\models.py changed, reloading.
+INFO 2025-09-04 14:47:45,507 autoreload 8872 16804 Watching for file changes with StatReloader
+INFO 2025-09-04 14:49:08,933 autoreload 28624 42712 Watching for file changes with StatReloader
+INFO 2025-09-04 14:49:12,473 basehttp 28624 2436 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:49:12,475 basehttp 28624 39332 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:49:12,497 basehttp 28624 39332 "GET /api/services/ HTTP/1.1" 200 2418
+INFO 2025-09-04 14:49:12,497 basehttp 28624 2436 "GET /api/services/ HTTP/1.1" 200 2418
+INFO 2025-09-04 14:49:12,741 basehttp 28624 16096 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 200 86352
+INFO 2025-09-04 14:49:12,743 basehttp 28624 10204 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 200 45639
+INFO 2025-09-04 14:49:12,743 basehttp 28624 34596 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 200 589802
+INFO 2025-09-04 14:49:12,747 basehttp 28624 4352 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 200 80127
+INFO 2025-09-04 14:49:12,747 basehttp 28624 24124 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 200 91099
+INFO 2025-09-04 14:49:16,723 basehttp 28624 2436 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:49:16,731 basehttp 28624 39332 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:49:17,364 basehttp 28624 39332 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:49:17,372 basehttp 28624 2436 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:49:19,386 basehttp 28624 2436 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:49:19,395 basehttp 28624 39332 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-04 14:49:19,888 basehttp 28624 39332 "GET /api/services/ HTTP/1.1" 200 2418
+INFO 2025-09-04 14:49:19,900 basehttp 28624 2436 "GET /api/services/ HTTP/1.1" 200 2418
+INFO 2025-09-04 14:50:30,495 basehttp 28624 2436 "GET /api/services/ HTTP/1.1" 200 2418
+INFO 2025-09-04 14:50:30,505 basehttp 28624 39332 "GET /api/services/ HTTP/1.1" 200 2418
+INFO 2025-09-04 14:50:45,088 basehttp 28624 43820 "GET /admin/services/typeservice/ HTTP/1.1" 200 19934
+INFO 2025-09-04 14:50:45,250 basehttp 28624 43820 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:50:45,278 basehttp 28624 43820 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 304 0
+INFO 2025-09-04 14:50:45,283 basehttp 28624 42908 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 304 0
+INFO 2025-09-04 14:50:45,283 basehttp 28624 16832 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 304 0
+INFO 2025-09-04 14:50:45,285 basehttp 28624 35768 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 304 0
+INFO 2025-09-04 14:50:45,286 basehttp 28624 31916 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 304 0
+WARNING 2025-09-04 14:50:45,570 log 28624 31916 Not Found: /favicon.ico
+WARNING 2025-09-04 14:50:45,570 basehttp 28624 31916 "GET /favicon.ico HTTP/1.1" 404 7594
+INFO 2025-09-04 14:50:58,078 basehttp 28624 31916 "POST /admin/services/typeservice/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:50:58,117 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 20110
+INFO 2025-09-04 14:50:58,244 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:00,174 basehttp 28624 31916 "GET /admin/services/typeservice/1/change/ HTTP/1.1" 200 21967
+INFO 2025-09-04 14:51:00,274 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:06,107 basehttp 28624 31916 "POST /admin/services/typeservice/1/change/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:51:06,152 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 20182
+INFO 2025-09-04 14:51:06,285 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:07,354 basehttp 28624 31916 "GET /admin/services/typeservice/2/change/ HTTP/1.1" 200 21990
+INFO 2025-09-04 14:51:07,462 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:11,352 basehttp 28624 31916 "POST /admin/services/typeservice/2/change/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:51:11,399 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 20183
+INFO 2025-09-04 14:51:11,535 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:13,149 basehttp 28624 31916 "GET /admin/services/typeservice/3/change/ HTTP/1.1" 200 21946
+INFO 2025-09-04 14:51:13,259 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:17,346 basehttp 28624 31916 "POST /admin/services/typeservice/3/change/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:51:17,389 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 20181
+INFO 2025-09-04 14:51:17,540 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:20,026 basehttp 28624 31916 "GET /admin/services/typeservice/4/change/ HTTP/1.1" 200 21944
+INFO 2025-09-04 14:51:20,139 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:23,644 basehttp 28624 31916 "POST /admin/services/typeservice/4/change/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:51:23,683 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 20179
+INFO 2025-09-04 14:51:23,825 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:25,705 basehttp 28624 31916 "GET /admin/services/typeservice/5/change/ HTTP/1.1" 200 21942
+INFO 2025-09-04 14:51:25,842 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:31,541 basehttp 28624 31916 "POST /admin/services/typeservice/5/change/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:51:31,585 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 20182
+INFO 2025-09-04 14:51:31,717 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:34,781 basehttp 28624 31916 "POST /admin/services/typeservice/ HTTP/1.1" 302 0
+INFO 2025-09-04 14:51:34,840 basehttp 28624 31916 "GET /admin/services/typeservice/ HTTP/1.1" 200 19958
+INFO 2025-09-04 14:51:34,963 basehttp 28624 31916 "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-09-04 14:51:38,528 basehttp 28624 39332 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:51:38,529 basehttp 28624 2436 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-04 14:51:38,544 basehttp 28624 2436 "GET /api/services/ HTTP/1.1" 200 2425
+INFO 2025-09-04 14:51:38,544 basehttp 28624 39332 "GET /api/services/ HTTP/1.1" 200 2425
+INFO 2025-09-04 14:51:38,590 basehttp 28624 24124 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 200 45639
+INFO 2025-09-04 14:51:38,592 basehttp 28624 16096 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 200 80127
+INFO 2025-09-04 14:51:38,594 basehttp 28624 4352 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 200 86352
+INFO 2025-09-04 14:51:38,595 basehttp 28624 34596 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 200 91099
+INFO 2025-09-04 14:51:38,598 basehttp 28624 10204 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 200 589802
+INFO 2025-09-04 14:51:46,996 basehttp 28624 2436 "GET /api/services/ HTTP/1.1" 200 2425
+INFO 2025-09-04 14:51:47,004 basehttp 28624 39332 "GET /api/services/ HTTP/1.1" 200 2425

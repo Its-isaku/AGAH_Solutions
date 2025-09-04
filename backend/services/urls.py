@@ -1,6 +1,8 @@
 
 #? Nesesary imports
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import (
     #* Public Views
     HomepageView,
@@ -60,3 +62,7 @@ path('api/orders/create-auth/', OrderCreateView.as_view(), name='order-create-au
     path('api/admin/orders/', AdminOrderListView.as_view(), name='admin-orders-list'),
     path('api/admin/orders/<int:pk>/', AdminOrderDetailView.as_view(), name='admin-order-detail'),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

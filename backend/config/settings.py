@@ -77,25 +77,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 #? <|--------------Database Configuration--------------|>
 
-# Using SQLite for development (simple, no additional setup needed)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# If you want to use PostgreSQL later, uncomment and configure .env:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('DATABASE_NAME', 'agah_db'),
-#         'USER': os.getenv('DATABASE_USER', 'postgres'),
-#         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-#         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
-#         'PORT': os.getenv('DATABASE_PORT', '5432'),
-#     }
-# }
 
 #? <|--------------Custom User Model--------------|>
 
@@ -130,9 +117,24 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Media files (uploaded files like images and designs)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# File upload settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 26214400  # 25MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400  # 25MB
+FILE_UPLOAD_PERMISSIONS = 0o644
+
+# Ensure media directory exists
+import os
+if not os.path.exists(MEDIA_ROOT):
+    os.makedirs(MEDIA_ROOT)
+
+# Create order_files subdirectory
+ORDER_FILES_DIR = os.path.join(MEDIA_ROOT, 'order_files')
+if not os.path.exists(ORDER_FILES_DIR):
+    os.makedirs(ORDER_FILES_DIR)
+
 
 #? <|--------------Default Primary Key Field Type--------------|>
 

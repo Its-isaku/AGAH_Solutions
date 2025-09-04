@@ -2,6 +2,27 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+import os 
+
+def validate_design_file(value):
+    allowed_extensions = ['.pdf', '.png', '.jpg', '.jpeg', '.svg', '.ai', '.psd', '.dwg', '.dxf']
+    ext = os.path.splitext(value.name)[1].lower()
+    
+    if ext not in allowed_extensions:
+        raise ValidationError(f'File type {ext} not allowed. Allowed: {", ".join(allowed_extensions)}')
+    
+    if value.size > 25 * 1024 * 1024:
+        raise ValidationError('File size must be less than 25MB')
+
+# Y en el campo design_file de OrderItem, cambiar:
+design_file = models.FileField(
+    upload_to='order_files/',
+    validators=[validate_design_file],  # AGREGAR ESTA LÍNEA
+    null=True,
+    blank=True,
+    help_text="Upload design files for the order"
+)
 
 #? <|--------------Type of service Model--------------|>
 class TypeService(models.Model): 
@@ -318,6 +339,7 @@ class OrderItem(models.Model):
     #* Design file upload field
     design_file = models.FileField(
         upload_to='order_files/',
+        validators=[validate_design_file],  # AGREGAR ESTA LÍNEA
         null=True,
         blank=True,
         help_text="Upload design files for the order"
@@ -550,56 +572,45 @@ class OrderItem(models.Model):
             
         service_type = self.service.type
         
-        if service_type == 'plasma':
+        if 'plasma' in service_type.lower():
             return self.calculate_plasma_price()
-        elif service_type in ['laser_engraving', 'laser_cutting']:
+        elif 'laser' in service_type.lower():
             return self.calculate_laser_price()
-        elif service_type in ['3D_printing', 'resin_printing']:
+        elif any(x in service_type.lower() for x in ['3d', 'printing', 'resin']):
             return self.calculate_printing_price()
         else:
             return float(self.service.base_price) if self.service.base_price else 0
     
     #* Plasma cutting price calculation
     def calculate_plasma_price(self):
-        #* Use minimum values for estimation
         A = self.plasma_design_programming_time or 60
         B = self.plasma_cutting_time or 30
         C = self.plasma_post_process_time or 60
-        D = 0.09524 * B  #* Luz (kW/min)
+        D = 0.09524 * B
         E = float(self.plasma_material_cost) if self.plasma_material_cost else 0
         F = self.get_area_square_inches()
         G = float(self.plasma_consumables) if self.plasma_consumables else 162.30
         
-        #* SUBTOTAL = ((A*3.33)+(B*16.5)+(C*1.5)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3
         subtotal = ((A * 3.33) + (B * 16.5) + (C * 1.5) + (D * 0.03211) + (((E * F) / 4608) * 2) + G) * 1.3
-        
-        #* TOTAL MXN = SUBTOTAL * 1.08
         total = subtotal * 1.08
         
         return total
     
-    #* Laser cutting/engraving price calculation
     def calculate_laser_price(self):
-        #* Use minimum values for estimation
         A = self.laser_design_programming_time or 30
         B = self.laser_cutting_time or 10
         C = self.laser_post_process_time or 10
-        D = 0.09524 * B  #* Luz (kW/min)
+        D = 0.09524 * B
         E = float(self.laser_material_cost) if self.laser_material_cost else 0
         F = self.get_area_square_inches()
         G = float(self.laser_consumables) if self.laser_consumables else 30.00
         
-        #* SUBTOTAL = ((A*1.2)+(B*1.7)+(C*1)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3
         subtotal = ((A * 1.2) + (B * 1.7) + (C * 1) + (D * 0.03211) + (((E * F) / 4608) * 2) + G) * 1.3
-        
-        #* TOTAL MXN = SUBTOTAL * 1.08
         total = subtotal * 1.08
         
         return total
     
-    #* 3D/Resin printing price calculation
     def calculate_printing_price(self):
-        #* Use minimum values for estimation
         A = self.printing_design_programming_time or 60
         B = self.printing_time or 30
         C = float(self.printing_material_used) if self.printing_material_used else 0
@@ -607,14 +618,11 @@ class OrderItem(models.Model):
         F = float(self.printing_material_cost) if self.printing_material_cost else 350.00
         G = float(self.printing_consumables) if self.printing_consumables else 30.00
         
-        #* SUBTOTAL = ((A*2.7)+(B*1.9)+(C/1000)*F+(D*1.5)+G)*1.3
         subtotal = ((A * 2.7) + (B * 1.9) + (C / 1000) * F + (D * 1.5) + G) * 1.3
-        
-        #* TOTAL MXN = SUBTOTAL * 1.08
         total = subtotal * 1.08
         
         return total
-    
+
     #* SOLUCION PROBLEMA 3 - Method to get estimated total including design price
     def get_estimated_total_with_design(self):
         """Calculate total estimated price including design price"""
@@ -659,48 +667,41 @@ class OrderItem(models.Model):
     
     #* Method to save and auto-calculate prices - SOLUCION PROBLEMA 5
     def save(self, *args, **kwargs):
-        #* Calculate prices based on calculation fields
         if self.service:
-            calculated_price = self.calculate_service_price()
+            service_type = self.service.type
+            has_calc_fields = False
             
-            #* Set estimated price only if not set
+            if 'plasma' in service_type.lower():
+                has_calc_fields = any([
+                    self.plasma_design_programming_time,
+                    self.plasma_cutting_time, 
+                    self.plasma_material_cost
+                ])
+            elif 'laser' in service_type.lower():
+                has_calc_fields = any([
+                    self.laser_design_programming_time,
+                    self.laser_cutting_time,
+                    self.laser_material_cost
+                ])
+            elif any(x in service_type.lower() for x in ['3d', 'printing', 'resin']):
+                has_calc_fields = any([
+                    self.printing_design_programming_time,
+                    self.printing_time,
+                    self.printing_material_used
+                ])
+            
+            if has_calc_fields:
+                calculated_price = self.calculate_service_price()
+                self.final_unit_price = calculated_price
+            
+            # Set estimated price only if not set
             if not self.estimated_unit_price:
-                self.estimated_unit_price = calculated_price
-            
-            #* NO auto-update final price - solo cuando admin llene los campos
-            # Solo actualiza si hay cambios en los campos de cálculo
-            if self._state.adding == False:  # Es un update, no creación
-                # Solo recalcula si hay valores en los campos de cálculo
-                service_type = self.service.type
-                has_calc_fields = False
-                
-                if service_type == 'plasma':
-                    has_calc_fields = any([
-                        self.plasma_design_programming_time,
-                        self.plasma_cutting_time, 
-                        self.plasma_material_cost
-                    ])
-                elif service_type in ['laser_engraving', 'laser_cutting']:
-                    has_calc_fields = any([
-                        self.laser_design_programming_time,
-                        self.laser_cutting_time,
-                        self.laser_material_cost
-                    ])
-                elif service_type in ['3D_printing', 'resin_printing']:
-                    has_calc_fields = any([
-                        self.printing_design_programming_time,
-                        self.printing_time,
-                        self.printing_material_used
-                    ])
-                
-                # Solo recalcula el precio final si hay campos de cálculo llenos
-                if has_calc_fields:
-                    self.final_unit_price = calculated_price
+                self.estimated_unit_price = self.calculate_service_price()
         
         super().save(*args, **kwargs)
         
-        #* Update order totals after saving item
+        # Update order totals after saving item
         if self.order:
-            self.order.estimated_price = self.order.get_estimated_total_price()
+            self.order.estimaded_price = self.order.get_estimated_total_price()
             self.order.final_price = self.order.get_final_total_price()
             self.order.save(update_fields=['estimaded_price', 'final_price'])

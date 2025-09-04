@@ -345,15 +345,14 @@ class OrderItemAdmin(admin.ModelAdmin):
     
     #* Fields to display in the list view
     list_display = [
-        'order_link',
+        'item_display',
+        'order_number_display',
         'service', 
         'quantity',
         'dimensions_display',
         'needs_custom_design',
         'estimated_unit_price', 
-        'final_unit_price',
-        'estimated_total_display',
-        'final_total_display'
+        'final_unit_price'
     ]
     
     #* Filters for the right sidebar
@@ -369,10 +368,37 @@ class OrderItemAdmin(admin.ModelAdmin):
         'service__name'
     ]
     
-    #* Organization of fields in the detail form - SOLUCION PROBLEMA 2
+    #* CRÍTICO: Solo este campo debe ser clickeable
+    list_display_links = ['item_display']
+    
+    #* Read-only fields - DEBE IR ANTES DE LOS MÉTODOS
+    readonly_fields = [
+        'estimated_unit_price', 
+        'final_unit_price',
+        'area_display',
+        'estimated_total_display',
+        'final_total_display',
+        'plasma_formula_display',
+        'laser_formula_display', 
+        'printing_formula_display'
+    ]
+    
+    def item_display(self, obj):
+        return f"Item #{obj.id}"
+    item_display.short_description = 'Item ID'
+    
+    def order_number_display(self, obj):
+        return obj.order.order_number
+    order_number_display.short_description = 'Order'
+    
+    #* Organization of fields in the detail form
     def get_fieldsets(self, request, obj=None):
         if obj and obj.service:
             service_type = obj.service.type
+            
+            # DEBUG - REMOVER DESPUÉS
+            print(f"DEBUG: service_type = '{service_type}'")
+            print(f"DEBUG: service.name = '{obj.service.name}'")
             
             # Base fieldsets
             fieldsets = [
@@ -383,14 +409,14 @@ class OrderItemAdmin(admin.ModelAdmin):
                     'fields': ('length_dimensions', 'width_dimensions', 'height_dimensions', 'area_display')
                 }),
                 ('Design & Pricing', {
-                    'fields': ('needs_custom_design', 'custom_design_price', 'estimated_unit_price', 'final_unit_price')
+                    'fields': ('needs_custom_design', 'custom_design_price')
                 })
             ]
             
-            # Add calculation fields based on service type
-            if service_type == 'plasma':
+            # Add calculation fields based on service type - CORREGIDO
+            if service_type == 'plasma' or service_type == 'PLASMA_CUTTING' or 'plasma' in service_type.lower():
                 fieldsets.append(
-                    (' Plasma Cutting Calculations', {
+                    ('🔥 Plasma Cutting Calculations', {
                         'fields': (
                             'plasma_formula_display',
                             'plasma_design_programming_time',
@@ -402,9 +428,9 @@ class OrderItemAdmin(admin.ModelAdmin):
                         'description': 'Complete estos campos para calcular el precio final automáticamente'
                     })
                 )
-            elif service_type in ['laser_engraving', 'laser_cutting']:
+            elif service_type in ['laser_engraving', 'laser_cutting'] or service_type in ['LASER_ENGRAVING', 'LASER_CUTTING'] or any(x in service_type.lower() for x in ['laser']):
                 fieldsets.append(
-                    (' Laser Calculations', {
+                    ('⚡ Laser Calculations', {
                         'fields': (
                             'laser_formula_display',
                             'laser_design_programming_time',
@@ -416,9 +442,9 @@ class OrderItemAdmin(admin.ModelAdmin):
                         'description': 'Complete estos campos para calcular el precio final automáticamente'
                     })
                 )
-            elif service_type in ['3D_printing', 'resin_printing']:
+            elif service_type in ['3D_printing', 'resin_printing'] or service_type in ['3D_PRINTING', 'RESIN_PRINTING'] or any(x in service_type.lower() for x in ['3d', 'printing', 'resin']):
                 fieldsets.append(
-                    (' 3D Printing Calculations', {
+                    ('🖨️ 3D Printing Calculations', {
                         'fields': (
                             'printing_formula_display',
                             'printing_design_programming_time',
@@ -432,9 +458,9 @@ class OrderItemAdmin(admin.ModelAdmin):
                     })
                 )
             
-            # Final pricing section - SOLUCION PROBLEMA 3
+            # Final pricing section
             fieldsets.append(
-                (' Final Pricing', {
+                ('💰 Final Pricing', {
                     'fields': (
                         'estimated_unit_price',
                         'final_unit_price',
@@ -467,24 +493,7 @@ class OrderItemAdmin(admin.ModelAdmin):
                 }),
             )
     
-    #* Read-only fields
-    readonly_fields = [
-        'estimated_unit_price', 
-        'final_unit_price',
-        'area_display',
-        'estimated_total_display',
-        'final_total_display',
-        'plasma_formula_display',
-        'laser_formula_display', 
-        'printing_formula_display'
-    ]
-    
     #* Custom methods for display
-    def order_link(self, obj):
-        url = reverse('admin:services_order_change', args=[obj.order.id])
-        return format_html('<a href="{}">{}</a>', url, obj.order.order_number)
-    order_link.short_description = 'Order'
-    
     def dimensions_display(self, obj):
         if obj.length_dimensions and obj.width_dimensions and obj.height_dimensions:
             return f"{obj.length_dimensions} × {obj.width_dimensions} × {obj.height_dimensions}"
@@ -506,59 +515,64 @@ class OrderItemAdmin(admin.ModelAdmin):
         return f"{area:.2f} in²" if area > 0 else "Not calculated"
     area_display.short_description = 'Area'
     
-    # Formula displays - SOLUCION PROBLEMA 2
+    # Formula displays - CORREGIDO PARA MOSTRAR COMO TEXTO
     def plasma_formula_display(self, obj):
+        area = obj.get_area_square_inches()
         return format_html(
-            '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">'
-            '<strong>Formula:</strong><br>'
-            'SUBTOTAL = ((A*3.33)+(B*16.5)+(C*1.5)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3<br>'
-            'TOTAL MXN = SUBTOTAL * 1.08<br><br>'
-            '<small>'
+            '<div style="background: #f0f0f0; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; font-size: 12px;">'
+            '<strong>Fórmula Plasma Cutting:</strong><br><br>'
+            'SUBTOTAL = ((A×3.33)+(B×16.5)+(C×1.5)+(D×0.03211)+(((E×F)/4608)×2)+G)×1.3<br>'
+            'TOTAL MXN = SUBTOTAL × 1.08<br><br>'
+            '<strong>Variables:</strong><br>'
             'A = Diseño y Programación (min)<br>'
             'B = Corte (min)<br>'
             'C = Post-proceso (min)<br>'
-            'D = Luz (kW/min) = 0.09524 * B<br>'
-            'E = Costo Material (placa 4\'x8\')<br>'
-            'F = Área (in²) = {:.2f}<br>'
-            'G = Consumibles'
-            '</small>'
-            '</div>'.format(obj.get_area_square_inches())
+            'D = Luz (kW/min) = 0.09524 × B<br>'
+            'E = Costo Material (placa 4\'×8\')<br>'
+            'F = Área (in²) = <strong>{:.2f}</strong><br>'
+            'G = Consumibles<br>'
+            '</div>'.format(area)
         )
     plasma_formula_display.short_description = 'Calculation Formula'
     
     def laser_formula_display(self, obj):
-        return format_html(
-            '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">'
-            '<strong>Formula:</strong><br>'
-            'SUBTOTAL = ((A*1.2)+(B*1.7)+(C*1)+(D*0.03211)+(((E*F)/4608)*2)+G)*1.3<br>'
-            'TOTAL MXN = SUBTOTAL * 1.08<br><br>'
-            '<small>'
-            'A = Diseño y Programación (min)<br>'
-            'B = Corte/Grabado (min)<br>'
-            'C = Post-proceso (min)<br>'
-            'D = Luz (kW/min) = 0.09524 * B<br>'
-            'E = Costo Material<br>'
-            'F = Área (in²) = {:.2f}<br>'
-            'G = Consumibles'
-            '</small>'
-            '</div>'.format(obj.get_area_square_inches())
-        )
+        area = obj.get_area_square_inches()
+        return f"""
+Fórmula Laser:
+SUBTOTAL = ((A×1.2)+(B×1.7)+(C×1)+(D×0.03211)+(((E×F)/4608)×2)+G)×1.3
+TOTAL MXN = SUBTOTAL × 1.08
+
+Variables:
+A = Diseño y Programación (min)
+B = Corte/Grabado (min)
+C = Post-proceso (min)
+D = Luz (kW/min) = 0.09524 × B
+E = Costo Material
+F = Área (in²) = {area:.2f}
+G = Consumibles
+        """.strip()
     laser_formula_display.short_description = 'Calculation Formula'
     
     def printing_formula_display(self, obj):
-        return format_html(
-            '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace;">'
-            '<strong>Formula:</strong><br>'
-            'SUBTOTAL = ((A*2.7)+(B*1.9)+(C/1000)*F+(D*1.5)+G)*1.3<br>'
-            'TOTAL MXN = SUBTOTAL * 1.08<br><br>'
-            '<small>'
-            'A = Diseño y Programación (min)<br>'
-            'B = Impresión (min)<br>'
-            'C = Material Utilizado (g)<br>'
-            'D = Post-proceso (min)<br>'
-            'F = Costo Material (por 1Kg)<br>'
-            'G = Consumibles'
-            '</small>'
-            '</div>'
-        )
+        return f"""
+Fórmula 3D Printing:
+SUBTOTAL = ((A×2.7)+(B×1.9)+(C/1000)×F+(D×1.5)+G)×1.3
+TOTAL MXN = SUBTOTAL × 1.08
+
+Variables:
+A = Diseño y Programación (min)
+B = Impresión (min)
+C = Material Utilizado (g)
+D = Post-proceso (min)
+F = Costo Material (por 1Kg)
+G = Consumibles
+        """.strip()
     printing_formula_display.short_description = 'Calculation Formula'
+    
+    #* IMPORTANTE: Override para forzar que vaya al item específico
+    def response_change(self, request, obj):
+        """Stay on the item edit page after saving"""
+        res = super().response_change(request, obj)
+        if "_continue" not in request.POST and "_addanother" not in request.POST:
+            return res
+        return res

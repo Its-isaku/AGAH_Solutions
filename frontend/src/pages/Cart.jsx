@@ -8,6 +8,7 @@ import { useToastContext } from '../context/ToastContext';
 import ConfirmationModal from '../components/common/ConfirmationModal';
 import api from '../services/api';
 import authAPI from '../services/AuthAPI';
+import axios from 'axios';
 
 //? Component
 function Cart() {
@@ -47,121 +48,116 @@ function Cart() {
     //? Functions
     //* Submit order for review
     const handleSubmitForReview = async () => {
-        //* Validate user is logged in
-        if (!userInfo) {
-            warning('Por favor inicia sesión para enviar tu pedido');
-            return;
-        }
+    //* Validate user is logged in
+    if (!userInfo) {
+        warning('Por favor inicia sesión para enviar tu pedido');
+        return;
+    }
 
-        //* Validate phone number is provided
-        if (!phoneNumber.trim()) {
-            warning('Por favor ingresa tu número de teléfono');
-            return;
-        }
+    //* Validate phone number is provided
+    if (!phoneNumber.trim()) {
+        warning('Por favor ingresa tu número de teléfono');
+        return;
+    }
 
-        if (cartItems.length === 0) {
-            warning('Tu carrito está vacío');
-            return;
-        }
+    if (cartItems.length === 0) {
+        warning('Tu carrito está vacío');
+        return;
+    }
 
-        setIsSubmitting(true);
+    setIsSubmitting(true);
 
-        try {
-            //* Prepare order data using user info
-            const orderData = {
-                customer_name: userInfo.first_name && userInfo.last_name 
-                    ? `${userInfo.first_name} ${userInfo.last_name}` 
-                    : userInfo.username,
-                customer_email: userInfo.email,
-                customer_phone: phoneNumber.trim(),
-                additional_notes: additionalNotes || "",
-                items: cartItems.map(item => ({
-                    service: parseInt(item.service), // Ensure service ID is a number
-                    description: item.description?.trim() || "",
-                    quantity: parseInt(item.quantity) || 1,
-                    length_dimensions: item.length_dimensions ? parseFloat(item.length_dimensions) : null,
-                    width_dimensions: item.width_dimensions ? parseFloat(item.width_dimensions) : null,
-                    height_dimensions: item.height_dimensions ? parseFloat(item.height_dimensions) : null,
-                    needs_custom_design: Boolean(item.needs_custom_design),
-                    design_file: null // Set to null for now, will need file upload handling
-                }))
+    try {
+        // CORRECCIÓN: Crear FormData para manejar archivos
+        const formData = new FormData();
+        
+        // Datos básicos del cliente
+        formData.append('customer_name', userInfo.first_name && userInfo.last_name 
+            ? `${userInfo.first_name} ${userInfo.last_name}` 
+            : userInfo.username);
+        formData.append('customer_email', userInfo.email);
+        formData.append('customer_phone', phoneNumber.trim());
+        formData.append('additional_notes', additionalNotes || '');
+
+        // Preparar items SIN archivos para JSON
+        const itemsForJson = cartItems.map((item, index) => {
+            // Si hay archivo, lo agregaremos por separado al FormData
+            if (item.design_file) {
+                formData.append(`item_${index}_design_file`, item.design_file);
+                console.log(`Added file for item ${index}: ${item.design_file.name}`);
+            }
+            
+            return {
+                service: parseInt(item.service),
+                description: item.description?.trim() || "",
+                quantity: parseInt(item.quantity) || 1,
+                length_dimensions: item.length_dimensions ? parseFloat(item.length_dimensions) : null,
+                width_dimensions: item.width_dimensions ? parseFloat(item.width_dimensions) : null,
+                height_dimensions: item.height_dimensions ? parseFloat(item.height_dimensions) : null,
+                needs_custom_design: Boolean(item.needs_custom_design),
+                has_design_file: Boolean(item.design_file)
             };
+        });
 
-            //* Validate order data before sending
-            console.log('Order data being sent:', JSON.stringify(orderData, null, 2));
-            
-            //* Validate required fields
-            if (!orderData.customer_name?.trim()) {
-                throw new Error('El nombre del cliente es requerido');
-            }
-            if (!orderData.customer_email?.trim()) {
-                throw new Error('El email del cliente es requerido');
-            }
-            if (!orderData.customer_phone?.trim()) {
-                throw new Error('El teléfono del cliente es requerido');
-            }
-            if (!orderData.items || orderData.items.length === 0) {
-                throw new Error('No hay artículos en el pedido');
-            }
+        // Agregar items como JSON
+        formData.append('items', JSON.stringify(itemsForJson));
 
-            //* Validate each item has required fields
-            orderData.items.forEach((item, index) => {
-                if (!item.service) {
-                    throw new Error(`Artículo ${index + 1}: ID de servicio requerido`);
-                }
-                if (!item.description?.trim()) {
-                    throw new Error(`Artículo ${index + 1}: Descripción requerida`);
-                }
-                if (!item.quantity || item.quantity <= 0) {
-                    throw new Error(`Artículo ${index + 1}: Cantidad debe ser mayor a 0`);
-                }
-            });
-
-            //* Create order with promise toast
-            const result = await promise(
-                api.orders.createOrder(orderData),
-                {
-                    loading: 'Enviando tu pedido...',
-                    success: 'Pedido enviado exitosamente. Te enviaremos una cotización pronto',
-                    error: 'Error al enviar el pedido'
-                }
-            );
-
-            //* Debug: Log the result
-            console.log('Order creation result:', result);
-            
-            if (result && result.errors) {
-                console.error('Validation errors:', result.errors);
-            }
-
-            if (result.success) {
-                //* Clear cart after successful submission
-                clearCart();
-                
-                //* Redirect to services or reload page
-                setTimeout(() => {
-                    window.location.href = '/services';
-                }, 1500);
-            } else {
-                // If there are specific validation errors, format them nicely
-                let errorMessage = result.error || 'Failed to submit order';
-                if (result.errors) {
-                    const errorDetails = Object.entries(result.errors)
-                        .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
-                        .join('\n');
-                    errorMessage = `${errorMessage}\n${errorDetails}`;
-                }
-                throw new Error(errorMessage);
-            }
-        } catch (error) {
-            console.error('Error submitting order:', error);
-            if (showError) {
-                showError(`Error: ${error.message || 'Error al enviar el pedido'}`);
-            }
-        } finally {
-            setIsSubmitting(false);
+        // Debug - mostrar contenido del FormData
+        console.log('FormData contents:');
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
         }
-    };
+
+        // CORRECCIÓN: Usar axios directo con multipart/form-data
+        const result = await promise(
+            axios.post('/api/orders/create/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                timeout: 30000 // 30 segundos para subida de archivos
+            }),
+            {
+                loading: 'Enviando tu pedido...',
+                success: 'Pedido enviado exitosamente. Te enviaremos una cotización pronto',
+                error: 'Error al enviar el pedido'
+            }
+        );
+
+        //* Debug: Log the result
+        console.log('Order creation result:', result);
+        
+        if (result && result.errors) {
+            console.error('Validation errors:', result.errors);
+        }
+
+        if (result.data && result.data.success) {
+            //* Clear cart after successful submission
+            clearCart();
+            
+            //* Redirect to services or reload page
+            setTimeout(() => {
+                window.location.href = '/services';
+            }, 1500);
+        } else {
+            // If there are specific validation errors, format them nicely
+            let errorMessage = result.data?.error || result.error || 'Failed to submit order';
+            if (result.data?.errors) {
+                const errorDetails = Object.entries(result.data.errors)
+                    .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
+                    .join('\n');
+                errorMessage = `${errorMessage}\n${errorDetails}`;
+            }
+            throw new Error(errorMessage);
+        }
+    } catch (error) {
+        console.error('Error submitting order:', error);
+        if (showError) {
+            showError(`Error: ${error.message || 'Error al enviar el pedido'}`);
+        }
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
     //* Handle cancel cart
     const handleCancelCart = () => {

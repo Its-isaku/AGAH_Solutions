@@ -17,7 +17,11 @@ export const CartProvider = ({ children }) => {
         const savedCart = localStorage.getItem('agah_cart');
         if (savedCart) {
             try {
-                setCartItems(JSON.parse(savedCart));
+                const parsedCart = JSON.parse(savedCart);
+                setCartItems(parsedCart.map(item => ({
+                    ...item,
+                    design_file: null // Archivos se pierden al recargar
+                })));
             } catch (err) {
                 console.error('Error loading cart from storage:', err);
             }
@@ -28,7 +32,11 @@ export const CartProvider = ({ children }) => {
     //* Save cart to localStorage whenever it changes (but not on initial load)
     useEffect(() => {
         if (isInitialized) {
-            localStorage.setItem('agah_cart', JSON.stringify(cartItems));
+            const cartToSave = cartItems.map(item => {
+                const { design_file, ...itemWithoutFile } = item;
+                return itemWithoutFile;
+            });
+            localStorage.setItem('agah_cart', JSON.stringify(cartToSave));
         }
     }, [cartItems, isInitialized]);
 
@@ -55,6 +63,7 @@ export const CartProvider = ({ children }) => {
                 return [...prevItems, {
                     ...item,
                     cartItemId: Date.now() + Math.random(), //* Unique ID for cart management
+                    design_file: item.design_file, // MANTENER el archivo
                 }];
             }
         });

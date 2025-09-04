@@ -2,12 +2,15 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils import timezone
 from .models import TypeService, Order, OrderItem, CompanyConfiguration
+import json
+from django.core.files.storage import default_storage
 from .serializers import (
     TypeServiceSerializer,
     OrderDetailSerializer,
@@ -654,53 +657,154 @@ class AdminOrderDetailView(APIView):
 class PublicOrderCreateView(APIView):
     """
     Public endpoint to create a new order without authentication
-    For guest checkout from cart
+    For guest checkout from cart - CORREGIDO para manejar archivos
     """
     permission_classes = [permissions.AllowAny]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
     
     def post(self, request):
-        #* Get order data from request
-        order_data = request.data.copy()
-        
-        #* Create serializer with nested items
-        serializer = OrderCreateSerializer(data=order_data)
-        
-        if serializer.is_valid():
-            try:
-                #* Create order with items
-                order = serializer.save()
-                
-                #* Send confirmation email with template
-                try:
-                    self.send_order_confirmation_email(order)
-                except Exception as e:
-                    print(f"Failed to send confirmation email: {e}")
-                
-                #* Return created order data
-                order_serializer = OrderDetailSerializer(order)
-                
-                return Response({
-                    'success': True,
-                    'data': order_serializer.data,
-                    'message': 'Order created successfully. Check your email for confirmation.'
-                }, status=status.HTTP_201_CREATED)
-                
-            except Exception as e:
+        try:
+            # Extraer datos básicos del cliente desde FormData
+            customer_name = request.data.get('customer_name', '').strip()
+            customer_email = request.data.get('customer_email', '').strip()
+            customer_phone = request.data.get('customer_phone', '').strip()
+            additional_notes = request.data.get('additional_notes', '')
+            
+            # Validar campos requeridos
+            if not customer_name:
                 return Response({
                     'success': False,
-                    'error': f'Error creating order: {str(e)}'
+                    'error': 'El nombre del cliente es requerido'
                 }, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response({
-            'success': False,
-            'error': 'Invalid order data',
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not customer_email:
+                return Response({
+                    'success': False,
+                    'error': 'El email del cliente es requerido'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not customer_phone:
+                return Response({
+                    'success': False,
+                    'error': 'El teléfono del cliente es requerido'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Parsear items JSON
+            items_json = request.data.get('items')
+            if not items_json:
+                return Response({
+                    'success': False,
+                    'error': 'No se encontraron artículos en el pedido'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                items_data = json.loads(items_json)
+            except json.JSONDecodeError:
+                return Response({
+                    'success': False,
+                    'error': 'Formato de artículos inválido'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not items_data:
+                return Response({
+                    'success': False,
+                    'error': 'El pedido debe contener al menos un artículo'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Crear la orden
+            order = Order.objects.create(
+                customer_name=customer_name,
+                customer_email=customer_email,
+                customer_phone=customer_phone,
+                additional_notes=additional_notes,
+                state='pending'
+            )
+            
+            # Crear items con archivos
+            for index, item_data in enumerate(items_data):
+                try:
+                    # Validar servicio
+                    service_id = item_data.get('service')
+                    if not service_id:
+                        raise ValueError(f'Item {index + 1}: ID de servicio requerido')
+                    
+                    try:
+                        service = TypeService.objects.get(id=service_id)
+                    except TypeService.DoesNotExist:
+                        raise ValueError(f'Item {index + 1}: Servicio no encontrado')
+                    
+                    # Validar campos requeridos
+                    description = item_data.get('description', '').strip()
+                    if not description:
+                        raise ValueError(f'Item {index + 1}: Descripción requerida')
+                    
+                    quantity = item_data.get('quantity', 1)
+                    if not quantity or quantity <= 0:
+                        raise ValueError(f'Item {index + 1}: Cantidad debe ser mayor a 0')
+                    
+                    # Buscar archivo para este item
+                    design_file = None
+                    file_key = f'item_{index}_design_file'
+                    if file_key in request.FILES:
+                        design_file = request.FILES[file_key]
+                        print(f"Archivo encontrado para item {index}: {design_file.name}")
+                    
+                    # Crear OrderItem
+                    order_item = OrderItem.objects.create(
+                        order=order,
+                        service=service,
+                        description=description,
+                        quantity=quantity,
+                        length_dimensions=item_data.get('length_dimensions'),
+                        width_dimensions=item_data.get('width_dimensions'),
+                        height_dimensions=item_data.get('height_dimensions'),
+                        needs_custom_design=item_data.get('needs_custom_design', False),
+                        design_file=design_file  # Django maneja la subida automáticamente
+                    )
+                    
+                    print(f"Item {index + 1} creado exitosamente")
+                    if design_file:
+                        print(f"Archivo guardado en: {order_item.design_file.url}")
+                
+                except Exception as item_error:
+                    # Si hay error en un item, eliminar la orden
+                    order.delete()
+                    return Response({
+                        'success': False,
+                        'error': str(item_error)
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Actualizar totales de la orden
+            order.estimaded_price = order.get_estimated_total_price()
+            order.final_price = order.get_final_total_price()
+            order.save()
+            
+            # Enviar email de confirmación
+            try:
+                self.send_order_confirmation_email(order)
+            except Exception as e:
+                print(f"Error enviando email: {e}")
+            
+            # Serializar respuesta
+            order_serializer = OrderDetailSerializer(order)
+            
+            return Response({
+                'success': True,
+                'data': order_serializer.data,
+                'message': 'Pedido creado exitosamente. Revise su email para confirmación.'
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            print(f"Error general en creación de orden: {e}")
+            return Response({
+                'success': False,
+                'error': 'Error interno del servidor'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def send_order_confirmation_email(self, order):
         """Send order confirmation email using HTML template"""
         try:
-            #* Prepare context for template
+            # Prepare context for template
             context = {
                 'order': order,
                 'customer_name': order.customer_name,
@@ -708,11 +812,11 @@ class PublicOrderCreateView(APIView):
                 'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
             }
             
-            #* Render HTML email
-            html_message = render_to_string('emails/order_confirmation.html', context)
+            # Render HTML email - USA EL TEMPLATE QUE YA TIENES
+            html_message = render_to_string('emails/order_estimate.html', context)
             plain_message = strip_tags(html_message)
             
-            #* Send email
+            # Send email
             send_mail(
                 subject=f"Order Confirmation - {order.order_number}",
                 message=plain_message,
@@ -722,9 +826,9 @@ class PublicOrderCreateView(APIView):
                 fail_silently=False,
             )
             
-            print(f" Confirmation email sent to {order.customer_email}")
+            print(f"Confirmation email sent to {order.customer_email}")
             return True
             
         except Exception as e:
-            print(f" Error sending email: {e}")
+            print(f"Error sending email: {e}")
             return False

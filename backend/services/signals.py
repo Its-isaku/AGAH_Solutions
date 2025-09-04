@@ -78,7 +78,8 @@ def send_order_confirmation_email(order):
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
-        html_message = render_to_string('emails/order_confirmation.html', context)
+        # USA EL TEMPLATE QUE YA TIENES
+        html_message = render_to_string('emails/order_estimate.html', context)
         plain_message = strip_tags(html_message)
         
         send_mail(
