@@ -10,7 +10,7 @@ from django.utils import timezone
 from .models import TypeService, Order, OrderItem, CompanyConfiguration
 from .serializers import (
     TypeServiceSerializer,
-    OrderSerializer,
+    OrderDetailSerializer,
     OrderItemSerializer,
     CompanyConfigurationSerializer,
     ContactFormSerializer,
@@ -136,7 +136,8 @@ class TypeServiceListView(APIView):
         try:
             #* Get all active services
             services = TypeService.objects.filter(active=True).order_by('order_display')
-            serializer = TypeServiceSerializer(services, many=True)
+            # CORREGIDO: Pasar context con request para las URLs de imágenes
+            serializer = TypeServiceSerializer(services, many=True, context={'request': request})
             
             return Response({
                 'success': True,
@@ -162,7 +163,7 @@ class TypeServiceDetailView(APIView):
     def get(self, request, pk):
         try:
             service = TypeService.objects.get(pk=pk, active=True)
-            serializer = TypeServiceSerializer(service)
+            serializer = TypeServiceSerializer(service, context={'request': request})
             
             return Response({
                 'success': True,
@@ -344,7 +345,7 @@ class OrderTrackingView(APIView):
                 customer_email=customer_email
             )
             
-            serializer = OrderSerializer(order)
+            serializer = OrderDetailSerializer(order)
             return Response({
                 'success': True,
                 'data': serializer.data
@@ -374,7 +375,7 @@ class OrderCreateView(APIView):
         order_data['customer_name'] = request.user.get_full_name() or request.user.username
         order_data['customer_email'] = request.user.email
         
-        serializer = OrderSerializer(data=order_data)
+        serializer = OrderDetailSerializer(data=order_data)
         
         if serializer.is_valid():
             order = serializer.save()
@@ -438,7 +439,7 @@ class UserOrdersListView(APIView):
         try:
             #* Get all orders for the authenticated user
             orders = Order.objects.filter(user=request.user).order_by('-created_at')
-            serializer = OrderSerializer(orders, many=True)
+            serializer = OrderDetailSerializer(orders, many=True)
             
             return Response({
                 'success': True,
@@ -465,7 +466,7 @@ class UserOrderDetailView(APIView):
         try:
             #* Get order only if it belongs to the authenticated user
             order = Order.objects.get(pk=pk, user=request.user)
-            serializer = OrderSerializer(order)
+            serializer = OrderDetailSerializer(order)
             
             return Response({
                 'success': True,
@@ -508,7 +509,7 @@ class AdminOrderListView(APIView):
         try:
             #* Get all orders
             orders = Order.objects.all().order_by('-created_at')
-            serializer = OrderSerializer(orders, many=True)
+            serializer = OrderDetailSerializer(orders, many=True)
             
             return Response({
                 'success': True,
@@ -543,7 +544,7 @@ class AdminOrderDetailView(APIView):
         
         try:
             order = Order.objects.get(pk=pk)
-            serializer = OrderSerializer(order)
+            serializer = OrderDetailSerializer(order)
             
             return Response({
                 'success': True,
@@ -574,7 +575,7 @@ class AdminOrderDetailView(APIView):
         
         try:
             order = Order.objects.get(pk=pk)
-            serializer = OrderSerializer(order, data=request.data, partial=True)
+            serializer = OrderDetailSerializer(order, data=request.data, partial=True)
             
             if serializer.is_valid():
                 #* Track who updated the order
@@ -676,7 +677,7 @@ class PublicOrderCreateView(APIView):
                     print(f"Failed to send confirmation email: {e}")
                 
                 #* Return created order data
-                order_serializer = OrderSerializer(order)
+                order_serializer = OrderDetailSerializer(order)
                 
                 return Response({
                     'success': True,

@@ -1,3 +1,4 @@
+#? Signal handlers for order state changes and email notifications
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
@@ -38,18 +39,24 @@ def track_order_state_changes(sender, instance, **kwargs):
 def send_order_emails(sender, instance, created, **kwargs):
     """
     Send emails based on order state changes
+    SOLUCION PROBLEMA 1: Enviar email correcto según el momento
     """
     
-    #* Send confirmation email for new orders
+    #* Send confirmation email for new orders (cuando se crea desde carrito)
     if created:
         send_order_confirmation_email(instance)
+        return  # Solo envía confirmación, NO estimación
     
     #* Check for state changes
     elif hasattr(instance, '_state_changed') and instance._state_changed:
         
-        #* Send estimate email
-        if instance.state == 'estimated' and instance.estimaded_price:
+        #* Send estimate email when state changes to estimated (SOLO si no hay precio final)
+        if instance.state == 'estimated' and instance.estimaded_price and not instance.final_price:
             send_estimate_email(instance)
+        
+        #* Send FINAL PRICE email when state changes to estimated AND final_price exists
+        elif instance.state == 'estimated' and instance.final_price:
+            send_final_price_email(instance)
         
         #* Send confirmation email when customer confirms
         elif instance.state == 'confirmed':
@@ -58,10 +65,6 @@ def send_order_emails(sender, instance, created, **kwargs):
         #* Send completion email
         elif instance.state == 'completed':
             send_completion_email(instance)
-    
-    #* Send final price email when set
-    elif hasattr(instance, '_final_price_set') and instance._final_price_set:
-        send_final_price_email(instance)
 
 #? <|--------------Email Helper Functions--------------|>
 
@@ -95,8 +98,13 @@ def send_order_confirmation_email(order):
         return False
 
 def send_estimate_email(order):
-    """Send estimate/quote email"""
+    """Send estimate/quote email - ONLY when there's no final price yet"""
     try:
+        # SOLUCION PROBLEMA 5: Only send estimate if final price is NOT set
+        if order.final_price:
+            print(f"Skipping estimate email for order {order.order_number} - final price already exists")
+            return False
+            
         context = {
             'order': order,
             'customer_name': order.customer_name,
@@ -122,6 +130,37 @@ def send_estimate_email(order):
         
     except Exception as e:
         print(f"Error sending estimate email: {e}")
+        return False
+
+def send_final_price_email(order):
+    """
+    SOLUCION PROBLEMA 5: Send email with final price
+    This is the CORRECT email that should be sent when final pricing is ready
+    """
+    try:
+        context = {
+            'order': order,
+            'customer_name': order.customer_name,
+            'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
+        }
+        
+        html_message = render_to_string('emails/order_final_price.html', context)
+        plain_message = strip_tags(html_message)
+        
+        send_mail(
+            subject=f"Final Price Ready - Order {order.order_number}",
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[order.customer_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        
+        print(f"Final price email sent for order {order.order_number}")
+        return True
+        
+    except Exception as e:
+        print(f"Error sending final price email: {e}")
         return False
 
 def send_order_confirmed_email(order):
@@ -154,34 +193,6 @@ def send_order_confirmed_email(order):
         print(f"Error sending confirmation email: {e}")
         return False
 
-def send_final_price_email(order):
-    """Send email with final price"""
-    try:
-        context = {
-            'order': order,
-            'customer_name': order.customer_name,
-            'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
-        }
-        
-        html_message = render_to_string('emails/order_final_price.html', context)
-        plain_message = strip_tags(html_message)
-        
-        send_mail(
-            subject=f"Final Price Ready - Order {order.order_number}",
-            message=plain_message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[order.customer_email],
-            html_message=html_message,
-            fail_silently=False,
-        )
-        
-        print(f"Final price email sent for order {order.order_number}")
-        return True
-        
-    except Exception as e:
-        print(f"Error sending final price email: {e}")
-        return False
-
 def send_completion_email(order):
     """Send email when order is completed"""
     try:
@@ -191,8 +202,6 @@ def send_completion_email(order):
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
-        #* Note: The template name has a typo in your files (order_comleted.html)
-        #* You should rename it to order_completed.html
         html_message = render_to_string('emails/order_completed.html', context)
         plain_message = strip_tags(html_message)
         

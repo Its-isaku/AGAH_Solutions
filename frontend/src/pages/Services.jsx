@@ -223,10 +223,10 @@ function Services() {
                     <div className="service-grid">
                         {services.map((service) => (
                             <div key={service.id} className="service-card">
-                                {service.principal_image && (
+                                {service.image_url && (
                                     <div className="service-card-image">
                                         <img 
-                                            src={`${api.services.baseURL}${service.principal_image}`} 
+                                            src={service.image_url} 
                                             alt={service.name}
                                             onError={(e) => {
                                                 e.target.style.display = 'none';

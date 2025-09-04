@@ -1,8 +1,7 @@
-
 #? Models for the services app
-from django.db import models                                                                                                #* models import for database tables 
-from django.conf import settings                                                                                            #* User model from settings
-from django.utils import timezone                                                                                           #* timezone import for date and time handling
+from django.db import models
+from django.conf import settings
+from django.utils import timezone
 
 #? <|--------------Type of service Model--------------|>
 class TypeService(models.Model): 
@@ -16,14 +15,13 @@ class TypeService(models.Model):
         ('resin_printing', 'Resin Printing'),
     ]
     
-    #* Use only base types (no additional types for your company)
     ALL_TYPES = BASE_TYPES
     
     #* Fields for the TypeService model
     type = models.CharField(
         max_length=50,
-        unique=True,                                                                                                        #* Ensures each type is unique / cant be duplicated
-        blank=True,                                                                                                         #* Allow blank - will be auto-generated from name
+        unique=True,
+        blank=True,
         help_text="Type of service offered (auto-generated from name)"
     )
     
@@ -35,217 +33,182 @@ class TypeService(models.Model):
 
     #* description fields for the service type
     description = models.TextField(
-        blank=True,                                                                                                         #* Allow empty initially
+        blank=True,
         help_text="Description of the service type"
     )
     
     #* short description field for the service type
     short_description = models.CharField(
         max_length=200,
-        blank=True,                                                                                                         #* Allow empty initially
-        help_text="Short description of the service type"
+        blank=True,
+        help_text="Short description of the service"
     )
     
     #* base price field for the service type
     base_price = models.DecimalField(
-        max_digits=10, 
+        max_digits=8,
         decimal_places=2,
-        null=True,                                                                                                          #* Allow NULL for services without initial price
-        blank=True,                                                                                                         #* Allow empty initially
-        help_text="Base price for the service type"
+        null=True,
+        blank=True,
+        help_text="Base price for the service"
     )
     
-    #* image field for the service type 
-    principal_image = models.ImageField(
-        upload_to='service_images/',                                                                                         #* Directory to upload images
-        blank=True,                                                                                                          #* Allows the field to be blank
-        null=True,                                                                                                           #* Allows the field to be null
-        help_text="Principal image for the service type"
-    )
-    
-    #* active field to indicate if the service type is active
+    #* active field for the service type
     active = models.BooleanField(
-        default=True,                                                                                                        #* Default value is True
-        help_text="If active show the service type in the frontend"
+        default=True,
+        help_text="Indicates if the service is active"
     )
     
-    #* order display field - now automatic
-    order_display = models.IntegerField(
-        default=0,
-        help_text="Order display for the service type (auto-assigned)"
-    )
-    
-    #* Indicates if this is one of the 5 base services or an additional one
+    #* is_base_service field to identify the 5 main services
     is_base_service = models.BooleanField(
         default=False,
         help_text="Indicates if this is one of the 5 base services"
     )
     
-    #* Indicates if this service should be featured/highlighted
-    is_featured = models.BooleanField(
-        default=False,
-        help_text="Mark this service as featured to highlight it in the frontend"
+    #* Order display field to control service order
+    order_display = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="Order for displaying services (auto-assigned)"
     )
     
-    #* Metadata class for the TypeService model 
+    #* Featured service indicator
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Featured services appear prominently"
+    )
+    
+    #* Image field for service representation
+    image = models.ImageField(
+        upload_to='service_images/',
+        null=True,
+        blank=True,
+        help_text="Service image for display"
+    )
+    
+    #* Metadata class for the TypeService model
     class Meta:
-        ordering = ['order_display', 'name']                                                                                 #* Orders by order_display and then by name
-        verbose_name = "Type of Service"                                                                                     #* Human-readable name for the model
-        verbose_name_plural = "Types of Services"                                                                            #* Human-readable plural name for the model     
-    
-    def __str__(self):         
-        return self.name                                                                                                     #* Returns the name of the service type when the object is printed
-    
-    #* Method to auto-generate type from name and assign order_display
-    def save(self, *args, **kwargs):
-        if not self.type:                                                                                                    #* If type is not set, auto-generate from name
-            #* Generate type from name (lowercase, replace spaces with underscores)
-            self.type = self.name.lower().replace(' ', '_').replace('-', '_')
-            #* Remove special characters and limit length
-            import re
-            self.type = re.sub(r'[^a-z0-9_]', '', self.type)[:50]
-            
-            #* Check if this type already exists, if so add number
-            base_type = self.type
-            counter = 1
-            while TypeService.objects.filter(type=self.type).exists():
-                self.type = f"{base_type}_{counter}"
-                counter += 1
+        ordering = ['order_display', 'name']
+        verbose_name = "Type of Service"
+        verbose_name_plural = "Types of Services"
         
-        if not self.order_display or self.order_display == 0:                                                               #* If order_display is not set
-            from django.db.models import Max
-            max_order = TypeService.objects.aggregate(Max('order_display'))['order_display__max']                          #* Get the maximum order_display value
-            self.order_display = (max_order or 0) + 1                                                                       #* Set order_display to max + 1
-        super().save(*args, **kwargs)                                                                                       #* Call the parent save method
+    def __str__(self):
+        return self.name
     
-    def get_price_display(self):
-        if self.base_price:
-            return f"${self.base_price:.2f} MXN"                                                                             #* Returns the base price formatted as a string with two decimal places
-        return "Price not set"
+    def save(self, *args, **kwargs):
+        if not self.type:
+            self.type = self.name.lower().replace(' ', '_').replace('-', '_')
+        super().save(*args, **kwargs)
 
 
 #? <|--------------Company Configuration Model--------------|>
 class CompanyConfiguration(models.Model):
     
-    #* Company name field 
+    #* Company information fields
     company_name = models.CharField(
         max_length=100,
         default="AGAH Solutions",
-        help_text="AGAH Solutions"
+        help_text="Name of the company"
     )
-
-    #* Company tagline field 
+    
     company_tagline = models.CharField(
         max_length=200,
         default="Cutting-Edge Solutions, Crafted to Perfection",
-        help_text="Tagline principal que aparece en la página de inicio"
+        help_text="Company tagline or slogan"
     )
     
-    #* Company email field
-    contact_email = models.EmailField(
-        help_text="Contact email for the company"
-    )
-    
-    #* Company phone field
-    company_phone = models.CharField(
-        max_length=150,
-        help_text="Contact phone number for the company"
-    )
-
-    #* Company address field
-    company_address = models.TextField(
-        help_text="Contact address for the company"
-    )
-
-    #* About Us field
     about_us = models.TextField(
-        help_text="About us section for the company"
+        blank=True,
+        help_text="About us section content"
     )
-
-    #* Company mission field
+    
     company_mission = models.TextField(
         blank=True,
         help_text="Company mission statement"
     )
-
-    #* Company vision field
+    
     company_vision = models.TextField(
         blank=True,
         help_text="Company vision statement"
     )
-
-    #* company time response hours field
-    company_time_response_hours = models.IntegerField(
-        default=24,
-        help_text="Average response time in hours"
+    
+    #* Contact information fields
+    contact_email = models.EmailField(
+        default="agahsolutions@gmail.com",
+        help_text="Main contact email"
     )
     
-    #* Timestamps (AGREGAR ESTOS CAMPOS)
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    company_phone = models.CharField(
+        max_length=20,
+        default="+52 665 127 0811",
+        help_text="Main phone number"
+    )
+    
+    company_address = models.TextField(
+        blank=True,
+        help_text="Company address"
+    )
+    
+    #* Business configuration
+    company_time_response_hours = models.IntegerField(
+        default=24,
+        help_text="Expected response time in hours"
+    )
+    
+    #* Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-    #* Company Meta 
     class Meta:
-        verbose_name_plural = "Company Configurations"                                                                      #* Human-readable plural name for the model
-        
+        verbose_name = "Company Configuration"
+        verbose_name_plural = "Company Configuration"
+    
     def __str__(self):
-        return self.company_name                                                                                            #* Returns the company name when the object is printed
-
+        return f"{self.company_name} - Configuration"
 
 
 #? <|--------------Order Model--------------|>
 class Order(models.Model):
     
-    #* Fields for the Order model
-    STATES = [
-        ('pending', 'Pending'),
-        ('estimated', 'Estimated - waiting for confirmation'),
-        ('confirmed', 'Confirmed by the customer'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('canceled', 'Canceled'),
+    #* Order state choices
+    ORDER_STATES = [
+        ('pending', 'Pendiente'),
+        ('estimated', 'Estimado'),
+        ('confirmed', 'Confirmado'),
+        ('in_progress', 'En Progreso'),
+        ('completed', 'Completado'),
+        ('canceled', 'Cancelado'),
     ]
-    
-    #* Unique order number field
+
+    #* Order number field
     order_number = models.CharField(
-        max_length=20,
-        unique=True,                                                                                                        #* Ensures each order number is unique
-        blank=True,                                                                                                         #* Allows the field to be blank
-        help_text="Unique order number for the order"
-    )
-
-    #* User who placed the order (can be null for guest orders)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
+        max_length=50,
+        unique=True,
         blank=True,
-        related_name='orders',
-        help_text="User who placed the order (optional for guest orders)"
+        help_text="Unique order number (auto-generated)"
     )
 
-    #* Customer name field 
+    #* Customer information fields
     customer_name = models.CharField(
         max_length=100,
-        help_text="Name of the customer placing the order"
+        help_text="Customer's full name"
     )
-    
-    #* Customer email field
+
     customer_email = models.EmailField(
-        help_text="Email of the customer placing the order"
+        help_text="Customer's email address"
     )
-    
-    #* Customer phone field
+
     customer_phone = models.CharField(
-        max_length=15, 
-        help_text="Phone number of the customer placing the order"
+        max_length=20,
+        blank=True,
+        help_text="Customer's phone number"
     )
 
     #* Order state field
     state = models.CharField(
         max_length=20,
-        choices=STATES,                                                                                                     #* Choices for the state of the order
-        default='pending',                                                                                                  #* Default state is pending
+        choices=ORDER_STATES,
+        default='pending',
         help_text="Current state of the order"
     )
 
@@ -283,7 +246,7 @@ class Order(models.Model):
     #* Assigned user field
     assigned_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,                                                                                         #* If the user is deleted, set this field to null
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='assigned_orders',
@@ -298,77 +261,75 @@ class Order(models.Model):
 
     #* Metadata class for the Order model
     class Meta:
-        ordering = ['-created_at']                                                                                         #* Orders are ordered by creation date (newest first) 
-        verbose_name = "Order"                                                                                             #* Human-readable name for the model
-        verbose_name_plural = "Orders"                                                                                     #* Human-readable plural name for the model
+        ordering = ['-created_at']
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
         
     def __str__(self):
-        return f"Order {self.order_number} - {self.customer_name}"                                                         #* Returns a string representation of the order with order number and customer name
+        return f"Order {self.order_number} - {self.customer_name}"
     
-    #* Method to save the order and generate a unique order number if not set
     def save(self, *args, **kwargs):
-        if not self.order_number:                                                                                          #* If order number is not set, generate a unique one
-            today = timezone.now().date()                                                                                  #* Get the current date and time
-            self.order_number = f"ORD-{today.strftime('%Y%m%d')}-{self.pk or '001'}"                                       #* Generate a unique order number
-        super().save(*args, **kwargs)                                                                                      #* Call the parent save method
-
-    #* Method to calculate the estimated price of the order based on items
-    def calculate_estimated_price(self):
-        total = sum(item.estimated_unit_price * item.quantity              
-                    for item in self.items.all()
-                    if item.estimated_unit_price)
+        if not self.order_number:
+            import uuid
+            self.order_number = str(uuid.uuid4())[:8].upper()
+        super().save(*args, **kwargs)
+    
+    #* SOLUCION PROBLEMA 4 - Método para calcular el precio total estimado
+    def get_estimated_total_price(self):
+        """Calculate total estimated price including all items and design costs"""
+        total = 0
+        for item in self.items.all():
+            total += item.get_estimated_total_with_design()
         return total
     
-    def get_state_display_color(self):
-        colors = {
-            'pending': 'text-gray-500',
-            'estimated': 'text-yellow-500',
-            'confirmed': 'text-blue-500',
-            'in_progress': 'text-green-500',
-            'completed': 'text-purple-500',
-            'canceled': 'text-red-500',
-        }
-        return colors.get(self.state, 'text-gray-500')                                                                     #* Returns the color class for the current state of the order
+    #* SOLUCION PROBLEMA 4 - Método para calcular el precio total final
+    def get_final_total_price(self):
+        """Calculate total final price including all items and design costs"""
+        total = 0
+        for item in self.items.all():
+            total += item.get_final_total_with_design()
+        return total
 
 
 #? <|--------------Order Item Model--------------|>
 class OrderItem(models.Model):
-
-    #* order foreign key field
+    
+    #* Order relationship field
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
-        related_name='items',                                                                                                 #* Related name for accessing order items from the order
+        related_name='items',
         help_text="Order to which this item belongs"
     )
 
-    #* type of service foreign key field
+    #* Service relationship field
     service = models.ForeignKey(
         TypeService,
         on_delete=models.CASCADE,
         help_text="Type of service requested"
     )
-    
-    #* description field for the order item
+
+    #* Description field for additional details
     description = models.TextField(
-        help_text="Description of the service the consumer wants"
+        blank=True,
+        help_text="Additional description for the service"
     )
-    
-    #* design file field for the order item    
+
+    #* Design file upload field
     design_file = models.FileField(
-        upload_to='design_files/%Y/%m/',                                                                                     #* Directory to upload design files organized by year/month
-        blank=True,                                                                                                          #* Allows the field to be blank
-        null=True,                                                                                                           #* Allows the field to be null
-        help_text="Design file for the order item"
+        upload_to='order_files/',
+        null=True,
+        blank=True,
+        help_text="Upload design files for the order"
     )
-    
-    #* Item quantity field 
-    quantity = models.IntegerField(
+
+    #* Quantity field
+    quantity = models.PositiveIntegerField(
         default=1,
         help_text="Quantity of the service the consumer wants"
     )
 
-    #* Length dimensions field
+    #* Dimension fields
     length_dimensions = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -377,7 +338,6 @@ class OrderItem(models.Model):
         help_text="Length of the design in inches"
     )
 
-    #* width dimensions field 
     width_dimensions = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -385,8 +345,7 @@ class OrderItem(models.Model):
         blank=True,
         help_text="Width of the design in inches"
     )
-    
-    #* height dimensions field
+
     height_dimensions = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -401,7 +360,7 @@ class OrderItem(models.Model):
         decimal_places=2, 
         null=True, 
         blank=True, 
-        help_text="Estimated unit price for the order item"                                                                #* Estimated price for the order item
+        help_text="Estimated unit price for the order item"
     )
     
     #* Final unit price field 
@@ -481,12 +440,12 @@ class OrderItem(models.Model):
         help_text="Design and programming time in minutes (minimum 30)"
     )
     
-    #* B: Corte (10 min minimo)
+    #* B: Corte/Grabado (10 min minimo)
     laser_cutting_time = models.IntegerField(
         default=10,
         null=True,
         blank=True,
-        help_text="Cutting time in minutes (minimum 10)"
+        help_text="Cutting/Engraving time in minutes (minimum 10)"
     )
     
     #* C: Post-proceso (10min minimo)
@@ -497,13 +456,13 @@ class OrderItem(models.Model):
         help_text="Post-process time in minutes (minimum 10)"
     )
     
-    #* E: Costo de Material (Hoja 4'x8')
+    #* E: Costo de Material
     laser_material_cost = models.DecimalField(
         max_digits=8,
         decimal_places=2,
         null=True,
         blank=True,
-        help_text="Material cost for 4'x8' sheet"
+        help_text="Material cost"
     )
     
     #* G: Consumibles (30 como default)
@@ -576,12 +535,11 @@ class OrderItem(models.Model):
         verbose_name_plural = "Order Items"
         
     def __str__(self):
-        return f"{self.service.name} - {self.quantity}x"                                                                  #* Returns a string representation of the order item with service name and quantity
+        return f"{self.service.name} - {self.quantity}x"
     
     #* Method to calculate area in square inches (for formulas)
     def get_area_square_inches(self):
         if self.length_dimensions and self.width_dimensions:
-            #* Already in inches, no conversion needed
             return float(self.length_dimensions) * float(self.width_dimensions)
         return 0
     
@@ -639,50 +597,25 @@ class OrderItem(models.Model):
         
         return total
     
-    #* 3D printing price calculation
+    #* 3D/Resin printing price calculation
     def calculate_printing_price(self):
         #* Use minimum values for estimation
         A = self.printing_design_programming_time or 60
         B = self.printing_time or 30
         C = float(self.printing_material_used) if self.printing_material_used else 0
         D = self.printing_post_process_time or 60
-        E = 0.0208333333333333 * B  #* Luz (kW/min)
         F = float(self.printing_material_cost) if self.printing_material_cost else 350.00
         G = float(self.printing_consumables) if self.printing_consumables else 30.00
         
-        #* SUBTOTAL = (((B*2.7)+((D+B)*1.5)+(E)+(((C/1000)/F))*2)+G)*1.6
-        subtotal = (((B * 2.7) + ((D + B) * 1.5) + E + (((C / 1000) / F) * 2) + G) * 1.6)
+        #* SUBTOTAL = ((A*2.7)+(B*1.9)+(C/1000)*F+(D*1.5)+G)*1.3
+        subtotal = ((A * 2.7) + (B * 1.9) + (C / 1000) * F + (D * 1.5) + G) * 1.3
         
         #* TOTAL MXN = SUBTOTAL * 1.08
         total = subtotal * 1.08
         
         return total
     
-    #* Method to calculate estimated total price of the item
-    def get_estimated_total_price(self):
-        #* Calculate service price automatically
-        service_price = self.calculate_service_price()
-        total = service_price * self.quantity
-        
-        #* Add custom design price if needed
-        if self.needs_custom_design and self.custom_design_price:
-            total += float(self.custom_design_price)
-        
-        #* Update estimated_unit_price with calculated value
-        self.estimated_unit_price = service_price
-        
-        return total
-    
-    #* Method to calculate final total price of the item
-    def get_final_total_price(self):
-        total = 0
-        if self.final_unit_price:
-            total += float(self.final_unit_price) * self.quantity                                                               #* Add service price
-        if self.needs_custom_design and self.custom_design_price:
-            total += float(self.custom_design_price)                                                                            #* Add design price if needed
-        return total
-    
-    #* Method to get estimated total including design price
+    #* SOLUCION PROBLEMA 3 - Method to get estimated total including design price
     def get_estimated_total_with_design(self):
         """Calculate total estimated price including design price"""
         total = 0
@@ -694,7 +627,7 @@ class OrderItem(models.Model):
         
         return total
     
-    #* Method to get final total including design price
+    #* SOLUCION PROBLEMA 3 - Method to get final total including design price
     def get_final_total_with_design(self):
         """Calculate total final price including design price"""
         total = 0
@@ -724,17 +657,50 @@ class OrderItem(models.Model):
             return f"${total:,.2f} MXN"
         return "Not calculated"
     
-    #* Method to save and auto-calculate prices
+    #* Method to save and auto-calculate prices - SOLUCION PROBLEMA 5
     def save(self, *args, **kwargs):
-        #* ONLY calculate estimated_unit_price if it's a NEW object (doesn't have pk)
-        if not self.pk and not self.estimated_unit_price and self.service:
-            #* It's a new object, calculate estimated price
-            self.estimated_unit_price = self.calculate_service_price()
-        
-        #* ALWAYS recalculate final_unit_price if there are changes in calculation fields
-        #* or if final_unit_price doesn't exist
-        if self.service and (not self.final_unit_price or self._state.adding == False):
-            #* Recalculate final price based on current fields
-            self.final_unit_price = self.calculate_service_price()
+        #* Calculate prices based on calculation fields
+        if self.service:
+            calculated_price = self.calculate_service_price()
+            
+            #* Set estimated price only if not set
+            if not self.estimated_unit_price:
+                self.estimated_unit_price = calculated_price
+            
+            #* NO auto-update final price - solo cuando admin llene los campos
+            # Solo actualiza si hay cambios en los campos de cálculo
+            if self._state.adding == False:  # Es un update, no creación
+                # Solo recalcula si hay valores en los campos de cálculo
+                service_type = self.service.type
+                has_calc_fields = False
+                
+                if service_type == 'plasma':
+                    has_calc_fields = any([
+                        self.plasma_design_programming_time,
+                        self.plasma_cutting_time, 
+                        self.plasma_material_cost
+                    ])
+                elif service_type in ['laser_engraving', 'laser_cutting']:
+                    has_calc_fields = any([
+                        self.laser_design_programming_time,
+                        self.laser_cutting_time,
+                        self.laser_material_cost
+                    ])
+                elif service_type in ['3D_printing', 'resin_printing']:
+                    has_calc_fields = any([
+                        self.printing_design_programming_time,
+                        self.printing_time,
+                        self.printing_material_used
+                    ])
+                
+                # Solo recalcula el precio final si hay campos de cálculo llenos
+                if has_calc_fields:
+                    self.final_unit_price = calculated_price
         
         super().save(*args, **kwargs)
+        
+        #* Update order totals after saving item
+        if self.order:
+            self.order.estimated_price = self.order.get_estimated_total_price()
+            self.order.final_price = self.order.get_final_total_price()
+            self.order.save(update_fields=['estimaded_price', 'final_price'])
