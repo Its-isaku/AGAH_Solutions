@@ -2,23 +2,90 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MdCheck, MdClose, MdInfo, MdWarning } from 'react-icons/md';
 import '../../style/Toast.css';
 
-// Hook para manejar las notificaciones
+// Hook para animaciones FLIP (First, Last, Invert, Play)
+const useFlipAnimation = (dependency) => {
+    const ref = useRef();
+    const prevPositions = useRef(new Map());
+
+    useEffect(() => {
+        if (!ref.current) return;
+
+        const container = ref.current;
+        const items = Array.from(container.children);
+        
+        // First: Capturar posiciones actuales
+        const currentPositions = new Map();
+        items.forEach((item, index) => {
+            const rect = item.getBoundingClientRect();
+            const key = item.dataset.toastId || index;
+            currentPositions.set(key, { y: rect.top, height: rect.height });
+        });
+
+        // Last & Invert: Comparar con posiciones previas y aplicar transform
+        items.forEach((item, index) => {
+            const key = item.dataset.toastId || index;
+            const current = currentPositions.get(key);
+            const previous = prevPositions.current.get(key);
+            
+            if (previous && current && previous.y !== current.y) {
+                const deltaY = previous.y - current.y;
+                
+                // Invert: Remover cualquier transición CSS temporal
+                item.style.transition = 'none';
+                item.style.transform = `translateY(${deltaY}px)`;
+                
+                // Forzar reflow
+                item.offsetHeight;
+                
+                // Play: Animar de vuelta a posición natural
+                requestAnimationFrame(() => {
+                    item.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                    item.style.transform = 'translateY(0px)';
+                    
+                    // Limpiar después de la animación
+                    setTimeout(() => {
+                        item.style.transition = '';
+                        item.style.transform = '';
+                    }, 600);
+                });
+            }
+        });
+
+        // Actualizar posiciones para la próxima vez
+        prevPositions.current = currentPositions;
+    }, [dependency]);
+
+    return ref;
+};
+
+const TOAST_TEXT = {
+    loading: 'Loading...',
+    successDefault: 'Operation completed successfully',
+    errorDefault: 'An error occurred',
+    closeToast: 'Close notification',
+};
+
+// Hook to manage notifications
 export const useToast = () => {
     const [toasts, setToasts] = useState([]);
 
     const addToast = (message, type = 'info', duration = 4000) => {
-        const id = Date.now() + Math.random();
+        const id = Date.now() + Math.random() * 10000; // ID más único
         const newToast = {
             id,
             message,
             type,
             duration,
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            createdAt: performance.now() // Tiempo de alta precisión
         };
 
+        console.log(`Agregando toast ${id} con duración ${duration}ms`);
+
         setToasts(prev => {
-            // Limitar a máximo 5 toasts visibles
+            // Limit to maximum 5 visible toasts
             const updatedToasts = [...prev, newToast];
+            console.log(`Total de toasts: ${updatedToasts.length}`);
             return updatedToasts.slice(-5);
         });
 
@@ -26,7 +93,9 @@ export const useToast = () => {
     };
 
     const removeToast = (id) => {
-        // Marcar como removing para activar animación
+        console.log(`Iniciando eliminación de toast ${id}`);
+        
+        // Primero marcar como eliminando para activar animación de salida
         setToasts(prev => 
             prev.map(toast => 
                 toast.id === id 
@@ -34,25 +103,30 @@ export const useToast = () => {
                     : toast
             )
         );
-        
-        // Eliminar después de la animación (400ms como definimos en CSS)
+
+        // Después de la animación, eliminarlo del array
         setTimeout(() => {
-            setToasts(prev => prev.filter(toast => toast.id !== id));
-        }, 400);
+            console.log(`Removiendo toast ${id} del DOM`);
+            setToasts(prev => {
+                const filtered = prev.filter(toast => toast.id !== id);
+                console.log(`Toasts restantes: ${filtered.length}`);
+                return filtered;
+            });
+        }, 300); // Tiempo de la animación de salida
     };
 
-    // Métodos de conveniencia
+    // Convenience methods
     const success = (message, duration) => addToast(message, 'success', duration);
     const error = (message, duration) => addToast(message, 'error', duration);
     const info = (message, duration) => addToast(message, 'info', duration);
     const warning = (message, duration) => addToast(message, 'warning', duration);
 
-    // Para promesas con estados de carga
+    // For promises with loading states
     const promise = (promiseOrFunc, messages = {}) => {
         const loadingId = addToast(
-            messages.loading || 'Cargando...', 
+            messages.loading || TOAST_TEXT.loading, 
             'loading', 
-            0 // No auto-remove para loading
+            0 // No auto-remove for loading
         );
 
         const promiseToResolve = typeof promiseOrFunc === 'function' 
@@ -62,12 +136,12 @@ export const useToast = () => {
         return promiseToResolve
             .then((result) => {
                 removeToast(loadingId);
-                addToast(messages.success || 'Operación completada exitosamente', 'success');
+                addToast(messages.success || TOAST_TEXT.successDefault, 'success');
                 return result;
             })
             .catch((error) => {
                 removeToast(loadingId);
-                addToast(messages.error || 'Ocurrió un error', 'error');
+                addToast(messages.error || TOAST_TEXT.errorDefault, 'error');
                 throw error;
             });
     };
@@ -83,78 +157,41 @@ export const useToast = () => {
     };
 };
 
-// Componente individual de toast
-const ToastItem = ({ toast, onRemove, style }) => {
+// Individual toast component
+const ToastItem = ({ toast, onRemove, style, index }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const [progressStyle, setProgressStyle] = useState({});
-    const [isPaused, setIsPaused] = useState(false);
-    const [remainingTime, setRemainingTime] = useState(toast.duration);
     const timerRef = useRef(null);
-    const startTimeRef = useRef(Date.now());
+    const elementRef = useRef(null);
 
     useEffect(() => {
-        // Animation in - delay para stagger effect
-        const timer = setTimeout(() => setIsVisible(true), 50);
+        // Animación de entrada con pequeño delay para efecto escalonado
+        const enterDelay = Math.min(index * 100, 400);
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+        }, enterDelay);
+        
         return () => clearTimeout(timer);
-    }, []);
+    }, [index]);
 
-    // Timer management with pause on hover
+    // Timer completamente independiente que inicia inmediatamente
     useEffect(() => {
         if (toast.duration <= 0) return;
 
-        const startTimer = () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            
-            timerRef.current = setTimeout(() => {
-                if (!isPaused) {
-                    onRemove(toast.id);
-                }
-            }, remainingTime);
-        };
-
-        if (!isPaused) {
-            startTimeRef.current = Date.now();
-            startTimer();
-            
-            // Progress bar animation
-            setProgressStyle({
-                transform: 'scaleX(1)',
-                transitionDuration: `${remainingTime}ms`,
-                animationPlayState: 'running'
-            });
-        } else {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            
-            // Pause progress bar
-            setProgressStyle(prev => ({
-                ...prev,
-                animationPlayState: 'paused'
-            }));
-        }
+        console.log(`Toast ${toast.id}: Timer iniciado por ${toast.duration}ms`);
+        
+        // Timer independiente que inicia inmediatamente cuando se monta el componente
+        timerRef.current = setTimeout(() => {
+            console.log(`Toast ${toast.id}: Timer terminado, eliminando...`);
+            onRemove(toast.id);
+        }, toast.duration);
 
         return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
+            console.log(`Toast ${toast.id}: Timer limpiado`);
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
         };
-    }, [isPaused, remainingTime, toast.duration, toast.id, onRemove]);
-
-    const handleMouseEnter = () => {
-        if (toast.duration > 0) {
-            setIsPaused(true);
-            const elapsed = Date.now() - startTimeRef.current;
-            setRemainingTime(Math.max(remainingTime - elapsed, 0));
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (toast.duration > 0) {
-            setIsPaused(false);
-        }
-    };
-
-    const handleRemove = () => {
-        if (toast.isRemoving) return; // Prevenir múltiples clicks
-        onRemove(toast.id);
-    };
+    }, []); // Sin dependencias para que solo se ejecute una vez
 
     const getIcon = () => {
         switch (toast.type) {
@@ -171,15 +208,31 @@ const ToastItem = ({ toast, onRemove, style }) => {
         }
     };
 
+    const handleRemove = () => {
+        if (toast.isRemoving) return; // Prevenir clicks múltiples
+        
+        // Añadir clase para animación de salida inmediata
+        if (elementRef.current) {
+            elementRef.current.classList.add('toast-removing');
+        }
+        
+        // Pequeño delay para que la animación se inicie
+        requestAnimationFrame(() => {
+            onRemove(toast.id);
+        });
+    };
+
     return (
         <div 
+            ref={elementRef}
+            data-toast-id={toast.id}
             className={`toast-item toast-${toast.type} ${isVisible ? 'toast-visible' : ''} ${toast.isRemoving ? 'toast-removing' : ''}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
             style={{
                 ...style,
-                '--progress-transform': progressStyle.transform || 'scaleX(0)',
-                '--progress-duration': progressStyle.transitionDuration || '0ms'
+                // Variables CSS para efectos de apilamiento
+                '--stack-index': index,
+                '--stack-offset': `${index * 4}px`,
+                '--stack-scale': `${1 - (index * 0.02)}`
             }}
         >
             <div className="toast-icon">
@@ -191,34 +244,42 @@ const ToastItem = ({ toast, onRemove, style }) => {
             <button 
                 className="toast-close"
                 onClick={handleRemove}
-                aria-label="Cerrar notificación"
+                aria-label={TOAST_TEXT.closeToast}
             >
                 <MdClose />
             </button>
-            {/* Barra de progreso para auto-dismiss */}
+            {/* Simple progress bar - solo visual */}
             {toast.duration > 0 && !toast.isRemoving && (
                 <div 
                     className="toast-progress-bar"
-                    style={progressStyle}
+                    style={{
+                        transform: 'scaleX(0)',
+                        transitionDuration: `${toast.duration}ms`,
+                        transitionTimingFunction: 'linear',
+                        animation: `toast-progress ${toast.duration}ms linear forwards`
+                    }}
                 />
             )}
         </div>
     );
 };
 
-// Contenedor principal de toasts
+// Main toast container
 const ToastContainer = ({ toasts, onRemove }) => {
+    const flipRef = useFlipAnimation(toasts.length); // Trigger animation when toast count changes
+    
     if (toasts.length === 0) return null;
 
     return (
-        <div className="toast-container">
+        <div ref={flipRef} className="toast-container">
             {toasts.map((toast, index) => (
                 <ToastItem
                     key={toast.id}
                     toast={toast}
                     onRemove={onRemove}
+                    index={index}
                     style={{
-                        zIndex: 1000 - index // Los más nuevos aparecen encima
+                        zIndex: 1000 - index, // Los más nuevos aparecen arriba
                     }}
                 />
             ))}

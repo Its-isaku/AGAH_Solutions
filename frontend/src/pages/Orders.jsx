@@ -8,8 +8,6 @@ import '../style/Orders.css';
 
 // Icons
 import { 
-    MdSearch, 
-    MdEmail, 
     MdPhone, 
     MdCalendarToday, 
     MdAttachment,
@@ -18,114 +16,297 @@ import {
     MdRefresh 
 } from 'react-icons/md';
 
+// Text constants for bilingual support
+const TEXT = {
+    // Page titles and headers
+    pageTitle: 'My Orders', // 'Mis Órdenes'
+    pageSubtitle: 'Check the status and details of all your orders', // 'Consulta el estado y detalles de todas tus órdenes'
+    
+    // Loading and empty states
+    loading: 'Loading orders...', // 'Cargando órdenes...'
+    updating: 'Updating...', // 'Actualizando...'
+    update: 'Update', // 'Actualizar'
+    noOrdersTitle: "You don't have any orders yet", // 'No tienes órdenes aún'
+    noOrdersSubtitle: 'When you place your first order, it will appear here.', // 'Cuando realices tu primera orden, aparecerá aquí.'
+    viewServices: 'View Services', // 'Ver Servicios'
+    
+    // Order statuses
+    firstEstimate: 'First Estimate', // 'Primera Estimación'
+    estimated: 'Estimated', // 'Estimado'
+    confirmed: 'Confirmed', // 'Confirmado'
+    inProgress: 'In Progress', // 'En Proceso'
+    completed: 'Completed', // 'Completado'
+    canceled: 'Canceled', // 'Cancelado'
+    
+    // Order details
+    orderNumber: 'Order #', // 'Orden #'
+    item: 'item', // 'artículo'
+    items: 'items', // 'artículos'
+    hideDetails: 'Hide', // 'Ocultar'
+    showDetails: 'View Details', // 'Ver Detalles'
+    completed: 'Completed', // 'Completado'
+    toBeDetermined: 'To be quoted', // 'Por cotizar'
+    
+    // Customer info section
+    customerInfo: 'Customer Information', // 'Información del Cliente'
+    name: 'Name:', // 'Nombre:'
+    email: 'Email:', // 'Email:'
+    phone: 'Phone:', // 'Teléfono:'
+    
+    // Order items section
+    orderItems: 'Order Items', // 'Artículos de la Orden'
+    itemNumber: 'Item #', // 'Artículo #'
+    service: 'Service', // 'Servicio'
+    quantity: 'Quantity:', // 'Cantidad:'
+    dimensions: 'Dimensions:', // 'Dimensiones:'
+    customDesign: 'Custom Design', // 'Diseño Personalizado'
+    attachedFile: 'Attached File', // 'Archivo Adjunto'
+    unitPrice: 'Unit price:', // 'Precio unitario:'
+    subtotal: 'Subtotal:', // 'Subtotal:'
+    
+    // Pricing section
+    pricingSummary: 'Pricing Summary', // 'Resumen de Precios'
+    estimatedPrice: 'Estimated Price:', // 'Precio Estimado:'
+    finalPrice: 'Final Price:', // 'Precio Final:'
+    
+    // Additional notes
+    additionalNotes: 'Additional Notes', // 'Notas Adicionales'
+    
+    // Actions
+    printOrder: 'Print Order', // 'Imprimir Orden'
+    
+    // Toast messages
+    toastInvalidSession: 'Invalid session. Please log in again.', // 'Sesión no válida. Por favor, inicia sesión nuevamente.'
+    toastOrdersCount: (count) => `You have ${count} ${count === 1 ? 'order' : 'orders'}`, // `Tienes ${count} ${count === 1 ? 'orden' : 'órdenes'}`
+    toastNoOrders: 'You have no registered orders', // 'No tienes órdenes registradas'
+    toastLoadError: 'Error loading orders', // 'Error al cargar las órdenes'
+    toastConfigError: 'Server configuration error. Please contact the administrator.', // 'Error de configuración en el servidor. Por favor contacta al administrador.'
+    toastSessionExpired: 'Session expired. Please log in again.', // 'Sesión expirada. Por favor, inicia sesión nuevamente.'
+    toastServerError: 'Internal server error. Please try again in a few moments.', // 'Error interno del servidor. Intenta nuevamente en unos momentos.'
+};
+
 function Orders() {
     // Context hooks
+    const { userInfo } = useAuthContext(); // Get user information
     const { success, error, warning, info, promise } = useToastContext();
     
     // State
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchEmail, setSearchEmail] = useState('');
     const [expandedOrder, setExpandedOrder] = useState(null);
     
-    // Fetch orders on component mount - without userInfo
+    // Fetch orders on component mount - using authenticated user's email
     useEffect(() => {
-        // Por ahora dejamos vacío el email inicial
-        // El usuario tendrá que escribir su email para buscar
-    }, []);
-
-    // Function to fetch orders by email
-    const fetchUserOrders = async (email) => {
-        if (!email || !email.includes('@')) {
-            warning('Por favor ingresa un email válido');
-            return;
+        if (userInfo && userInfo.email) {
+            fetchUserOrders();
+        } else if (!userInfo || !userInfo.email) {
+            setLoading(false);
         }
+    }, [userInfo?.email]); // Only depends on email to avoid unnecessary renders
 
+    // Function to fetch orders - using authenticated endpoint
+    const fetchUserOrders = async (showToast = true) => {
         setLoading(true);
         
         try {
-            await promise(
-                api.orders.getOrdersByCustomer(email),
-                {
-                    loading: 'Buscando tus órdenes...',
-                    success: (data) => {
-                        setOrders(data.orders || []);
-                        return `Encontradas ${data.orders?.length || 0} órdenes`;
-                    },
-                    error: 'Error al cargar las órdenes'
+            // Verify that the token is present
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                if (showToast) error(TEXT.toastInvalidSession);
+                setLoading(false);
+                return;
+            }
+            
+            // Use the endpoint for authenticated users
+            const response = await api.orders.getUserOrders();
+            
+            if (response.success) {
+                setOrders(response.orders || []);
+                if (showToast && response.orders && response.orders.length > 0) {
+                    success(TEXT.toastOrdersCount(response.orders.length));
+                } else if (showToast) {
+                    info(TEXT.toastNoOrders);
                 }
-            );
+            } else {
+                if (showToast) error(TEXT.toastLoadError);
+                setOrders([]);
+            }
         } catch (err) {
             console.error('Error fetching orders:', err);
+            
+            if (showToast) {
+                // Handle different types of errors
+                if (err.message && err.message.includes('Cannot resolve keyword')) {
+                    error(TEXT.toastConfigError);
+                    console.error('Backend database query error:', err.message);
+                } else if (err.message && err.message.includes('401')) {
+                    error(TEXT.toastSessionExpired);
+                } else if (err.message && err.message.includes('500')) {
+                    error(TEXT.toastServerError);
+                } else {
+                    error(TEXT.toastLoadError);
+                }
+            }
+            
             setOrders([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Handle search
-    const handleSearch = (e) => {
-        e.preventDefault();
-        fetchUserOrders(searchEmail);
+    // Function to refresh orders
+    const handleRefresh = () => {
+        fetchUserOrders(false); // Don't show toast on manual refresh
     };
 
     // Get progress percentage based on status
-    const getProgressPercentage = (status) => {
-        switch (status) {
+    const getProgressPercentage = (order) => {
+        // Try different possible fields for status
+        const status = order?.status || order?.state || order?.order_status || order?.current_status;
+        
+        // Normalize status for more flexible comparison
+        const normalizedStatus = status?.toLowerCase().trim();
+        
+        switch (normalizedStatus) {
+            // English states (real API values)
+            case 'pending':
+                return 25;
+            case 'estimated':
+                return 50;
+            case 'confirmed':
+                return 60;
+            case 'in_progress':  // ← This is the real value that comes from the API
+                return 75;
+            case 'completed':
+                return 100;
+            case 'canceled':
+                return 0;
+            
+            // Spanish states (for compatibility)
             case 'pendiente':
             case 'first_estimate':
+            case 'primera estimación':
+            case 'primera_estimacion':
                 return 25;
             case 'cotizado':
             case 'final_price_sent':
+            case 'cotización final':
+            case 'cotizacion_final':
+            case 'estimado':
                 return 50;
             case 'confirmado':
             case 'en_proceso':
+            case 'en proceso':
+            case 'enproceso':
                 return 75;
             case 'completado':
+            case 'terminado':
                 return 100;
             case 'cancelado':
+            case 'cancelled':
                 return 0;
             default:
+                console.warn('Unknown status:', status, 'defaulting to 25%');
                 return 25;
         }
     };
 
     // Get status display text
-    const getStatusText = (status) => {
-        switch (status) {
+    const getStatusText = (order) => {
+        // Try different possible fields for status
+        const status = order?.status || order?.state || order?.order_status || order?.current_status;
+        
+        // Normalize status for more flexible comparison
+        const normalizedStatus = status?.toLowerCase().trim();
+        
+        switch (normalizedStatus) {
+            // English states (real API values)
+            case 'pending':
+                return TEXT.firstEstimate;
+            case 'estimated':
+                return TEXT.estimated;
+            case 'confirmed':
+                return TEXT.confirmed;
+            case 'in_progress':  // ← This is the real value that comes from the API
+                return TEXT.inProgress;
+            case 'completed':
+                return TEXT.completed;
+            case 'canceled':
+                return TEXT.canceled;
+                
+            // Spanish states (for compatibility)
             case 'pendiente':
             case 'first_estimate':
-                return 'Primera Estimación';
+            case 'primera estimación':
+            case 'primera_estimacion':
+                return TEXT.firstEstimate;
             case 'cotizado':
             case 'final_price_sent':
-                return 'Precio Final Aceptado';
+            case 'cotización final':
+            case 'cotizacion_final':
+            case 'estimado':
+                return TEXT.estimated;
             case 'confirmado':
             case 'en_proceso':
-                return 'En Proceso';
+            case 'en proceso':
+            case 'enproceso':
+                return TEXT.inProgress;
             case 'completado':
-                return 'Terminado';
+            case 'terminado':
+                return TEXT.completed;
             case 'cancelado':
-                return 'Cancelado';
+            case 'cancelled':
+                return TEXT.canceled;
             default:
-                return 'Primera Estimación';
+                return TEXT.firstEstimate;
         }
     };
 
     // Get status color
-    const getStatusColor = (status) => {
-        switch (status) {
+    const getStatusColor = (order) => {
+        // Try different possible fields for status
+        const status = order?.status || order?.state || order?.order_status || order?.current_status;
+        
+        // Normalize status for more flexible comparison
+        const normalizedStatus = status?.toLowerCase().trim();
+        
+        switch (normalizedStatus) {
+            // English states (real API values)
+            case 'pending':
+                return '#F59E0B'; // Yellow
+            case 'estimated':
+                return '#3B82F6'; // Blue
+            case 'confirmed':
+                return '#8B5CF6'; // Purple
+            case 'in_progress':  // ← This is the real value that comes from the API
+                return '#78B7D0'; // Cyan
+            case 'completed':
+                return '#10B981'; // Green
+            case 'canceled':
+                return '#EF4444'; // Red
+                
+            // Spanish states (for compatibility)
             case 'pendiente':
             case 'first_estimate':
+            case 'primera estimación':
+            case 'primera_estimacion':
                 return '#F59E0B'; // Yellow
             case 'cotizado':
             case 'final_price_sent':
+            case 'cotización final':
+            case 'cotizacion_final':
+            case 'estimado':
                 return '#3B82F6'; // Blue
             case 'confirmado':
             case 'en_proceso':
+            case 'en proceso':
+            case 'enproceso':
                 return '#78B7D0'; // Cyan
             case 'completado':
+            case 'terminado':
                 return '#10B981'; // Green
             case 'cancelado':
+            case 'cancelled':
                 return '#EF4444'; // Red
             default:
                 return '#F59E0B';
@@ -150,7 +331,7 @@ function Orders() {
 
     // Format currency
     const formatCurrency = (amount) => {
-        if (!amount) return 'Por cotizar';
+        if (!amount) return TEXT.toBeDetermined;
         return `$${parseFloat(amount).toLocaleString('es-ES', { minimumFractionDigits: 2 })} MXN`;
     };
 
@@ -158,46 +339,35 @@ function Orders() {
         <div className="orders-container">
             {/* Header Section */}
             <div className="orders-header">
-                <h1>Mis Órdenes</h1>
+                <h1>{TEXT.pageTitle}</h1>
                 <p className="orders-subtitle">
-                    Consulta el estado y detalles de todas tus órdenes
+                    {TEXT.pageSubtitle}
                 </p>
-            </div>
-
-            {/* Search Section */}
-            <div className="orders-search-section">
-                <form onSubmit={handleSearch} className="search-form">
-                    <div className="search-input-group">
-                        <MdEmail className="search-icon" />
-                        <input
-                            type="email"
-                            value={searchEmail}
-                            onChange={(e) => setSearchEmail(e.target.value)}
-                            placeholder="Ingresa tu email para buscar órdenes"
-                            className="search-input"
-                            required
-                        />
-                        <button type="submit" className="search-button" disabled={loading}>
-                            {loading ? <MdRefresh className="spinning" /> : <MdSearch />}
-                            Buscar
-                        </button>
-                    </div>
-                </form>
+                {/* Refresh button */}
+                <button 
+                    onClick={handleRefresh} 
+                    className="refresh-button"
+                    disabled={loading}
+                    title={TEXT.update}
+                >
+                    <MdRefresh className={loading ? "spinning" : ""} />
+                    {loading ? TEXT.updating : TEXT.update}
+                </button>
             </div>
 
             {/* Orders Content */}
             <div className="orders-content">
-                {loading && orders.length === 0 ? (
+                {loading ? (
                     <div className="loading-state">
                         <div className="loading-spinner"></div>
-                        <p>Cargando órdenes...</p>
+                        <p>{TEXT.loading}</p>
                     </div>
                 ) : orders.length === 0 ? (
                     <div className="empty-orders">
-                        <h3>No se encontraron órdenes</h3>
-                        <p>No tienes órdenes asociadas a este email, o el email no existe en nuestro sistema.</p>
-                        <a href="/services" className="continue-shopping-btn">
-                            Hacer una Orden
+                        <h3>{TEXT.noOrdersTitle}</h3>
+                        <p>{TEXT.noOrdersSubtitle}</p>
+                        <a href="/services" className="modal-button-submit">
+                            {TEXT.viewServices}
                         </a>
                     </div>
                 ) : (
@@ -207,14 +377,14 @@ function Orders() {
                                 {/* Order Header */}
                                 <div className="order-header">
                                     <div className="order-main-info">
-                                        <h3 className="order-number">#{order.order_number}</h3>
+                                        <h3 className="order-number">{TEXT.orderNumber}{order.order_number}</h3>
                                         <div className="order-meta">
                                             <span className="order-date">
                                                 <MdCalendarToday />
                                                 {formatDate(order.created_at)}
                                             </span>
                                             <span className="order-items-count">
-                                                {order.items?.length || 0} {(order.items?.length || 0) === 1 ? 'artículo' : 'artículos'}
+                                                {order.items?.length || 0} {(order.items?.length || 0) === 1 ? TEXT.item : TEXT.items}
                                             </span>
                                         </div>
                                     </div>
@@ -227,96 +397,116 @@ function Orders() {
                                             onClick={() => toggleOrderExpansion(order.id)}
                                         >
                                             <MdVisibility />
-                                            {expandedOrder === order.id ? 'Ocultar' : 'Ver'} Detalles
+                                            {expandedOrder === order.id ? TEXT.hideDetails : TEXT.showDetails}
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Progress Bar */}
-                                <div className="progress-section">
-                                    <div className="progress-header">
-                                        <span className="progress-label">Estado: {getStatusText(order.status)}</span>
-                                        <span className="progress-percentage">
-                                            {getProgressPercentage(order.status)}%
-                                        </span>
-                                    </div>
-                                    <div className="progress-bar">
+                                <div className="order-progress">
+                                    <div className="progress-bar-container">
                                         <div 
-                                            className="progress-fill"
+                                            className="progress-bar-fill"
                                             style={{ 
-                                                width: `${getProgressPercentage(order.status)}%`,
-                                                backgroundColor: getStatusColor(order.status)
+                                                width: `${getProgressPercentage(order)}%`,
+                                                backgroundColor: getStatusColor(order)
                                             }}
-                                        ></div>
+                                        />
                                     </div>
-                                    <div className="progress-steps">
-                                        <div className={`step ${getProgressPercentage(order.status) >= 25 ? 'completed' : ''}`}>
-                                            <span>Primera Estimación</span>
-                                        </div>
-                                        <div className={`step ${getProgressPercentage(order.status) >= 50 ? 'completed' : ''}`}>
-                                            <span>Precio Final Aceptado</span>
-                                        </div>
-                                        <div className={`step ${getProgressPercentage(order.status) >= 75 ? 'completed' : ''}`}>
-                                            <span>En Proceso</span>
-                                        </div>
-                                        <div className={`step ${getProgressPercentage(order.status) >= 100 ? 'completed' : ''}`}>
-                                            <span>Terminado</span>
-                                        </div>
+                                    <div className="progress-status">
+                                        <span 
+                                            className="status-badge"
+                                            style={{ backgroundColor: getStatusColor(order) + '20', color: getStatusColor(order) }}
+                                        >
+                                            {getStatusText(order)}
+                                        </span>
+                                        <span className="progress-percentage">
+                                            {getProgressPercentage(order)}% {TEXT.completed}
+                                        </span>
                                     </div>
                                 </div>
 
                                 {/* Expanded Details */}
                                 {expandedOrder === order.id && (
                                     <div className="order-details">
+                                        {/* Progress Steps */}
+                                        <div className="progress-steps">
+                                            <div className={`step ${getProgressPercentage(order) >= 25 ? 'active' : ''}`}>
+                                                <div className="step-indicator">1</div>
+                                                <span>{TEXT.firstEstimate}</span>
+                                            </div>
+                                            <div className={`step ${getProgressPercentage(order) >= 50 ? 'active' : ''}`}>
+                                                <div className="step-indicator">2</div>
+                                                <span>Final Quote</span> {/* Cotización Final */}
+                                            </div>
+                                            <div className={`step ${getProgressPercentage(order) >= 75 ? 'active' : ''}`}>
+                                                <div className="step-indicator">3</div>
+                                                <span>{TEXT.inProgress}</span>
+                                            </div>
+                                            <div className={`step ${getProgressPercentage(order) >= 100 ? 'active' : ''}`}>
+                                                <div className="step-indicator">4</div>
+                                                <span>{TEXT.completed}</span>
+                                            </div>
+                                        </div>
+
                                         {/* Customer Info */}
                                         <div className="detail-section">
-                                            <h4>Información del Cliente</h4>
+                                            <h4>{TEXT.customerInfo}</h4>
                                             <div className="detail-grid">
                                                 <div className="detail-item">
-                                                    <span className="label">Nombre:</span>
-                                                    <span className="value">{order.customer_name}</span>
+                                                    <span className="detail-label">{TEXT.name}</span>
+                                                    <span className="detail-value">{order.customer_name}</span>
                                                 </div>
                                                 <div className="detail-item">
-                                                    <span className="label">Email:</span>
-                                                    <span className="value">{order.customer_email}</span>
+                                                    <span className="detail-label">{TEXT.email}</span>
+                                                    <span className="detail-value">{order.customer_email}</span>
                                                 </div>
-                                                <div className="detail-item">
-                                                    <span className="label">Teléfono:</span>
-                                                    <span className="value">{order.customer_phone}</span>
-                                                </div>
+                                                {order.customer_phone && (
+                                                    <div className="detail-item">
+                                                        <span className="detail-label">{TEXT.phone}</span>
+                                                        <span className="detail-value">
+                                                            <MdPhone /> {order.customer_phone}
+                                                        </span>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
                                         {/* Order Items */}
                                         <div className="detail-section">
-                                            <h4>Artículos del Pedido</h4>
-                                            <div className="order-items">
+                                            <h4>{TEXT.orderItems}</h4>
+                                            <div className="order-items-list">
                                                 {order.items?.map((item, index) => (
-                                                    <div key={index} className="order-item">
+                                                    <div key={item.id || index} className="order-item">
                                                         <div className="item-header">
-                                                            <h5>{item.service_name}</h5>
-                                                            <span className="item-price">
-                                                                {formatCurrency(item.estimated_unit_price * item.quantity)}
-                                                            </span>
+                                                            <span className="item-number">{TEXT.itemNumber}{index + 1}</span>
+                                                            <span className="item-service">{item.service_name || TEXT.service}</span>
                                                         </div>
                                                         <div className="item-details">
-                                                            <p><strong>Descripción:</strong> {item.description}</p>
-                                                            <p><strong>Cantidad:</strong> {item.quantity}</p>
-                                                            {(item.length_dimensions || item.width_dimensions || item.height_dimensions) && (
-                                                                <p>
-                                                                    <strong>Dimensiones:</strong> 
-                                                                    {item.length_dimensions}cm × {item.width_dimensions}cm × {item.height_dimensions}cm
-                                                                </p>
-                                                            )}
-                                                            {item.needs_custom_design && (
-                                                                <span className="custom-design-badge">
-                                                                    Diseño Personalizado
-                                                                </span>
-                                                            )}
-                                                            {item.design_file && (
-                                                                <div className="file-attachment">
-                                                                    <MdAttachment />
-                                                                    <span>Archivo de diseño adjunto</span>
+                                                            <p className="item-description">{item.description}</p>
+                                                            <div className="item-specs">
+                                                                <span>{TEXT.quantity} {item.quantity}</span>
+                                                                {item.length_dimensions && item.width_dimensions && (
+                                                                    <span>
+                                                                        {TEXT.dimensions} {item.length_dimensions} x {item.width_dimensions}
+                                                                        {item.height_dimensions && ` x ${item.height_dimensions}`} cm
+                                                                    </span>
+                                                                )}
+                                                                {item.needs_custom_design && (
+                                                                    <span className="custom-design-badge">
+                                                                        {TEXT.customDesign}
+                                                                    </span>
+                                                                )}
+                                                                {item.design_file && (
+                                                                    <span className="has-file-badge">
+                                                                        <MdAttachment /> {TEXT.attachedFile}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            {item.unit_price && (
+                                                                <div className="item-pricing">
+                                                                    <span>{TEXT.unitPrice} {formatCurrency(item.unit_price)}</span>
+                                                                    <span>{TEXT.subtotal} {formatCurrency(item.subtotal)}</span>
                                                                 </div>
                                                             )}
                                                         </div>
@@ -325,46 +515,39 @@ function Orders() {
                                             </div>
                                         </div>
 
+                                        {/* Pricing Section */}
+                                        {(order.estimated_price || order.final_price) && (
+                                            <div className="detail-section">
+                                                <h4>{TEXT.pricingSummary}</h4>
+                                                <div className="pricing-summary">
+                                                    {order.estimated_price && (
+                                                        <div className="price-row">
+                                                            <span>{TEXT.estimatedPrice}</span>
+                                                            <span>{formatCurrency(order.estimated_price)}</span>
+                                                        </div>
+                                                    )}
+                                                    {order.final_price && (
+                                                        <div className="price-row final-price">
+                                                            <span>{TEXT.finalPrice}</span>
+                                                            <span>{formatCurrency(order.final_price)}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+
                                         {/* Additional Notes */}
                                         {order.additional_notes && (
                                             <div className="detail-section">
-                                                <h4>Notas Adicionales</h4>
+                                                <h4>{TEXT.additionalNotes}</h4>
                                                 <p className="notes-text">{order.additional_notes}</p>
                                             </div>
                                         )}
 
-                                        {/* Pricing Info */}
-                                        <div className="detail-section">
-                                            <h4>Información de Precios</h4>
-                                            <div className="pricing-info">
-                                                <div className="price-row">
-                                                    <span>Precio Estimado:</span>
-                                                    <span>{formatCurrency(order.estimaded_price)}</span>
-                                                </div>
-                                                {order.final_price && (
-                                                    <div className="price-row final-price">
-                                                        <span>Precio Final:</span>
-                                                        <span>{formatCurrency(order.final_price)}</span>
-                                                    </div>
-                                                )}
-                                                {order.estimated_completion_date_days && (
-                                                    <div className="price-row">
-                                                        <span>Tiempo Estimado:</span>
-                                                        <span>{order.estimated_completion_date_days} días</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        {/* Action Buttons */}
+                                        {/* Order Actions */}
                                         <div className="order-actions-expanded">
-                                            <button className="modal-button-cancel">
-                                                <MdPrint />
-                                                Imprimir Orden
-                                            </button>
-                                            <button className="modal-button-submit">
-                                                <MdPhone />
-                                                Contactar Soporte
+                                            <button className="action-btn print-btn">
+                                                <MdPrint /> {TEXT.printOrder}
                                             </button>
                                         </div>
                                     </div>

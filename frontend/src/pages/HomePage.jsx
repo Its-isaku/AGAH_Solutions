@@ -35,7 +35,6 @@ function HomePage() {
             setLoading(true);
             setError(null);
 
-            console.log('Loading homepage data...');
             const result = await api.homepage.getHomepageData()
 
             if(result.success) {
@@ -45,7 +44,6 @@ function HomePage() {
             }
         } catch (err) {
             setError('Server Connection Error');
-            console.log('Connection Error:', err);
         } finally {
             setLoading(false);
         }

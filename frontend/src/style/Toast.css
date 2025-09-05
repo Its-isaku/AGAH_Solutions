@@ -3,12 +3,12 @@
 /*? <|---------- TOAST CONTAINER ---------|> */
 .toast-container {
     position: fixed;
-    top: 5rem; /* Espacio para el navbar */
+    top: 5rem; 
     right: 1rem;
-    z-index: 1000; /* Debajo del navbar pero encima del contenido */
+    z-index: 1000; 
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem; 
     pointer-events: none;
     max-width: 400px;
     width: 100%;
@@ -37,12 +37,40 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     pointer-events: auto;
     cursor: pointer;
-    transform: translateX(120%) scale(0.8) rotateY(45deg);
-    opacity: 0;
-    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     max-width: 100%;
     min-height: 60px;
     overflow: hidden;
+    
+    /* Estado inicial - invisible y desplazado */
+    transform: translateX(100%) scale(0.9);
+    opacity: 0;
+    visibility: hidden;
+    
+    /* SOLO transiciones para entrada/salida - NO para reordenamiento */
+    transition: 
+        opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        visibility 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        box-shadow 0.3s ease;
+    
+    /* Mejoras de rendimiento */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Animaciones de entrada y salida */
+.toast-item.toast-visible {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+}
+
+.toast-item.toast-removing {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+    transition: 
+        transform 0.3s cubic-bezier(0.4, 0, 1, 1),
+        opacity 0.3s ease-out;
 }
 
 /*? <|---------- PROGRESS BAR FOR AUTO-DISMISS ---------|> */
@@ -78,44 +106,78 @@
 .toast-visible {
     transform: translateX(0) scale(1);
     opacity: 1;
-    animation: toast-slide-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    visibility: visible;
+    /* Animación de entrada suave tipo fade */
+    animation: toast-fade-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .toast-removing {
-    transform: translateX(120%) scale(0.8) rotateY(45deg);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-    animation: toast-slide-out 0.4s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+    /* Animación de salida más rápida para eliminación inmediata */
+    animation: toast-fade-out 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    pointer-events: none; /* Evitar interacciones durante la salida */
 }
+
+/* Animación para múltiples toasts - entrada escalonada */
+.toast-item:nth-child(1).toast-visible { animation-delay: 0ms; }
+.toast-item:nth-child(2).toast-visible { animation-delay: 100ms; }
+.toast-item:nth-child(3).toast-visible { animation-delay: 200ms; }
+.toast-item:nth-child(4).toast-visible { animation-delay: 300ms; }
+.toast-item:nth-child(5).toast-visible { animation-delay: 400ms; }
 
 /*? <|---------- KEYFRAME ANIMATIONS ---------|> */
-@keyframes toast-slide-in {
+@keyframes toast-fade-in {
     0% {
-        transform: translateX(100%) scale(0.8) rotateY(45deg);
+        transform: translateX(100%) scale(0.9);
         opacity: 0;
+        visibility: hidden;
+        filter: blur(8px);
     }
-    50% {
-        transform: translateX(-10px) scale(1.05) rotateY(0deg);
-        opacity: 0.8;
+    40% {
+        transform: translateX(-8px) scale(1.02);
+        opacity: 0.6;
+        visibility: visible;
+        filter: blur(2px);
+    }
+    70% {
+        transform: translateX(2px) scale(1.01);
+        opacity: 0.9;
+        filter: blur(0.5px);
     }
     100% {
-        transform: translateX(0) scale(1) rotateY(0deg);
+        transform: translateX(0) scale(1);
         opacity: 1;
+        visibility: visible;
+        filter: blur(0);
     }
 }
 
-@keyframes toast-slide-out {
+@keyframes toast-fade-out {
     0% {
         transform: translateX(0) scale(1);
         opacity: 1;
+        visibility: visible;
+        filter: blur(0);
     }
-    30% {
-        transform: translateX(20px) scale(0.95);
-        opacity: 0.7;
+    50% {
+        transform: translateX(15px) scale(0.98);
+        opacity: 0.4;
+        filter: blur(1px);
     }
     100% {
-        transform: translateX(120%) scale(0.8) rotateY(45deg);
+        transform: translateX(100%) scale(0.9);
         opacity: 0;
+        visibility: hidden;
+        filter: blur(2px);
+    }
+}
+
+/* Animación especial para cuando se apilan múltiples toasts */
+@keyframes toast-stack-adjust {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        transform: translateY(var(--stack-offset, 0px)) scale(var(--stack-scale, 1));
     }
 }
 
@@ -307,16 +369,33 @@
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     flex-shrink: 0;
     width: 1.5rem;
     height: 1.5rem;
+    opacity: 0;
 }
 
 .toast-close:hover {
     color: #F4E7E1;
     background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(90deg);
+    border-radius: 50%;
+}
+
+.toast-close:active {
+    transform: scale(0.9) rotate(90deg);
+}
+
+.toast-close:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+    transform: none;
+}
+
+/* El botón de cerrar aparece con la animación del toast */
+.toast-visible .toast-close {
+    opacity: 0.6;
 }
 
 /*? <|---------- LOADING SPINNER ---------|> */
@@ -336,15 +415,37 @@
 
 /*? <|---------- HOVER EFFECTS ---------|> */
 .toast-item:hover {
-    transform: translateY(-3px) scale(1.02);
+    transform: translateY(-2px) scale(1.01);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(20px);
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: 
+        transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        backdrop-filter 0.3s ease;
+}
+
+/* Efecto visual cuando está pausado */
+.toast-item:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: inherit;
+    pointer-events: none;
 }
 
 .toast-item:active {
-    transform: translateY(-1px) scale(0.98);
+    transform: translateY(-1px) scale(0.99);
     transition: all 0.1s ease;
+}
+
+/* Hover mejorado para toasts apilados */
+.toast-item:hover ~ .toast-item {
+    transform: translateY(4px) scale(0.96);
+    transition: transform 0.2s ease;
 }
 
 /*? <|---------- PULSE ANIMATION FOR LOADING ---------|> */
@@ -358,6 +459,57 @@
     }
     50% {
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 8px rgba(120, 183, 208, 0);
+    }
+}
+
+/* Animación sutil y suave para el contenido del toast */
+.toast-visible .toast-content {
+    animation: toast-content-fade-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
+}
+
+.toast-visible .toast-icon {
+    animation: toast-icon-smooth-in 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s both;
+}
+
+.toast-visible .toast-close {
+    animation: toast-close-fade-in 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+
+@keyframes toast-content-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animación de icono optimizada sin tirones */
+@keyframes toast-icon-smooth-in {
+    from {
+        opacity: 0;
+        transform: scale(0.7);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes toast-close-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 0.6;
+        transform: scale(1);
     }
 }
 
@@ -380,33 +532,66 @@
 }
 
 /*? <|---------- STACKING EFFECTS ---------|> */
-.toast-container .toast-item:not(:last-child) {
-    margin-bottom: -4px;
+/* Contenedor con mejor manejo de múltiples toasts */
+.toast-container .toast-item {
+    transition: 
+        transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        visibility 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    /* Mejoras de rendimiento para stack */
     transform-origin: top center;
+    backface-visibility: hidden;
 }
 
-.toast-container .toast-item:nth-last-child(2) {
-    transform: scale(0.98) translateY(2px);
-    opacity: 0.9;
-    z-index: 999;
+/* Sin overlap - cada toast tiene su propio espacio */
+.toast-container .toast-item {
+    margin-bottom: 0; /* Sin overlap negativo */
 }
 
-.toast-container .toast-item:nth-last-child(3) {
-    transform: scale(0.96) translateY(4px);
-    opacity: 0.8;
-    z-index: 998;
+/* Stack con orden correcto - más nuevos arriba */
+.toast-container .toast-item:nth-child(1) {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 1005;
 }
 
-.toast-container .toast-item:nth-last-child(4) {
-    transform: scale(0.94) translateY(6px);
-    opacity: 0.7;
-    z-index: 997;
+.toast-container .toast-item:nth-child(2) {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 1004;
 }
 
-.toast-container .toast-item:nth-last-child(n+5) {
-    transform: scale(0.92) translateY(8px);
-    opacity: 0.6;
-    z-index: 996;
+.toast-container .toast-item:nth-child(3) {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 1003;
+}
+
+.toast-container .toast-item:nth-child(4) {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 1002;
+}
+
+.toast-container .toast-item:nth-child(5) {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 1001;
+}
+
+.toast-container .toast-item:nth-child(n+6) {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 1000;
+}
+
+/* Suavizar la reorganización cuando se elimina un toast */
+.toast-container .toast-item:not(.toast-removing) {
+    transition-delay: 0ms;
+}
+
+.toast-container .toast-item.toast-removing ~ .toast-item {
+    transition-delay: 100ms; /* Delay para reorganización suave */
 }
 
 /*? <|---------- IMPROVED ENTRANCE ANIMATIONS ---------|> */
@@ -414,11 +599,41 @@
     animation-fill-mode: both;
 }
 
-/*? <|---------- PERFORMANCE OPTIMIZATIONS ---------|> */
-.toast-item {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-    -webkit-font-smoothing: antialiased;
+/* Reducir el motion para usuarios con preferencias de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    .toast-item {
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    
+    .toast-visible {
+        animation: toast-fade-in-reduced 0.3s ease forwards;
+    }
+    
+    .toast-removing {
+        animation: toast-fade-out-reduced 0.3s ease forwards;
+    }
+}
+
+@keyframes toast-fade-in-reduced {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes toast-fade-out-reduced {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(20px);
+    }
 }
 
 /*? <|---------- PROGRESS BAR ---------|> */
@@ -430,9 +645,11 @@
     background: linear-gradient(90deg, #78B7D0, #4299d1);
     border-radius: 0 0 1rem 1rem;
     transform-origin: left center;
-    transform: scaleX(0);
+    transform: scaleX(0); /* Empezar vacía */
     transition: transform linear;
     opacity: 0.8;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .toast-success .toast-progress-bar {
@@ -445,4 +662,22 @@
 
 .toast-warning .toast-progress-bar {
     background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.toast-info .toast-progress-bar {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.toast-loading .toast-progress-bar {
+    background: linear-gradient(90deg, #78B7D0, #4299d1);
+}
+
+/* Animación simple para la barra de progreso */
+@keyframes toast-progress {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
 }

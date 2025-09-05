@@ -21,6 +21,7 @@ function SignUp() {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
 
@@ -74,6 +75,8 @@ function SignUp() {
         
         if (!validateForm()) return;
         
+        setLoading(true);
+        
         try {
             //* Prepare data for backend
             const signupData = {
@@ -101,6 +104,8 @@ function SignUp() {
             
         } catch (error) {
             console.error('Signup error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 

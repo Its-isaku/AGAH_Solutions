@@ -15,21 +15,15 @@ function SimpleLogin() {
         e.preventDefault();
         e.stopPropagation();
         
-        console.log('Form submitted - preventing default and propagation');
-        
         setLoading(true);
         setError('');
         
         try {
-            console.log('Making login request...');
             const response = await authAPI.login({ email, password });
-            console.log('Login response:', response);
             
             if (response.success) {
-                console.log('Login successful!');
                 success('Login exitoso');
             } else {
-                console.log('Login failed:', response.error);
                 setError(response.error || 'Error de login');
                 setEmail('');
                 setPassword('');
@@ -43,7 +37,6 @@ function SimpleLogin() {
             setLoading(false);
         }
         
-        console.log('handleSubmit completed');
         return false; // Extra precaución
     };
 

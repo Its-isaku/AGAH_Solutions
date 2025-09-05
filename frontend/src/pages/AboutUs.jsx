@@ -36,11 +36,9 @@ function AboutUs() {
                 setAboutUsData(data);
             } else {
                 setError("Failed to Load About Us Data");
-                console.log("Failed to Load About Us Data");
             }
         } catch (err) {
             setError(err?.message || "Failed to Load About Us Data");
-            console.log("Failed to Load About Us Data");
         }
     }
 

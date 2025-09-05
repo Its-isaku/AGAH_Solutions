@@ -23,7 +23,7 @@ class AuthAPI {
             (config) => {
                 const token = this.getToken();
                 if (token) {
-                    // Django REST Framework uses "Token" instead of "Bearer"
+                    //* Django REST Framework uses "Token" instead of "Bearer"
                     config.headers.Authorization = `Token ${token}`;
                 }
                 return config;
@@ -36,15 +36,14 @@ class AuthAPI {
             (response) => response,
             (error) => {
                 if (error.response?.status === 401) {
-                    // Token expired or invalid
+                    //* Token expired or invalid
                     this.logout();
                     
-                    // En lugar de window.location.href, disparamos un evento personalizado
-                    // que será manejado por los componentes React de manera apropiada
+                    //* Instead of direct redirect, dispatch custom event for React handling
                     window.dispatchEvent(new CustomEvent('auth-expired', { 
                         detail: { 
                             redirect: '/login',
-                            message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.' 
+                            message: 'Your session has expired. Please log in again.' 
                         } 
                     }));
                 }
@@ -61,11 +60,11 @@ class AuthAPI {
                 password: credentials.password
             });
             
-            // Backend now returns {success, data}
+            //* Backend now returns {success, data}
             if (response.data.success) {
                 const { token, user } = response.data.data;
                 
-                // Store token and user data
+                //* Store token and user data
                 this.setToken(token);
                 this.setUser(user);
                 
@@ -84,7 +83,6 @@ class AuthAPI {
             return {
                 success: false,
                 error: error.response?.data?.error || error.message || 'Login error'
-                // error: error.response?.data?.error || error.message || 'Error al iniciar sesión'
             };
         }
     }
@@ -94,11 +92,11 @@ class AuthAPI {
         try {
             const response = await this.api.post('/register/', userData);
             
-            // Backend now returns {success, data}
+            //* Backend now returns {success, data}
             if (response.data.success) {
                 const { token, user } = response.data.data;
                 
-                // Auto-login after successful registration
+                //* Auto-login after successful registration
                 if (token) {
                     this.setToken(token);
                     this.setUser(user);
@@ -119,7 +117,6 @@ class AuthAPI {
             return {
                 success: false,
                 error: error.response?.data?.error || error.message || 'Registration error'
-                // error: error.response?.data?.error || error.message || 'Error en el registro'
             };
         }
     }
@@ -127,22 +124,21 @@ class AuthAPI {
     //* Logout user
     async logout() {
         try {
-            // Try to logout from backend
+            //* Try to logout from backend
             const token = this.getToken();
             if (token) {
                 await this.api.post('/logout/');
             }
         } catch (error) {
-            // Even if backend logout fails, clear local data
+            //* Even if backend logout fails, clear local data
             console.error('Logout error:', error);
         } finally {
-            // Always clear local storage
+            //* Always clear local storage
             this.clearAuth();
             
             return {
                 success: true,
                 message: 'Session closed successfully'
-                // message: 'Sesión cerrada exitosamente'
             };
         }
     }
@@ -177,7 +173,7 @@ class AuthAPI {
             const response = await this.api.put('/profile/', profileData);
             
             if (response.data.success) {
-                // Update stored user data
+                //* Update stored user data
                 const updatedUser = response.data.data;
                 this.setUser(updatedUser);
                 
@@ -208,14 +204,13 @@ class AuthAPI {
                 return {
                     success: false,
                     error: 'You must be authenticated to change your password'
-                    // error: 'Debes estar autenticado para cambiar tu contraseña'
                 };
             }
 
             const response = await this.api.post('/change-password/', passwordData);
             
             if (response.data.success) {
-                // Update token if returned
+                //* Update token if returned
                 if (response.data.data?.token) {
                     this.setToken(response.data.data.token);
                 }
@@ -307,7 +302,6 @@ class AuthAPI {
     //* Store authentication token
     setToken(token) {
         localStorage.setItem('authToken', token);
-        // Also update default header for this instance - Django REST Framework uses "Token"
         this.api.defaults.headers.Authorization = `Token ${token}`;
     }
 

@@ -50,7 +50,7 @@ function Contact() {
             const contactData = await api.contact.getContactInfo();
             setContactInfo(contactData);
         } catch (error) {
-            console.log('Using default contact info:', error);
+            // Using default contact info - error handled silently
         }
     };
 

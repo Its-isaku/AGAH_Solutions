@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './style/index.css'
@@ -19,7 +18,6 @@ import { ToastProvider } from './context/ToastContext.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-<StrictMode>
   <ToastProvider>
     <CartProvider>
       <AuthProvider>
@@ -69,5 +67,4 @@ createRoot(document.getElementById('root')).render(
     </AuthProvider>
   </CartProvider>
   </ToastProvider>
-</StrictMode>
 )

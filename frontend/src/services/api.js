@@ -14,11 +14,22 @@ class BaseAPI {
             }
         });
         
+        // Setup authentication interceptor automatically
+        this.setupAuthInterceptor();
+        
         // Response interceptor for error handling
         this.api.interceptors.response.use(
             response => response,
             error => {
                 console.error('API Error:', error.response?.data || error.message);
+                
+                // Handle 401 errors specifically
+                if (error.response?.status === 401) {
+                    console.error('Authentication failed - token may be invalid or expired');
+                    // You could dispatch an event here to logout the user automatically
+                    // window.dispatchEvent(new CustomEvent('auth-error', { detail: '401 Unauthorized' }));
+                }
+                
                 return Promise.reject(error);
             }
         );
@@ -31,6 +42,8 @@ class BaseAPI {
                 const token = localStorage.getItem('authToken');
                 if (token) {
                     config.headers.Authorization = `Token ${token}`;
+                } else {
+                    console.warn('No auth token found in localStorage');
                 }
                 return config;
             },
@@ -453,6 +466,15 @@ class OrdersAPI extends BaseAPI {
             }
         } catch (error) {
             console.error('Error fetching user orders:', error);
+            
+            // Mejorar el manejo de errores específicos
+            if (error.response?.status === 500) {
+                if (error.response?.data?.error && error.response.data.error.includes('Cannot resolve keyword')) {
+                    throw new Error(`Database configuration error: ${error.response.data.error}`);
+                }
+                throw new Error(error.response?.data?.error || 'Internal server error');
+            }
+            
             throw new Error(error.response?.data?.error || 'Failed to load orders');
         }
     }

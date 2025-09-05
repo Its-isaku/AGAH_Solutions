@@ -83,7 +83,6 @@ function Cart() {
             // Si hay archivo, lo agregaremos por separado al FormData
             if (item.design_file) {
                 formData.append(`item_${index}_design_file`, item.design_file);
-                console.log(`Added file for item ${index}: ${item.design_file.name}`);
             }
             
             return {
@@ -101,12 +100,6 @@ function Cart() {
         // Agregar items como JSON
         formData.append('items', JSON.stringify(itemsForJson));
 
-        // Debug - mostrar contenido del FormData
-        console.log('FormData contents:');
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
-        }
-
         const result = await promise(
             api.orders.api.post('/api/orders/create/', formData, {
                 headers: {
@@ -121,9 +114,6 @@ function Cart() {
             }
         );
 
-        //* Debug: Log the result
-        console.log('Order creation result:', result);
-        
         if (result && result.errors) {
             console.error('Validation errors:', result.errors);
         }

@@ -442,7 +442,7 @@ class UserOrdersListView(APIView):
     def get(self, request):
         try:
             #* Get all orders for the authenticated user
-            orders = Order.objects.filter(user=request.user).order_by('-created_at')
+            orders = Order.objects.filter(customer_email=request.user.email).order_by('-created_at')
             serializer = OrderDetailSerializer(orders, many=True)
             
             return Response({
@@ -469,7 +469,7 @@ class UserOrderDetailView(APIView):
     def get(self, request, pk):
         try:
             #* Get order only if it belongs to the authenticated user
-            order = Order.objects.get(pk=pk, user=request.user)
+            order = Order.objects.get(pk=pk, customer_email=request.user.email)
             serializer = OrderDetailSerializer(order)
             
             return Response({
