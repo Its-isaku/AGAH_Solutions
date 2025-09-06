@@ -6975,3 +6975,47 @@ INFO 2025-09-04 19:06:17,068 basehttp 36236 20228 "GET /api/company/ HTTP/1.1" 2
 INFO 2025-09-04 19:06:41,191 basehttp 36236 20228 "GET /api/orders/my-orders/ HTTP/1.1" 200 1368
 INFO 2025-09-04 19:11:15,587 basehttp 36236 20228 "GET /api/orders/my-orders/ HTTP/1.1" 200 1368
 INFO 2025-09-04 19:11:16,053 basehttp 36236 20228 "GET /api/orders/my-orders/ HTTP/1.1" 200 1368
+INFO 2025-09-05 19:23:54,401 autoreload 43940 43844 Watching for file changes with StatReloader
+INFO 2025-09-05 19:24:12,476 basehttp 43940 43080 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:24:12,504 basehttp 43940 43080 "GET /api/homepage/ HTTP/1.1" 200 1650
+INFO 2025-09-05 19:25:11,261 basehttp 43940 43080 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:25:11,275 basehttp 43940 43080 "GET /api/homepage/ HTTP/1.1" 200 1650
+INFO 2025-09-05 19:25:15,931 basehttp 43940 43080 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:25:15,945 basehttp 43940 43080 "GET /api/homepage/ HTTP/1.1" 200 1650
+INFO 2025-09-05 19:25:21,811 basehttp 43940 43080 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:25:21,825 basehttp 43940 43080 "GET /api/homepage/ HTTP/1.1" 200 1650
+INFO 2025-09-05 19:25:39,937 basehttp 43940 43080 "OPTIONS /api/homepage/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:25:39,949 basehttp 43940 43080 "GET /api/homepage/ HTTP/1.1" 200 1650
+INFO 2025-09-05 19:26:31,854 basehttp 43940 43080 "OPTIONS /api/services/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:26:31,866 basehttp 43940 43080 "GET /api/services/ HTTP/1.1" 200 2425
+INFO 2025-09-05 19:26:32,353 basehttp 43940 32848 "GET /media/service_images/Laser_Cutting_jU4gugo.jpeg HTTP/1.1" 200 91099
+INFO 2025-09-05 19:26:32,358 basehttp 43940 8268 "GET /media/service_images/laser_engravingpng_2_ss0DR2o.jpg HTTP/1.1" 200 45639
+INFO 2025-09-05 19:26:32,359 basehttp 43940 33424 "GET /media/service_images/Resin_Printing_AaV76hC.jpeg HTTP/1.1" 200 80127
+INFO 2025-09-05 19:26:32,360 basehttp 43940 16740 "GET /media/service_images/plasma_cutting_delfCLO.jpg HTTP/1.1" 200 86352
+INFO 2025-09-05 19:26:32,363 basehttp 43940 2128 "GET /media/service_images/3D_printing_2_j7V72V4.png HTTP/1.1" 200 589802
+INFO 2025-09-05 19:27:39,719 basehttp 43940 43080 "OPTIONS /api/company/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:27:39,735 basehttp 43940 43080 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-05 19:27:40,968 basehttp 43940 43080 "GET /api/services/ HTTP/1.1" 200 2425
+INFO 2025-09-05 19:28:47,244 basehttp 43940 25876 "OPTIONS /api/orders/create/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:28:52,750 basehttp 43940 25876 "POST /api/orders/create/ HTTP/1.1" 201 1421
+INFO 2025-09-05 19:28:54,929 basehttp 43940 25876 "GET /api/services/ HTTP/1.1" 200 2425
+INFO 2025-09-05 19:28:56,318 basehttp 43940 25876 "OPTIONS /api/orders/my-orders/ HTTP/1.1" 200 0
+INFO 2025-09-05 19:28:56,332 basehttp 43940 25876 "GET /api/orders/my-orders/ HTTP/1.1" 200 2690
+WARNING 2025-09-05 19:29:40,071 log 43940 42924 Not Found: /
+WARNING 2025-09-05 19:29:40,073 basehttp 43940 42924 "GET / HTTP/1.1" 404 8366
+WARNING 2025-09-05 19:29:40,447 log 43940 42924 Not Found: /favicon.ico
+WARNING 2025-09-05 19:29:40,448 basehttp 43940 42924 "GET /favicon.ico HTTP/1.1" 404 8417
+INFO 2025-09-05 19:29:49,130 basehttp 43940 42924 "GET /admin HTTP/1.1" 301 0
+INFO 2025-09-05 19:29:49,251 basehttp 43940 5600 "GET /admin/ HTTP/1.1" 200 14987
+INFO 2025-09-05 19:29:49,324 basehttp 43940 5600 "GET /static/admin/css/base.css HTTP/1.1" 200 22120
+INFO 2025-09-05 19:29:49,333 basehttp 43940 5600 "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-09-05 19:29:49,333 basehttp 43940 41600 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-09-05 19:29:49,333 basehttp 43940 34364 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-09-05 19:29:49,334 basehttp 43940 8368 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-09-05 19:29:49,351 basehttp 43940 5020 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-09-05 19:29:49,358 basehttp 43940 8368 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-09-05 19:29:49,374 basehttp 43940 34364 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-09-05 19:29:49,374 basehttp 43940 5020 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-09-05 19:29:49,375 basehttp 43940 8368 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-09-05 19:30:12,362 basehttp 43940 25876 "GET /api/company/ HTTP/1.1" 200 2515
+INFO 2025-09-05 19:30:31,755 basehttp 43940 25876 "GET /api/company/ HTTP/1.1" 200 2515
