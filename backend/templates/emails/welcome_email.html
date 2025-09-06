@@ -1,259 +1,180 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido a AGAH Solutions</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #F4E7E1;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-        
-        .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: linear-gradient(145deg, #363447 0%, #2a2838 100%);
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(120, 183, 208, 0.3);
-        }
-        
-        .email-header {
-            background: linear-gradient(135deg, #78B7D0 0%, #5aa3c4 50%, #3d8fb8 100%);
-            padding: 2.5rem;
-            text-align: center;
-            position: relative;
-        }
-        
-        .email-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(244, 231, 225, 0.1) 0%, transparent 100%);
-        }
-        
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #F4E7E1;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tagline {
-            color: #F4E7E1;
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
-        .email-body {
-            padding: 2rem;
-        }
-        
-        .welcome-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #F4E7E1;
-            text-align: center;
-        }
-        
-        .welcome-text {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #F4E7E1;
-        }
-        
-        .features-section {
-            background-color: rgba(120, 183, 208, 0.1);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(120, 183, 208, 0.2);
-        }
-        
-        .features-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #78B7D0;
-            text-align: center;
-        }
-        
-        .features-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .features-list li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: #F4E7E1;
-        }
-        
-        .features-list li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #78B7D0;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            background-color: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #F4E7E1;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 1rem auto;
-            display: block;
-            text-align: center;
-            transition: all 0.3s ease;
-            width: fit-content;
-        }
-        
-        .cta-button:hover {
-            color: #78B7D0;
-            border-color: #78B7D0;
-            transform: translateY(-2px);
-        }
-        
-        .contact-info {
-            background-color: rgba(26, 26, 26, 0.5);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            text-align: center;
-            border: 1px solid rgba(120, 183, 208, 0.2);
-        }
-        
-        .contact-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #78B7D0;
-        }
-        
-        .contact-item {
-            margin: 0.5rem 0;
-            color: #F4E7E1;
-        }
-        
-        .contact-item a {
-            color: #78B7D0;
-            text-decoration: none;
-        }
-        
-        .contact-item a:hover {
-            text-decoration: underline;
-        }
-        
-        .email-footer {
-            background-color: rgba(26, 26, 26, 0.8);
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #999;
-        }
-        
-        .footer-text {
-            margin-bottom: 0.5rem;
-        }
-        
-        @media (max-width: 600px) {
-            .email-container {
-                margin: 0;
-                border-radius: 0;
-            }
-            
-            .email-header,
-            .email-body {
-                padding: 1.5rem;
-            }
-            
-            .welcome-title {
-                font-size: 1.5rem;
-            }
-            
-            .logo {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="email-container">
-        <div class="email-header">
-            <div class="logo">AGAH Solutions</div>
-            <div class="tagline">Cutting-Edge Solutions, Crafted to Perfection</div>
-        </div>
-        
-        <div class="email-body">
-            <h1 class="welcome-title">¡Bienvenido {{ user_name }}!</h1>
-            
-            <p class="welcome-text">
-                Tu cuenta ha sido creada exitosamente. Estamos emocionados de tenerte como parte de la familia AGAH Solutions.
+{% extends "emails/base_email.html" %}
+
+{% block title %}Bienvenido a AGAH Solutions{% endblock %}
+
+{% block content %}
+<!-- Welcome Header -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="text-align: center; margin-bottom: 30px;">
+    <tr>
+        <td>
+            <h1 style="margin: 0 0 10px 0; color: #78B7D0; font-size: 32px; font-weight: 600;">
+                ¡Bienvenido a AGAH Solutions!
+            </h1>
+            <p style="margin: 0; color: #F4E7E1; font-size: 18px;">
+                Tu cuenta ha sido creada exitosamente
             </p>
-            
-            <div class="features-section">
-                <h2 class="features-title">Ahora puedes disfrutar de:</h2>
-                <ul class="features-list">
-                    <li>Explorar nuestro catálogo completo de servicios</li>
-                    <li>Crear y gestionar tus pedidos personalizados</li>
-                    <li>Hacer seguimiento del estado de tus proyectos</li>
-                    <li>Contactar con nuestro equipo de soporte especializado</li>
-                    <li>Acceder a cotizaciones detalladas y estimados</li>
-                </ul>
-            </div>
-            
-            <a href="{{ website_url }}" class="cta-button">
-                Comenzar a Explorar
-            </a>
-            
-            <div class="contact-info">
-                <h3 class="contact-title">¿Necesitas ayuda?</h3>
-                <div class="contact-item">
-                    <strong>Email:</strong> 
-                    <a href="mailto:agahsolutions@gmail.com">agahsolutions@gmail.com</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Teléfono:</strong> 
-                    <a href="tel:+526651270811">+52 665 127 0811</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Respuesta promedio:</strong> 24 horas
-                </div>
-            </div>
-        </div>
-        
-        <div class="email-footer">
-            <div class="footer-text">
-                Gracias por confiar en AGAH Solutions para tus proyectos de fabricación digital.
-            </div>
-            <div class="footer-text">
-                © 2025 AGAH Solutions. Todos los derechos reservados.
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+        </td>
+    </tr>
+</table>
+
+<!-- Greeting -->
+<p style="margin: 0 0 30px 0; color: #F4E7E1; font-size: 16px; line-height: 1.6;">
+    Hola {{ first_name|default:username }},
+</p>
+
+<p style="margin: 0 0 30px 0; color: #F4E7E1; font-size: 16px; line-height: 1.6;">
+    Gracias por unirte a AGAH Solutions. Estamos emocionados de tenerte como parte de nuestra comunidad. 
+    Ahora tienes acceso completo a todos nuestros servicios de fabricación de precisión.
+</p>
+
+<!-- Account Info -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(120, 183, 208, 0.1); border-radius: 10px; border: 1px solid rgba(120, 183, 208, 0.3); margin-bottom: 30px;">
+    <tr>
+        <td style="padding: 20px;">
+            <h3 style="margin: 0 0 15px 0; color: #78B7D0; font-size: 18px;">
+                Información de tu Cuenta:
+            </h3>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: #888888; font-size: 14px;">Nombre de Usuario:</span>
+                        <span style="color: #F4E7E1; font-size: 14px; font-weight: 600; margin-left: 10px;">{{ username }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: #888888; font-size: 14px;">Email:</span>
+                        <span style="color: #F4E7E1; font-size: 14px; margin-left: 10px;">{{ email }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 5px 0;">
+                        <span style="color: #888888; font-size: 14px;">Tipo de Cuenta:</span>
+                        <span style="color: #78B7D0; font-size: 14px; margin-left: 10px;">{{ user_type|default:"Cliente" }}</span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Services Available -->
+<h3 style="margin: 0 0 20px 0; color: #78B7D0; font-size: 18px;">Servicios Disponibles:</h3>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+    <tr>
+        <td>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td style="padding: 10px 0;">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 30px;">
+                                    <div style="width: 8px; height: 8px; background-color: #78B7D0; border-radius: 50%; margin-top: 5px;"></div>
+                                </td>
+                                <td style="color: #F4E7E1; font-size: 15px;">
+                                    <strong>Corte Láser:</strong> Precisión extrema para tus proyectos
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0;">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 30px;">
+                                    <div style="width: 8px; height: 8px; background-color: #78B7D0; border-radius: 50%; margin-top: 5px;"></div>
+                                </td>
+                                <td style="color: #F4E7E1; font-size: 15px;">
+                                    <strong>Corte Plasma:</strong> Potencia para materiales gruesos
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0;">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 30px;">
+                                    <div style="width: 8px; height: 8px; background-color: #78B7D0; border-radius: 50%; margin-top: 5px;"></div>
+                                </td>
+                                <td style="color: #F4E7E1; font-size: 15px;">
+                                    <strong>Router CNC:</strong> Versatilidad en diseños complejos
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px 0;">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td style="width: 30px;">
+                                    <div style="width: 8px; height: 8px; background-color: #78B7D0; border-radius: 50%; margin-top: 5px;"></div>
+                                </td>
+                                <td style="color: #F4E7E1; font-size: 15px;">
+                                    <strong>Servicios Personalizados:</strong> Soluciones a tu medida
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Next Steps -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background: linear-gradient(135deg, rgba(120, 183, 208, 0.2) 0%, rgba(120, 183, 208, 0.1) 100%); border-radius: 10px; padding: 20px; margin-bottom: 30px;">
+    <tr>
+        <td style="text-align: center;">
+            <h3 style="margin: 0 0 15px 0; color: #78B7D0; font-size: 18px;">
+                ¿Listo para comenzar?
+            </h3>
+            <p style="margin: 0 0 20px 0; color: #F4E7E1; font-size: 15px; line-height: 1.6;">
+                Explora nuestros servicios y solicita tu primera cotización
+            </p>
+        </td>
+    </tr>
+</table>
+
+<!-- CTA Buttons -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 30px 0;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="padding-right: 10px;">
+                        <a href="{{ website_url|default:'http://localhost:5173' }}/services" 
+                            style="display: inline-block; padding: 15px 30px; background-color: transparent; border: 2px solid #78B7D0; border-radius: 8px; color: #78B7D0; font-size: 16px; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
+                            Ver Servicios
+                        </a>
+                    </td>
+                    <td style="padding-left: 10px;">
+                        <a href="{{ website_url|default:'http://localhost:5173' }}/login" 
+                            style="display: inline-block; padding: 15px 30px; background-color: transparent; border: 2px solid #78B7D0; border-radius: 8px; color: #78B7D0; font-size: 16px; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
+                            Iniciar Sesión
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Help Section -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid rgba(120, 183, 208, 0.2); padding-top: 30px;">
+    <tr>
+        <td style="text-align: center;">
+            <p style="margin: 0 0 10px 0; color: #888888; font-size: 14px;">
+                ¿Necesitas ayuda para empezar?
+            </p>
+            <p style="margin: 0; color: #F4E7E1; font-size: 14px;">
+                Contáctanos en cualquier momento
+            </p>
+        </td>
+    </tr>
+</table>
+{% endblock %}

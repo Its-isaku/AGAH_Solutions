@@ -1,353 +1,133 @@
-<!-- order_final_price.html - SOLUCION PROBLEMA 5 -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Precio Final - AGAH Solutions</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #F4E7E1;
-            background-color: #1a1a1a;
-        }
-        
-        .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(54, 52, 71, 0.95) 100%);
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        .email-header {
-            background: linear-gradient(135deg, #78B7D0 0%, #5A9BD4 100%);
-            padding: 2rem;
-            text-align: center;
-            color: white;
-        }
-        
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-        
-        .tagline {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
-        .email-body {
-            padding: 2rem;
-        }
-        
-        .final-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #78B7D0;
-        }
-        
-        .order-info {
-            background: linear-gradient(135deg, rgba(120, 183, 208, 0.2) 0%, rgba(120, 183, 208, 0.1) 100%);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(120, 183, 208, 0.4);
-        }
-        
-        .order-number {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #78B7D0;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        
-        .items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background-color: rgba(26, 26, 26, 0.4);
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-        
-        .items-table th,
-        .items-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(120, 183, 208, 0.2);
-        }
-        
-        .items-table th {
-            background-color: rgba(120, 183, 208, 0.3);
-            color: #78B7D0;
-            font-weight: 600;
-        }
-        
-        .price-comparison {
-            background-color: rgba(26, 26, 26, 0.4);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(120, 183, 208, 0.3);
-        }
-        
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 0.75rem 0;
-            padding: 0.5rem;
-        }
-        
-        .price-estimated {
-            color: #F4E7E1;
-            opacity: 0.7;
-            text-decoration: line-through;
-        }
-        
-        .price-final {
-            color: #78B7D0;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        
-        .total-final {
-            background: linear-gradient(135deg, rgba(120, 183, 208, 0.3) 0%, rgba(120, 183, 208, 0.1) 100%);
-            border-radius: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 2px solid #78B7D0;
-            text-align: center;
-        }
-        
-        .total-amount {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: #78B7D0;
-            margin-bottom: 0.5rem;
-        }
-        
-        .delivery-time {
-            background: linear-gradient(135deg, rgba(120, 183, 208, 0.2) 0%, rgba(120, 183, 208, 0.1) 100%);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(120, 183, 208, 0.4);
-            text-align: center;
-        }
-        
-        .delivery-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #78B7D0;
-            margin-bottom: 0.8rem;
-        }
-        
-        .delivery-days {
-            font-size: 1.1rem;
-            color: #F4E7E1;
-        }
-        
-        .cta-section {
-            text-align: center;
-            margin: 2rem 0;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            margin: 0.5rem;
-            background: linear-gradient(135deg, #78B7D0 0%, #5A9BD4 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(120, 183, 208, 0.3);
-        }
-        
-        .cta-button.cancel {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        }
-        
-        .cta-button.cancel:hover {
-            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
-            border-color: #dc3545;
-            transform: translateY(-2px);
-        }
-        
-        .contact-info {
-            background-color: rgba(26, 26, 26, 0.5);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            text-align: center;
-            border: 1px solid rgba(120, 183, 208, 0.2);
-        }
-        
-        .contact-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #78B7D0;
-        }
-        
-        .contact-item {
-            margin: 0.5rem 0;
-            color: #F4E7E1;
-        }
-        
-        .contact-item a {
-            color: #78B7D0;
-            text-decoration: none;
-        }
-        
-        .email-footer {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.8) 0%, rgba(54, 52, 71, 0.8) 100%);
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #999;
-        }
-        
-        .footer-text {
-            margin-bottom: 0.5rem;
-        }
-    </style>
-</head>
-<body>
-    <div class="email-container">
-        <div class="email-header">
-            <div class="logo">AGAH Solutions</div>
-            <div class="tagline">Cutting-Edge Solutions, Crafted to Perfection</div>
-        </div>
-        
-        <div class="email-body">
-            <h1 class="final-title">¡Tu Precio Final Está Listo!</h1>
-            
-            <div class="order-info">
-                <div class="order-number">Pedido #{{ order.order_number }}</div>
-                <p style="text-align: center; margin-bottom: 0;">
-                    Hola {{ customer_name }}, hemos revisado tu pedido y aquí está el precio final.
-                </p>
-            </div>
-            
-            <!-- SOLUCION PROBLEMA 4 - Tabla con todos los productos -->
-            <table class="items-table">
-                <thead>
-                    <tr>
-                        <th>Servicio</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unit.</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in order.items.all %}
-                    <tr>
-                        <td>{{ item.service.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>${{ item.final_unit_price|floatformat:2 }} MXN</td>
-                        <td>${{ item.get_final_total_with_design|floatformat:2 }} MXN</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            
-            <div class="price-comparison">
-                <div class="price-row">
-                    <span>Precio Estimado:</span>
-                    <span class="price-estimated">${{ order.estimaded_price|floatformat:2 }} MXN</span>
-                </div>
-                <div class="price-row">
-                    <span>Precio Final:</span>
-                    <span class="price-final">${{ order.final_price|floatformat:2 }} MXN</span>
-                </div>
-                {% if order.final_price < order.estimaded_price %}
-                <div class="price-row">
-                    <span>Ahorras:</span>
-                    <span class="savings">${{ order.estimaded_price|add:"-"|add:order.final_price|floatformat:2 }} MXN</span>
-                </div>
-                {% endif %}
-            </div>
-            
-            <!-- SOLUCION PROBLEMA 4 - Total Final Calculado -->
-            <div class="total-final">
-                <div class="total-amount">
-                    ${{ order.get_final_total_price|floatformat:2 }} MXN
-                </div>
-                <p style="margin: 0; opacity: 0.9;">Total Final</p>
-            </div>
+{% extends "emails/base_email.html" %}
 
-            <!-- SOLUCION PROBLEMA 5 - Tiempo Estimado de Entrega Corregido -->
-            {% if order.estimated_completion_date_days %}
-            <div class="delivery-time">
-                <div class="delivery-title">Tiempo Estimado de Entrega</div>
-                <div class="delivery-days">
-                    {% if order.estimated_completion_date_days == 1 %}
-                        {{ order.estimated_completion_date_days }} día hábil
-                    {% else %}
-                        {{ order.estimated_completion_date_days }} días hábiles
-                    {% endif %}
-                </div>
-            </div>
+{% block title %}Precio Final Disponible - AGAH Solutions{% endblock %}
+
+{% block content %}
+<!-- Greeting -->
+<h2 style="margin: 0 0 20px 0; color: #F4E7E1; font-size: 24px; font-weight: 600;">
+    Hola {{ customer_name|default:"Cliente" }},
+</h2>
+
+<p style="margin: 0 0 30px 0; color: #F4E7E1; font-size: 16px; line-height: 1.6;">
+    Hemos finalizado la revisión completa de tu pedido. Aquí está el precio final y el tiempo de entrega para tu proyecto.
+</p>
+
+<!-- Order Info -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(120, 183, 208, 0.1); border-radius: 10px; border: 1px solid rgba(120, 183, 208, 0.3); margin-bottom: 30px;">
+    <tr>
+        <td style="padding: 20px;">
+            <h3 style="margin: 0 0 15px 0; color: #78B7D0; font-size: 18px; text-align: center;">
+                Pedido: {{ order.order_number }}
+            </h3>
+            <p style="margin: 0; color: #F4E7E1; font-size: 14px; text-align: center;">
+                Estado: Precio Final Disponible
+            </p>
+        </td>
+    </tr>
+</table>
+
+<!-- Final Price -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background: linear-gradient(135deg, rgba(120, 183, 208, 0.2) 0%, rgba(120, 183, 208, 0.1) 100%); border-radius: 10px; border: 2px solid #78B7D0; margin-bottom: 30px;">
+    <tr>
+        <td style="padding: 30px; text-align: center;">
+            <p style="margin: 0 0 10px 0; color: #F4E7E1; font-size: 18px;">PRECIO FINAL:</p>
+            <p style="margin: 0; color: #78B7D0; font-size: 42px; font-weight: bold;">
+                ${{ final_price|floatformat:2 }} MXN
+            </p>
+            {% if order.estimaded_price %}
+            <p style="margin: 15px 0 0 0; color: #888888; font-size: 13px;">
+                Precio estimado inicial: ${{ order.estimaded_price|floatformat:2 }} MXN
+            </p>
             {% endif %}
+        </td>
+    </tr>
+</table>
 
-            <div class="cta-section">
-                <a href="{{ website_url }}/orders/confirm?order={{ order.order_number }}" class="cta-button">
-                    Confirmar Pedido
-                </a>
-                <br>
-                <a href="{{ website_url }}/orders/cancel?order={{ order.order_number }}" class="cta-button cancel">
-                    Cancelar Pedido
-                </a>
-                <br>
-                <a href="{{ website_url }}/orders/track?order={{ order.order_number }}" class="cta-button">
-                    Ver Detalles
-                </a>
-            </div>
-            
-            <div class="contact-info">
-                <h3 class="contact-title">¿Necesitas hacer cambios?</h3>
-                <div class="contact-item">
-                    <strong>Email:</strong> 
-                    <a href="mailto:agahsolutions@gmail.com">agahsolutions@gmail.com</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Teléfono:</strong> 
-                    <a href="tel:+526651270811">+52 665 127 0811</a>
-                </div>
-                <div class="contact-item">
-                    <strong>Respuesta promedio:</strong> 24 horas
-                </div>
-            </div>
-        </div>
-        
-        <div class="email-footer">
-            <div class="footer-text">
-                Gracias por confiar en AGAH Solutions para tus proyectos.
-            </div>
-            <div class="footer-text">
-                © 2025 AGAH Solutions. Todos los derechos reservados.
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+<!-- Delivery Time -->
+{% if delivery_time %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(120, 183, 208, 0.1); border-radius: 10px; border: 1px solid rgba(120, 183, 208, 0.3); margin-bottom: 30px;">
+    <tr>
+        <td style="padding: 20px; text-align: center;">
+            <p style="margin: 0 0 10px 0; color: #78B7D0; font-size: 16px; font-weight: 600;">
+                Tiempo de Entrega:
+            </p>
+            <p style="margin: 0; color: #F4E7E1; font-size: 20px;">
+                {{ delivery_time }} días hábiles
+            </p>
+        </td>
+    </tr>
+</table>
+{% endif %}
+
+<!-- Order Summary -->
+<h3 style="margin: 0 0 20px 0; color: #78B7D0; font-size: 18px;">Resumen del Pedido:</h3>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 30px;">
+    {% for item in order.items.all %}
+    <tr>
+        <td style="padding: 15px; background-color: rgba(26, 26, 26, 0.3); border-bottom: 1px solid rgba(120, 183, 208, 0.2);">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td style="color: #F4E7E1; font-size: 16px; font-weight: 600;">
+                        {{ item.service.name }}
+                    </td>
+                    <td align="right" style="color: #78B7D0; font-size: 16px; font-weight: 600;">
+                        {% if item.final_price %}
+                        ${{ item.final_price|floatformat:2 }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="color: #888888; font-size: 14px; padding-top: 5px;">
+                        Cantidad: {{ item.quantity }}
+                        {% if item.material %} | Material: {{ item.material }}{% endif %}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- Action Required -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: rgba(120, 183, 208, 0.05); border-radius: 10px; padding: 20px; margin-bottom: 30px;">
+    <tr>
+        <td style="text-align: center;">
+            <p style="margin: 0 0 15px 0; color: #F4E7E1; font-size: 16px; font-weight: 600;">
+                ¿Deseas proceder con tu pedido?
+            </p>
+            <p style="margin: 0; color: #888888; font-size: 14px; line-height: 1.6;">
+                Por favor confirma o cancela tu pedido usando los botones a continuación.
+            </p>
+        </td>
+    </tr>
+</table>
+
+<!-- CTA Buttons -->
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 30px 0;">
+    <tr>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td style="padding-right: 10px;">
+                        <a href="{{ website_url|default:'http://localhost:5173' }}/orders" 
+                           style="display: inline-block; padding: 15px 30px; background-color: transparent; border: 2px solid #78B7D0; border-radius: 8px; color: #78B7D0; font-size: 16px; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
+                            Confirmar Pedido
+                        </a>
+                    </td>
+                    <td style="padding-left: 10px;">
+                        <a href="{{ website_url|default:'http://localhost:5173' }}/orders" 
+                           style="display: inline-block; padding: 15px 30px; background-color: transparent; border: 2px solid #ef4444; border-radius: 8px; color: #ef4444; font-size: 16px; font-weight: 600; text-decoration: none; text-transform: uppercase; letter-spacing: 1px;">
+                            Cancelar Pedido
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<p style="margin: 30px 0 0 0; color: #888888; font-size: 14px; line-height: 1.6; text-align: center;">
+    Si tienes alguna pregunta sobre el precio o necesitas ajustes, contáctanos respondiendo a este correo.
+</p>
+{% endblock %}

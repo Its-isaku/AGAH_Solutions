@@ -287,10 +287,11 @@ class ContactFormView(APIView):
                 'message': contact_data.get('message', ''),
                 'submitted_at': timezone.now(),
                 'company_time_response_hours': 24,  # Default from your config
+                'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
             }
             
             #* Render HTML template
-            html_message = render_to_string('emails/contact_form_company.html', context)
+            html_message = render_to_string('emails/contact_form.html', context)
             
             #* Plain text version
             plain_message = f"""

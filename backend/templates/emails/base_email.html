@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AGAH Solutions{% endblock %}</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <style>
+        /* Reset styles for email clients */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; }
+        
+        /* Remove default styling */
+        img { border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        table { border-collapse: collapse !important; }
+        body { height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important; }
+        
+        /* Mobile styles */
+        @media screen and (max-width: 600px) {
+            .mobile-padding { padding: 20px !important; }
+            .mobile-center { text-align: center !important; }
+            .container { width: 100% !important; max-width: 100% !important; }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #1a1a1a; font-family: Arial, sans-serif;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1a1a1a; min-height: 100vh;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <!-- Email Container -->
+                <table class="container" border="0" cellpadding="0" cellspacing="0" width="600" style="background: linear-gradient(180deg, #2a2838 0%, #1a1926 100%); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); border: 1px solid #78B7D0;">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #78B7D0 0%, #5a9bd4 100%); padding: 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #FFFFFF; font-size: 32px; font-weight: bold;">AGAH Solutions</h1>
+                            <p style="margin: 10px 0 0 0; color: #FFFFFF; font-size: 14px; opacity: 0.95;">Cutting-Edge Solutions, Crafted to Perfection</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            {% block content %}{% endblock %}
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: rgba(26, 26, 26, 0.5); padding: 30px; text-align: center; border-top: 1px solid rgba(120, 183, 208, 0.3);">
+                            <p style="margin: 0 0 10px 0; color: #78B7D0; font-size: 14px;">
+                                ¿Necesitas ayuda? Contáctanos
+                            </p>
+                            <p style="margin: 0 0 5px 0;">
+                                <a href="mailto:{{ contact_email|default:'agahsolutions@gmail.com' }}" style="color: #78B7D0; text-decoration: none; font-size: 14px;">
+                                    {{ contact_email|default:'agahsolutions@gmail.com' }}
+                                </a>
+                            </p>
+                            <p style="margin: 0; color: #888888; font-size: 14px;">
+                                +52 665 127 0811
+                            </p>
+                            <p style="margin: 20px 0 0 0; color: #666666; font-size: 12px;">
+                                © 2024 AGAH Solutions. Todos los derechos reservados.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -153,8 +153,12 @@ class SignupView(APIView):
         
         # Context for the template
         context = {
+            'first_name': user.first_name,
+            'username': user.username,
+            'email': user.email,
             'user_name': user.get_display_name(),
-            'website_url': 'http://localhost:3000',  # Update with your actual domain
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
+            'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
             'user': user
         }
         

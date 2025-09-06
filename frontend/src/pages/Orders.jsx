@@ -44,7 +44,6 @@ const TEXT = {
     items: 'items', // 'artículos'
     hideDetails: 'Hide', // 'Ocultar'
     showDetails: 'View Details', // 'Ver Detalles'
-    completed: 'Completed', // 'Completado'
     toBeDetermined: 'To be quoted', // 'Por cotizar'
     
     // Customer info section

@@ -38,52 +38,60 @@ def track_order_state_changes(sender, instance, **kwargs):
 @receiver(post_save, sender=Order)
 def send_order_emails(sender, instance, created, **kwargs):
     """
-    Send emails based on order state changes
-    SOLUCION PROBLEMA 1: Enviar email correcto según el momento
+    Send emails based on order state changes using new templates
     """
     
-    #* Send confirmation email for new orders (cuando se crea desde carrito)
+    #* Send confirmation email for new orders
     if created:
         send_order_confirmation_email(instance)
-        return  # Solo envía confirmación, NO estimación
+        return
     
     #* Check for state changes
     elif hasattr(instance, '_state_changed') and instance._state_changed:
         
-        #* Send estimate email when state changes to estimated (SOLO si no hay precio final)
+        #* Send estimate email when state changes to estimated (only if no final price)
         if instance.state == 'estimated' and instance.estimaded_price and not instance.final_price:
             send_estimate_email(instance)
         
-        #* Send FINAL PRICE email when state changes to estimated AND final_price exists
+        #* Send final price email when final_price exists
         elif instance.state == 'estimated' and instance.final_price:
             send_final_price_email(instance)
         
         #* Send confirmation email when customer confirms
         elif instance.state == 'confirmed':
-            send_order_confirmed_email(instance)
+            send_confirmed_email(instance)
+        
+        #* Send in progress email
+        elif instance.state == 'in_progress':
+            send_in_progress_email(instance)
         
         #* Send completion email
         elif instance.state == 'completed':
             send_completion_email(instance)
+            
+        #* Send cancellation email
+        elif instance.state == 'canceled':
+            send_cancellation_email(instance)
 
 #? <|--------------Email Helper Functions--------------|>
 
 def send_order_confirmation_email(order):
-    """Send initial order confirmation email"""
+    """Send initial order confirmation email when order is created"""
     try:
         context = {
             'order': order,
             'customer_name': order.customer_name,
             'order_items': order.items.all(),
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
-        # USA EL TEMPLATE QUE YA TIENES
-        html_message = render_to_string('emails/order_estimate.html', context)
+        # Use the welcome email template for new orders
+        html_message = render_to_string('emails/welcome_email.html', context)
         plain_message = strip_tags(html_message)
         
         send_mail(
-            subject=f"Order Confirmation - {order.order_number}",
+            subject=f"¡Pedido Recibido! - {order.order_number} | AGAH Solutions",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[order.customer_email],
@@ -91,7 +99,7 @@ def send_order_confirmation_email(order):
             fail_silently=False,
         )
         
-        print(f"Confirmation email sent for order {order.order_number}")
+        print(f"Welcome/confirmation email sent for order {order.order_number}")
         return True
         
     except Exception as e:
@@ -101,7 +109,6 @@ def send_order_confirmation_email(order):
 def send_estimate_email(order):
     """Send estimate/quote email - ONLY when there's no final price yet"""
     try:
-        # SOLUCION PROBLEMA 5: Only send estimate if final price is NOT set
         if order.final_price:
             print(f"Skipping estimate email for order {order.order_number} - final price already exists")
             return False
@@ -111,6 +118,7 @@ def send_estimate_email(order):
             'customer_name': order.customer_name,
             'order_items': order.items.all(),
             'estimated_price': order.estimaded_price,
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
@@ -118,7 +126,7 @@ def send_estimate_email(order):
         plain_message = strip_tags(html_message)
         
         send_mail(
-            subject=f"Quote Ready - Order {order.order_number}",
+            subject=f"Cotización Lista - {order.order_number} | AGAH Solutions",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[order.customer_email],
@@ -134,14 +142,15 @@ def send_estimate_email(order):
         return False
 
 def send_final_price_email(order):
-    """
-    SOLUCION PROBLEMA 5: Send email with final price
-    This is the CORRECT email that should be sent when final pricing is ready
-    """
+    """Send email with final price when pricing is finalized"""
     try:
         context = {
             'order': order,
             'customer_name': order.customer_name,
+            'order_items': order.items.all(),
+            'final_price': order.final_price,
+            'delivery_time_days': order.estimated_completion_date_days,
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
@@ -149,7 +158,7 @@ def send_final_price_email(order):
         plain_message = strip_tags(html_message)
         
         send_mail(
-            subject=f"Final Price Ready - Order {order.order_number}",
+            subject=f"Precio Final - {order.order_number} | AGAH Solutions",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[order.customer_email],
@@ -164,22 +173,24 @@ def send_final_price_email(order):
         print(f"Error sending final price email: {e}")
         return False
 
-def send_order_confirmed_email(order):
+def send_confirmed_email(order):
     """Send email when customer confirms the order"""
     try:
         context = {
             'order': order,
             'customer_name': order.customer_name,
             'final_price': order.final_price or order.estimaded_price,
-            'estimated_days': order.estimated_completion_date_days,
+            'delivery_time_days': order.estimated_completion_date_days,
+            'order_items': order.items.all(),
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
-        html_message = render_to_string('emails/order_status.html', context)
+        html_message = render_to_string('emails/order_confirmation.html', context)
         plain_message = strip_tags(html_message)
         
         send_mail(
-            subject=f"Order Confirmed - {order.order_number}",
+            subject=f"¡Pedido Confirmado! - {order.order_number} | AGAH Solutions",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[order.customer_email],
@@ -187,11 +198,42 @@ def send_order_confirmed_email(order):
             fail_silently=False,
         )
         
-        print(f"Confirmation email sent for order {order.order_number}")
+        print(f"Order confirmed email sent for order {order.order_number}")
         return True
         
     except Exception as e:
-        print(f"Error sending confirmation email: {e}")
+        print(f"Error sending confirmed email: {e}")
+        return False
+
+def send_in_progress_email(order):
+    """Send email when order starts production"""
+    try:
+        context = {
+            'order': order,
+            'customer_name': order.customer_name,
+            'order_items': order.items.all(),
+            'delivery_time_days': order.estimated_completion_date_days,
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
+            'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
+        }
+        
+        html_message = render_to_string('emails/order_in_progres.html', context)
+        plain_message = strip_tags(html_message)
+        
+        send_mail(
+            subject=f"En Producción - {order.order_number} | AGAH Solutions",
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[order.customer_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        
+        print(f"In progress email sent for order {order.order_number}")
+        return True
+        
+    except Exception as e:
+        print(f"Error sending in progress email: {e}")
         return False
 
 def send_completion_email(order):
@@ -200,6 +242,8 @@ def send_completion_email(order):
         context = {
             'order': order,
             'customer_name': order.customer_name,
+            'order_items': order.items.all(),
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
             'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
         }
         
@@ -207,7 +251,7 @@ def send_completion_email(order):
         plain_message = strip_tags(html_message)
         
         send_mail(
-            subject=f"Order Completed! - {order.order_number}",
+            subject=f"¡Pedido Completado! - {order.order_number} | AGAH Solutions",
             message=plain_message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[order.customer_email],
@@ -220,4 +264,34 @@ def send_completion_email(order):
         
     except Exception as e:
         print(f"Error sending completion email: {e}")
+        return False
+
+def send_cancellation_email(order):
+    """Send email when order is cancelled"""
+    try:
+        context = {
+            'order': order,
+            'customer_name': order.customer_name,
+            'order_items': order.items.all(),
+            'contact_email': getattr(settings, 'CONTACT_EMAIL', 'agahsolutions@gmail.com'),
+            'website_url': getattr(settings, 'FRONTEND_URL', 'http://localhost:3000'),
+        }
+        
+        html_message = render_to_string('emails/order_canceld.html', context)
+        plain_message = strip_tags(html_message)
+        
+        send_mail(
+            subject=f"Pedido Cancelado - {order.order_number} | AGAH Solutions",
+            message=plain_message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[order.customer_email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        
+        print(f"Cancellation email sent for order {order.order_number}")
+        return True
+        
+    except Exception as e:
+        print(f"Error sending cancellation email: {e}")
         return False
