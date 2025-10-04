@@ -38,19 +38,13 @@
                 <tr>
                     <td style="padding: 5px 0;">
                         <span style="color: #888888; font-size: 14px;">Nombre de Usuario:</span>
-                        <span style="color: #F4E7E1; font-size: 14px; font-weight: 600; margin-left: 10px;">{{ username }}</span>
+                        <span style="color: #F4E7E1; font-size: 14px; margin-left: 10px;">{{ first_name|default:username }}</span>
                     </td>
                 </tr>
                 <tr>
                     <td style="padding: 5px 0;">
                         <span style="color: #888888; font-size: 14px;">Email:</span>
                         <span style="color: #F4E7E1; font-size: 14px; margin-left: 10px;">{{ email }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding: 5px 0;">
-                        <span style="color: #888888; font-size: 14px;">Tipo de Cuenta:</span>
-                        <span style="color: #78B7D0; font-size: 14px; margin-left: 10px;">{{ user_type|default:"Cliente" }}</span>
                     </td>
                 </tr>
             </table>
